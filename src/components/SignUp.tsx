@@ -7,6 +7,7 @@ const SignUp = () => {
         Create Account
     </h1>
 <form>
+    
 <label>Name</label>
 <input type="text" placeholder="lulu" required></input>
 <label>Surname</label>
@@ -19,6 +20,12 @@ const SignUp = () => {
 <input type="password" required></input>
 <label>Confirm password</label>
 <input type="password" required></input>
+<button>Sign up</button>
+<label>
+    <span>
+        Already have an account? Sign in
+    </span>
+</label>
 </form>
 </div>  )
 }

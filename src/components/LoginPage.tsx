@@ -22,15 +22,15 @@ const LoginPage = () => {
                               Remember me
                            </span>
                         </label>
-
+<br></br>
                         <a href="#">
                            Forgot password?
                         </a>
                      
-
+<div>
                      <button type="submit">
                         Sign in</button>
-
+</div>
                      <div >Don't have an account? <a href="#"> Sign  up</a>
                      </div>
                   </form>
