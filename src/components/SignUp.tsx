@@ -2,32 +2,49 @@
 
 const SignUp = () => {
   return (
-<div className="signup">
+  <div className="signup">
     <h1>
         Create Account
     </h1>
-<form>
-    
+<form >
+    <div>
 <label>Name</label>
 <input type="text" placeholder="lulu" required></input>
+ </div>
+<div>
 <label>Surname</label>
 <input type="text" placeholder="ngomane" required></input>
-<label>Cell Number</label>
+</div>
+
+<div>
+    <label>Cell Number</label>
 <input type="text" placeholder="+27 123 456 7891" required></input>
-<label>Email</label>
+</div>
+
+<div>
+    <label>Email</label>
 <input type="text" placeholder="example.com" required></input>
-<label>Password</label>
+</div>
+
+<div>
+    <label>Password</label>
 <input type="password" required></input>
-<label>Confirm password</label>
+</div>
+<div>
+    <label>Confirm password</label>
 <input type="password" required></input>
-<button>Sign up</button>
-<label>
+</div>
+
+<div><button>Sign up</button></div>
+<div><button type="button">
     <span>
         Already have an account? Sign in
     </span>
-</label>
+</button></div>
+
 </form>
-</div>  )
+</div> 
+  )
 }
 
 export default SignUp

@@ -6,7 +6,7 @@ const LoginPage = () => {
                   <h1>Welcome back!</h1>
                   <p>Sign in to continue</p>
 
-                  <form>
+                  <form >
                      <div>
                         <label>Email</label>
                         <input type="email" id="email" name="email" placeholder="example.com" required></input>
@@ -22,21 +22,17 @@ const LoginPage = () => {
                               Remember me
                            </span>
                         </label>
+                        <div><button type="button">Forgot password?</button></div>
 <br></br>
-                        <a href="#">
-                           Forgot password?
-                        </a>
                      
 <div>
                      <button type="submit">
                         Sign in</button>
 </div>
-                     <div >Don't have an account? <a href="#"> Sign  up</a>
+                     <div>Don't have an account? <button type="button" >Sign up</button>
                      </div>
                   </form>
-               </div>
-        
-  )
+               </div>  )
 }
 
 export default LoginPage
