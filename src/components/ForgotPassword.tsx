@@ -1,5 +1,6 @@
 
 const ForgotPassword = () => {
+    
   return (
  <div className="forgotPassword">
       <h1>Reset your password</h1>
