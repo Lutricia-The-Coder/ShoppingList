@@ -28,11 +28,11 @@ const SignUp = () => {
 
 <div>
     <label>Password</label>
-<input type="password" required></input>
+<input type="password" minLength={8} required></input>
 </div>
 <div>
     <label>Confirm password</label>
-<input type="password" required></input>
+<input type="password" minLength={8} required></input>
 </div>
 
 <div><button>Sign up</button></div>

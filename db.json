@@ -1,7 +1,5 @@
 {
-  "lists": [
-    { "id": 1, "name": "Dairy", "items": ["Milk", "Eggs"] },
-    { "id": 2, "name": "Electronics", "items": ["Headphones"] },
-    { "id": 3, "name": "Meat", "items": ["Chicken" , "Pork chops"] }
-  ]
+  "users": [],
+  "shoppingLists": []
 }
+ 
