@@ -7,8 +7,7 @@ export interface User{
     cellNumber: string;
 }
 
-export interface ShoppingList {
-    id: string;
+export interface ShoppingList{
     userId: string;
     name : string;
     quantity : number;
