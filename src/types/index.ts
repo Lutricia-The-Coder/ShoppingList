@@ -14,6 +14,6 @@ export interface ShoppingList {
     quantity : number;
     notes?: string;  // optional
     category : string;
-    image?: string ;
+    image?: string ; //not yet sure
     dateAdded: string;
 }
