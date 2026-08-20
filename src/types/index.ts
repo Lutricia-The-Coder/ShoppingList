@@ -12,7 +12,7 @@ export interface ShoppingList {
     userId: string;
     name : string;
     quantity : number;
-    notes?: string;
+    notes?: string;  // optional
     category : string;
     image?: string ;
     dateAdded: string;
