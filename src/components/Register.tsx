@@ -56,7 +56,7 @@ const Register = () => {
       // Encryption
       const encryptedPassword = encrypt(formData.password);
 
-await registerUser({
+   await registerUser({
   ...formData,
   password: encryptedPassword,
 });
