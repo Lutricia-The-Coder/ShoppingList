@@ -1,29 +1,22 @@
 
 
 import './App.css'
-import LoginPage from './components/LoginPage'
 import Dashboard from './components/Dashboard'
 import ForgotPassword from './components/ForgotPassword'
-import SignUp from './components/SignUp'
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
-
+import SignUp from './components/Register'
+import { BrowserRouter } from 'react-router-dom'
+import AppRoute from "./routes/AppRoute"
+import Register from './components/Register'
 
 
 function App() {
   return (
-    <> 
-    <Router>
-<Routes>
-  <Route path="/"
-  element={<SignUp />}/>
-  <Route path="/loginpage"
-  element={<LoginPage />}/>
-  <Route path="/forgotpassword"
-  element={<ForgotPassword />}/>
-</Routes>
-    </Router>
-<Dashboard />
-      </>
+    <BrowserRouter> 
+<AppRoute />
+<Register />
+
+
+      </BrowserRouter>
       )
   
 }

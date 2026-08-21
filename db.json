@@ -1,5 +1,14 @@
 {
-  "users": [],
-  "shoppingLists": []
+  "users": [
+    {
+      "email": "jondoe@gmail.com",
+      "password": "yesss",
+      "name": "jon",
+      "surname": "doe",
+      "cellNumber": "0354636346",
+      "id": "oAj5Kp9vSmQ"
+    }
+  ],
+  "shoppingLists": [],
+  "$schema": "./node_modules/json-server/schema.json"
 }
- 
