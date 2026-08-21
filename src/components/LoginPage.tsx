@@ -1,38 +1,81 @@
-
+import { type FormEvent, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useAppDispatch } from "../store/hooks";
+import { login } from "../features/auth/authSlice";
+import { getUserByEmail } from "../services/authService";
+import { encrypt } from "../types/encryption";
 
 const LoginPage = () => {
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const [error, setError] = useState("");
+
+  const handleSubmit = async (event: FormEvent) => {
+    event.preventDefault();
+
+    setError("");
+
+    try {
+      const user = await getUserByEmail(email);
+
+      if (!user) {
+        setError("Invalid email or password.");
+        return;
+      }
+
+      const encryptedPassword = encrypt(password);
+
+      if (encryptedPassword !== user.password) {
+        setError("Invalid email or password.");
+        return;
+      }
+
+      dispatch(login(user));
+
+      navigate("/");
+    } catch {
+      setError("Something went wrong while logging in.");
+    }
+  };
+
   return (
-    <div className="loginForm">
-                  <h1>Welcome back!</h1>
+    <main>
+       <h1>Welcome back!</h1>
                   <p>Sign in to continue</p>
 
-                  <form >
-                     <div>
-                        <label>Email</label>
-                        <input type="email" id="email" name="email" placeholder="example.com" required></input>
-                    </div>
-                     <div>
-                        <label>Password</label>
-                        <input type="password" id="password"  minLength={8} name="password" required ></input>
-                     </div>
+      {error && <p>{error}</p>}
 
-                        <label>
-                           <input id="remember" name="remember" type="checkbox" required/>
-                           <span>
-                              Remember me
-                           </span>
-                        </label>
-                        <div><button type="button">Forgot password?</button></div>
-<br></br>
-                     
-<div>
-                     <button type="submit">
-                        Sign in</button>
-</div>
-                     <div>Don't have an account? <button type="button" >Sign up</button>
-                     </div>
-                  </form>
-               </div>  )
-}
+      <form onSubmit={handleSubmit}>
+          <label>Email</label>
+        <input
+          type="email"
+          placeholder="Email address"
+          value={email}
+          onChange={(event) => setEmail(event.target.value)}
+        />
+ <label>Password</label>
+        <input
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={(event) => setPassword(event.target.value)}
+        />
+
+        <button type="submit">
+          Login
+        </button>
+      </form>
+
+      <p>
+        Don't have an account?{" "}
+        <Link to="/register">Register</Link>
+      </p>
+    </main>
+  );
+};
 
 export default LoginPage

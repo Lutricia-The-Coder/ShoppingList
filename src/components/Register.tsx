@@ -1,7 +1,12 @@
 import { type FormEvent, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { registerUser, getUserByEmail } from "../../src/services/authService";
-import {encrypt} from "../types/encryption";
+
+import {
+  registerUser,
+  getUserByEmail,
+} from "../services/authService";
+
+import { encrypt } from "../types/encryption";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -35,6 +40,7 @@ const Register = () => {
     setSuccess("");
 
     try {
+      // Check that all fields have been completed
       if (
         !formData.email ||
         !formData.password ||
@@ -46,31 +52,34 @@ const Register = () => {
         return;
       }
 
+      // Check if the email is already registered
       const existingUser = await getUserByEmail(formData.email);
 
       if (existingUser) {
-        setError("An account with this email already exists.Try signing in");
+        setError(
+          "An account with this email already exists. Try signing in."
+        );
         return;
       }
 
-      // Encryption
+      // Encrypting the password before sending it to JSON Server
       const encryptedPassword = encrypt(formData.password);
 
-   await registerUser({
-  ...formData,
-  password: encryptedPassword,
-});
-
-      await registerUser(formData);
+      // Create the user with the encrypted password
+      await registerUser({
+        ...formData,
+        password: encryptedPassword,
+      });
 
       setSuccess("Registration successful!");
 
       setTimeout(() => {
         navigate("/login");
       }, 1000);
-    } catch {
-      setError("Something went wrong during registration.");
-    }
+    } catch (error) {
+  console.error("Registration error:", error);
+  setError("Something went wrong during registration.");
+}
   };
 
   return (
@@ -81,35 +90,46 @@ const Register = () => {
       {success && <p>{success}</p>}
 
       <form onSubmit={handleSubmit}>
-        <label>Name</label>
+        <label htmlFor="name">Name</label>
+
         <input
+          id="name"
           type="text"
           name="name"
-          placeholder="your name"
+          placeholder="Your name"
           value={formData.name}
           onChange={handleChange}
           required
         />
-        <label>Surname</label>
+
+        <label htmlFor="surname">Surname</label>
+
         <input
+          id="surname"
           type="text"
           name="surname"
-          placeholder=""
+          placeholder="Your surname"
           value={formData.surname}
           onChange={handleChange}
           required
         />
-<label>Email</label>
+
+        <label htmlFor="email">Email</label>
+
         <input
+          id="email"
           type="email"
           name="email"
-          placeholder="exapmle.com"
+          placeholder="example@email.com"
           value={formData.email}
           onChange={handleChange}
           required
         />
-<label>Cell Number</label>
+
+        <label htmlFor="cellNumber">Cell Number</label>
+
         <input
+          id="cellNumber"
           type="tel"
           name="cellNumber"
           placeholder="Cell number"
@@ -117,10 +137,14 @@ const Register = () => {
           onChange={handleChange}
           required
         />
-<label>Password</label>
+
+        <label htmlFor="password">Password</label>
+
         <input
+          id="password"
           type="password"
           name="password"
+          placeholder="Password"
           value={formData.password}
           onChange={handleChange}
           required
