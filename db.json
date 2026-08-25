@@ -1,0 +1,88 @@
+{
+  "users": [
+    {
+      "email": "erhfg@vbmn",
+      "password": "M0pOnXrujXYMSR54+8Z8GQ==",
+      "name": "jhthy",
+      "surname": "trjk",
+      "cellNumber": "3478780784",
+      "id": "_NYOwu5qKGg"
+    },
+    {
+      "email": "lulu@gmail.com",
+      "password": "0SqXjch3N8XNXDU87tD9rw==",
+      "name": "dfghfhf",
+      "surname": "fggdg",
+      "cellNumber": "586794554343",
+      "id": "LZ8SM8Xdv2I"
+    },
+    {
+      "email": "lulu@com",
+      "password": "qmcylAlvVUCcH2amCSWjNQ==",
+      "name": "lulzz",
+      "surname": "ngomz",
+      "cellNumber": "0874574356",
+      "id": "Zn73r_04rNk"
+    },
+    {
+      "email": "neomolomo@gmail.com",
+      "password": "U2FsdGVkX1/ZT+7RsHRIaWnx6T4GFQdPpUraZZVRdiM=",
+      "name": "Neo",
+      "surname": "Molomo",
+      "cellNumber": "0765463863",
+      "id": "DVpHo9BGwoo"
+    },
+    {
+      "email": "zoe@gmail.com",
+      "password": "a8b67d81d0ff962982b34e7c3aeb6d72e700ce25160e9dbbfd2e992443c437d1",
+      "name": "zoe",
+      "surname": "ngomane",
+      "cellNumber": "0758762354",
+      "id": "sZAkAVCi0ZY"
+    }
+  ],
+  "shoppingLists": [],
+  "shoppingItems": [
+    {
+      "listId": "sXetyYM4VZQ",
+      "name": "milk",
+      "quantity": 1,
+      "notes": "",
+      "category": "Groceries",
+      "image": "",
+      "dateAdded": "2026-08-25T09:49:01.178Z",
+      "id": "d2N2c1UuFro"
+    },
+    {
+      "listId": "azgAb8LbPDA",
+      "name": "fgdjhdgkf",
+      "quantity": 1,
+      "notes": "",
+      "category": "Electronics",
+      "image": "",
+      "dateAdded": "2026-08-25T10:04:49.609Z",
+      "id": "-kobbXT3qG0"
+    },
+    {
+      "listId": "zKiIEbRUmIM",
+      "name": "Milk",
+      "quantity": 3,
+      "notes": "",
+      "category": "Groceries",
+      "image": "",
+      "dateAdded": "2026-08-25T13:00:26.432Z",
+      "id": "-hYPjWTVAGU"
+    },
+    {
+      "listId": "zKiIEbRUmIM",
+      "name": "choc",
+      "quantity": 1,
+      "notes": "",
+      "category": "Groceries",
+      "image": "",
+      "dateAdded": "2026-08-25T13:00:47.151Z",
+      "id": "PcwIWVj1rTo"
+    }
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
+}
