@@ -317,3 +317,204 @@ body {
 .btn-secondary:hover {
   background-color: var(--secondary-hover);
 }
+/* Full Canvas Outer Page */
+.landing-page-container {
+  min-height: 100vh;
+  width: 100vw;
+  background-color: #dbe4f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+}
+
+/* Central Split Card */
+.landing-card {
+  width: 100%;
+  max-width: 1100px;
+  height: 640px;
+  background: #ffffff;
+  border-radius: 24px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+  display: flex;
+  overflow: hidden;
+}
+
+/* Left Form Area */
+.landing-form-section {
+  flex: 1;
+  padding: 48px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.landing-brand-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.brand-logo-icon {
+  width: 32px;
+  height: 32px;
+  background-color: var(--primary-blue, #4f75b7);
+  color: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.brand-name {
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--primary-blue, #4f75b7);
+}
+
+.landing-form-content {
+  max-width: 320px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.landing-form-content h2 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--text-dark, #1f2937);
+  margin-bottom: 36px;
+  text-align: center;
+}
+
+/* Minimalist Underline Inputs */
+.minimal-input-group {
+  margin-bottom: 24px;
+}
+
+.minimal-input-group input {
+  width: 100%;
+  border: none;
+  border-bottom: 1px solid #e5e7eb;
+  padding: 10px 4px;
+  font-size: 0.95rem;
+  outline: none;
+  background: transparent;
+  transition: border-color 0.2s;
+}
+
+.minimal-input-group input:focus {
+  border-bottom-color: var(--primary-blue, #4f75b7);
+}
+
+.forgot-link-wrapper {
+  text-align: right;
+  margin-bottom: 32px;
+}
+
+.forgot-link-wrapper a {
+  font-size: 0.8rem;
+  color: #9ca3af;
+  text-decoration: none;
+}
+
+.forgot-link-wrapper a:hover {
+  color: var(--primary-blue, #4f75b7);
+}
+
+/* Rounded Pill Button */
+.btn-pill-submit {
+  width: 100%;
+  padding: 14px;
+  border-radius: 50px;
+  background-color: var(--primary-blue, #4f75b7);
+  color: #ffffff;
+  border: none;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  box-shadow: 0 8px 16px rgba(79, 117, 183, 0.3);
+  transition: transform 0.1s, background-color 0.2s;
+}
+
+.btn-pill-submit:hover {
+  background-color: var(--primary-blue-hover, #40629c);
+  transform: translateY(-1px);
+}
+
+/* Right Hero Section with Gradient Overlay */
+.landing-hero-section {
+  flex: 1.2;
+  background: linear-gradient(
+      135deg,
+      rgba(79, 117, 183, 0.9),
+      rgba(44, 46, 53, 0.95)
+    ),
+    url("https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=1200&q=80")
+      center/cover no-repeat;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  color: #ffffff;
+  position: relative;
+}
+
+.hero-top-nav {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 16px;
+  font-size: 0.85rem;
+}
+
+.btn-hero-outline {
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  padding: 8px 20px;
+  border-radius: 50px;
+  color: #ffffff;
+  text-decoration: none;
+  font-weight: 500;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.btn-hero-outline:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: #ffffff;
+}
+
+.hero-content {
+  max-width: 420px;
+}
+
+.hero-content h1 {
+  font-size: 2.4rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+  line-height: 1.2;
+}
+
+.hero-content p {
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.8);
+  line-height: 1.5;
+}
+
+.hero-pagination-dots {
+  display: flex;
+  gap: 8px;
+}
+
+.hero-pagination-dots .dot {
+  width: 16px;
+  height: 4px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.4);
+}
+
+.hero-pagination-dots .dot.active {
+  background: #ffffff;
+  width: 24px;
+}

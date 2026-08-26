@@ -1,139 +1,133 @@
-import { type FormEvent, useState } from "react";
+import { useState, type FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
-
+import { getUserByEmail } from "../services/authService";
+import { hashPassword } from "../types/encryption";
 import { useAppDispatch } from "../store/hooks";
 import { login } from "../features/auth/authSlice";
-import { getUserByEmail } from "../services/authService";
-
-import { hashPassword } from "../types/encryption";
 
 const LoginPage = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (
-    event: FormEvent
-  ) => {
-    event.preventDefault();
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
 
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
     setError("");
 
+    if (!formData.email || !formData.password) {
+      setError("Please fill in all fields.");
+      return;
+    }
+
     try {
-      // Make sure the email matches the
-      // format used during registration.
-      const normalizedEmail = email
-        .trim()
-        .toLowerCase();
+      setLoading(true);
+      const email = formData.email.trim().toLowerCase();
+      const user = await getUserByEmail(email);
 
-      const user =
-        await getUserByEmail(normalizedEmail);
-
-      if (!user) {
-        setError(
-          "Invalid email or password."
-        );
+      if (!user || user.password !== hashPassword(formData.password)) {
+        setError("Invalid email or password.");
         return;
       }
 
-      // Hash the password entered during login.
-      const hashedPassword =
-        hashPassword(password);
-
-      // Compare the hash with the value
-      // stored in JSON Server.
-      if (hashedPassword !== user.password) {
-        setError(
-          "Invalid email or password."
-        );
-        return;
-      }
-
-      // Login successful
       dispatch(login(user));
-
-      navigate("/");
-    } catch (error) {
-      console.error(
-        "Login error:",
-        error
-      );
-
-      setError(
-        "Something went wrong while logging in."
-      );
+      navigate("/dashboard");
+    } catch (err) {
+      console.error("Login error:", err);
+      setError("An unexpected error occurred.");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <main className="auth-page">
-      <div className="auth-header">
-        <h1>Welcome back!</h1>
+    <div className="landing-page-container">
+      <div className="landing-card">
+        {/* Left Form Section */}
+        <div className="landing-form-section">
+          <div className="landing-brand-header">
+            <span className="brand-logo-icon">G</span>
+            <span className="brand-name">OrgLists</span>
+          </div>
 
-        <p>
-          Sign in to continue
-        </p>
+          <div className="landing-form-content">
+            <h2>Login</h2>
+
+            {error && <div className="auth-error-alert">{error}</div>}
+
+            <form onSubmit={handleSubmit}>
+              <div className="minimal-input-group">
+                <input
+                  type="email"
+                  name="email"
+                  placeholder="Username or Email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+
+              <div className="minimal-input-group">
+                <input
+                  type="password"
+                  name="password"
+                  placeholder="Password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+
+              <div className="forgot-link-wrapper">
+                <Link to="/forgot-password">Forgot Your Password?</Link>
+              </div>
+
+              <button
+                type="submit"
+                className="btn-pill-submit"
+                disabled={loading}
+              >
+                {loading ? "LOGGING IN..." : "LOGIN"}
+              </button>
+            </form>
+          </div>
+        </div>
+
+        {/* Right Hero Gradient/Image Banner Section */}
+        <div className="landing-hero-section">
+          <div className="hero-top-nav">
+            <span>Don't have an account ?</span>
+            <Link to="/register" className="btn-hero-outline">
+              Sign Up
+            </Link>
+          </div>
+
+          <div className="hero-content">
+            <h1>Welcome to OrgList</h1>
+            <p>
+              Organize and manage your shopping lists
+              efficiently in one place.
+            </p>
+          </div>
+
+          <div className="hero-pagination-dots">
+            <span className="dot active"></span>
+            <span className="dot"></span>
+            <span className="dot"></span>
+          </div>
+        </div>
       </div>
-
-      {error && (
-        <p role="alert">
-          {error}
-        </p>
-      )}
-
-      <form onSubmit={handleSubmit}>
-        <label htmlFor="login-email">
-          Email
-        </label>
-
-        <input
-          id="login-email"
-          type="email"
-          placeholder="Email address"
-          value={email}
-          onChange={(event) =>
-            setEmail(event.target.value)
-          }
-          required
-        />
-
-        <label htmlFor="login-password">
-          Password
-        </label>
-
-        <input
-          id="login-password"
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(event) =>
-            setPassword(event.target.value)
-          }
-          required
-        />
-
-        <button type="submit">
-          Login
-        </button>
-      </form>
-
-      <p>
-        <Link to="/forgot-password">
-          Forgot your password?
-        </Link>
-      </p>
-
-      <p>
-        Don't have an account?{" "}
-        <Link to="/register">
-          Register
-        </Link>
-      </p>
-    </main>
+    </div>
   );
 };
 
