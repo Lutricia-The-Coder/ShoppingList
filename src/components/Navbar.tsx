@@ -1,49 +1,69 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Home, User, LogOut } from "lucide-react";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { logout } from "../features/auth/authSlice";
 
 const Navbar = () => {
+  const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
-  const currentUser = useAppSelector(
-    (state) => state.auth.currentUser
-  );
+  const currentUser = useAppSelector((state) => state.auth.currentUser);
 
-  if (!currentUser) {
-    return null;
-  }
+  const displayName = currentUser
+    ? `${currentUser.name} ${currentUser.surname}`
+    : "User";
 
-  const handleLogout = () => {
+  const handleLogout = (e: React.MouseEvent) => {
+    e.preventDefault();
     dispatch(logout());
     navigate("/login");
   };
 
   return (
-    <nav>
-      <div>
-        <Link to="/">
-          <strong>ShopList</strong>
-        </Link>
+    <aside className="sidebar">
+      <div className="sidebar-profile">
+        <div className="sidebar-user-info">
+          <h3>{displayName}</h3>
+          <p>{currentUser?.email}</p>
+        </div>
       </div>
 
-      <div>
-        <Link to="/">
-          Home
+      <nav className="sidebar-nav">
+        <Link
+          to="/"
+          className={`nav-item ${location.pathname === "/" ? "active" : ""}`}
+        >
+          <Home size={20} />
+          <span>Home</span>
         </Link>
-
-        <Link to="/profile">
-          Profile
+        <Link
+          to="/profile"
+          className={`nav-item ${
+            location.pathname === "/profile" ? "active" : ""
+          }`}
+        >
+          <User size={20} />
+          <span>Profile</span>
         </Link>
-
+        
         <button
           type="button"
           onClick={handleLogout}
+          className="nav-item"
+          style={{
+            background: "none",
+            border: "none",
+            width: "100%",
+            textAlign: "left",
+            cursor: "pointer",
+          }}
         >
-          Logout
+          <LogOut size={20} />
+          <span>Logout</span>
         </button>
-      </div>
-    </nav>
+      </nav>
+    </aside>
   );
 };
 
