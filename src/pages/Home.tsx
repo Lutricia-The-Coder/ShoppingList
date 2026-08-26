@@ -202,8 +202,8 @@ const handleShare = async (
   }
 };
   return (
-    <main>
-      <header>
+   <main>
+  <header className="page-header">
         <h1>My Shopping Lists</h1>
 
         <button
@@ -250,7 +250,7 @@ const handleShare = async (
       )}
 
       {!loading && lists.length > 0 && (
-        <section>
+       <section className="shopping-lists">
           {lists.map((shoppingList) => (
          <ShoppingListCard
   key={shoppingList.id}

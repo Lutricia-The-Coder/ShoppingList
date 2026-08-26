@@ -1,47 +1,22 @@
 {
   "users": [
     {
-      "email": "erhfg@vbmn",
-      "password": "M0pOnXrujXYMSR54+8Z8GQ==",
-      "name": "jhthy",
-      "surname": "trjk",
-      "cellNumber": "3478780784",
-      "id": "_NYOwu5qKGg"
-    },
-    {
-      "email": "lulu@gmail.com",
-      "password": "0SqXjch3N8XNXDU87tD9rw==",
-      "name": "dfghfhf",
-      "surname": "fggdg",
-      "cellNumber": "586794554343",
-      "id": "LZ8SM8Xdv2I"
-    },
-    {
-      "email": "lulu@com",
-      "password": "qmcylAlvVUCcH2amCSWjNQ==",
-      "name": "lulzz",
-      "surname": "ngomz",
-      "cellNumber": "0874574356",
-      "id": "Zn73r_04rNk"
-    },
-    {
-      "email": "neomolomo@gmail.com",
-      "password": "U2FsdGVkX1/ZT+7RsHRIaWnx6T4GFQdPpUraZZVRdiM=",
-      "name": "Neo",
-      "surname": "Molomo",
-      "cellNumber": "0765463863",
-      "id": "DVpHo9BGwoo"
-    },
-    {
-      "email": "zoe@gmail.com",
+      "email": "neom@gmail.com",
       "password": "a8b67d81d0ff962982b34e7c3aeb6d72e700ce25160e9dbbfd2e992443c437d1",
-      "name": "zoe",
-      "surname": "ngomane",
-      "cellNumber": "0758762354",
-      "id": "sZAkAVCi0ZY"
+      "name": "neo",
+      "surname": "molomo",
+      "cellNumber": "0786453211",
+      "id": "zRFIQLXn_SA"
     }
   ],
-  "shoppingLists": [],
+  "shoppingLists": [
+    {
+      "name": "rtth",
+      "userId": "zRFIQLXn_SA",
+      "dateAdded": "2026-08-26T08:12:30.528Z",
+      "id": "Pzg3eRHYjgc"
+    }
+  ],
   "shoppingItems": [
     {
       "listId": "sXetyYM4VZQ",
