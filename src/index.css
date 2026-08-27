@@ -1,23 +1,48 @@
+/* ==========================================
+   GLOBAL DESIGN TOKENS (Grayscale Palette)
+   ========================================== */
 :root {
-  --sidebar-bg: #2c2e35;
-  --sidebar-hover: #383b43;
-  --sidebar-active: #41444d;
-  --main-bg: #f3f4f7;
-  --card-bg: #ffffff;
-  --primary-blue: #4f75b7;
-  --primary-blue-hover: #40629c;
-  --secondary-bg: #ededf2;
-  --secondary-hover: #e0e0e8;
-  --text-dark: #1f2937;
-  --text-muted: #6b7280;
-  --text-light: #f9fafb;
-  --border-light: #e5e7eb;
+  /* Core Colors */
+  --color-black: #0d0d0d;
+  --color-dark-grey: #1a1a1a;
+  --color-mid-grey: #404040;
+  --color-slate-grey: #737373;
+  --color-light-grey: #e5e5e5;
+  --color-off-white: #f5f5f5;
+  --color-white: #ffffff;
+
+  /* App Canvas & Layout */
+  --main-bg: var(--color-off-white);
+  --card-bg: var(--color-white);
+  --sidebar-bg: var(--color-dark-grey);
+  --sidebar-hover: var(--color-mid-grey);
+  --sidebar-active: var(--color-black);
+
+  /* Typography */
+  --text-dark: var(--color-black);
+  --text-muted: var(--color-slate-grey);
+  --text-light: var(--color-white);
+
+  /* Borders & Shadows */
+  --border-light: var(--color-light-grey);
+  --border-dark: var(--color-black);
+  --shadow-card: 0 4px 12px rgba(0, 0, 0, 0.05);
+
+  /* Buttons */
+  --primary-btn-bg: var(--color-black);
+  --primary-btn-hover: var(--color-dark-grey);
+  --secondary-btn-bg: var(--color-light-grey);
+  --secondary-btn-hover: var(--color-slate-grey);
+
+  /* Radius Tokens */
   --radius-sm: 6px;
   --radius-md: 10px;
   --radius-lg: 14px;
-  --shadow-card: 0 4px 12px rgba(0, 0, 0, 0.04);
 }
 
+/* ==========================================
+   RESET & BASE STYLES
+   ========================================== */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -30,13 +55,15 @@ body {
   color: var(--text-dark);
 }
 
-/* App Layout Structure */
+/* ==========================================
+   MAIN DASHBOARD LAYOUT (Post-Auth)
+   ========================================== */
 .app-container {
   display: flex;
   min-height: 100vh;
 }
 
-/* Sidebar Styling */
+/* Sidebar */
 .sidebar {
   width: 260px;
   background-color: var(--sidebar-bg);
@@ -55,22 +82,15 @@ body {
   padding: 0 8px;
 }
 
-.sidebar-avatar {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  object-fit: cover;
-}
-
 .sidebar-user-info h3 {
   font-size: 1.1rem;
   font-weight: 600;
-  color: #ffffff;
+  color: var(--color-white);
 }
 
 .sidebar-user-info p {
   font-size: 0.8rem;
-  color: #9ca3af;
+  color: var(--color-slate-grey);
 }
 
 .sidebar-nav {
@@ -85,7 +105,7 @@ body {
   gap: 12px;
   padding: 12px 16px;
   border-radius: var(--radius-md);
-  color: #d1d5db;
+  color: var(--color-light-grey);
   text-decoration: none;
   font-size: 0.95rem;
   font-weight: 500;
@@ -94,38 +114,24 @@ body {
 
 .nav-item:hover {
   background-color: var(--sidebar-hover);
-  color: #ffffff;
+  color: var(--color-white);
 }
 
 .nav-item.active {
   background-color: var(--sidebar-active);
-  color: #ffffff;
+  color: var(--color-white);
 }
 
-/* Main Content Canvas */
+/* Content Area */
 .main-content {
   flex: 1;
   padding: 36px 48px;
   overflow-y: auto;
 }
 
-.header-title {
-  margin-bottom: 24px;
-}
-
-.header-title h1 {
-  font-size: 1.75rem;
-  font-weight: 700;
-  color: var(--text-dark);
-}
-
-.header-title p {
-  color: var(--text-muted);
-  font-size: 0.95rem;
-  margin-top: 4px;
-}
-
-/* Top Stat Cards */
+/* ==========================================
+   CARDS & DASHBOARD GRID COMPONENTS
+   ========================================== */
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -133,164 +139,53 @@ body {
   margin-bottom: 32px;
 }
 
-.stat-card {
+.stat-card,
+.shopping-card,
+.activity-card {
   background: var(--card-bg);
+  border: 1px solid var(--border-light);
   border-radius: var(--radius-lg);
   padding: 20px 24px;
+  box-shadow: var(--shadow-card);
+}
+
+.stat-card {
   display: flex;
   align-items: center;
   gap: 16px;
-  box-shadow: var(--shadow-card);
 }
 
 .stat-icon-wrapper {
   width: 52px;
   height: 52px;
   border-radius: var(--radius-md);
-  background: var(--secondary-bg);
+  background: var(--color-light-grey);
+  color: var(--color-black);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 1.5rem;
 }
 
-.stat-info span {
-  font-size: 0.85rem;
-  color: var(--text-muted);
-  font-weight: 500;
-}
-
-.stat-info h2 {
-  font-size: 1.75rem;
-  font-weight: 700;
-  color: var(--text-dark);
-}
-
-/* Dashboard Content Grid */
 .dashboard-grid {
   display: grid;
   grid-template-columns: 320px 1fr;
   gap: 28px;
 }
 
-.section-title {
-  font-size: 1.15rem;
-  font-weight: 600;
-  margin-bottom: 16px;
-  color: var(--text-dark);
-}
-
-/* Recent Activity List */
-.activity-list {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.activity-card {
-  background: var(--card-bg);
-  padding: 14px 16px;
-  border-radius: var(--radius-md);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  box-shadow: var(--shadow-card);
-  font-size: 0.88rem;
-}
-
-.activity-details {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.activity-time {
-  color: var(--text-muted);
-  font-size: 0.75rem;
-  white-space: nowrap;
-}
-
-/* My Shopping Lists Section */
-.lists-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 16px;
-}
-
-.lists-controls {
-  display: flex;
-  gap: 12px;
-  margin-bottom: 20px;
-}
-
-.search-input {
-  flex: 1;
-  padding: 10px 14px;
-  border-radius: var(--radius-md);
-  border: 1px solid var(--border-light);
-  background: var(--card-bg);
-  outline: none;
-}
-
-.sort-select {
-  padding: 10px 14px;
-  border-radius: var(--radius-md);
-  border: 1px solid var(--border-light);
-  background: var(--card-bg);
-  cursor: pointer;
-}
-
-/* Shopping List Card Grid */
 .lists-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   gap: 16px;
 }
 
-.shopping-card {
-  background: var(--card-bg);
-  border-radius: var(--radius-lg);
-  padding: 16px;
-  box-shadow: var(--shadow-card);
-}
-
-.shopping-card-header {
-  display: flex;
-  gap: 14px;
-  margin-bottom: 16px;
-}
-
-.card-image {
-  width: 54px;
-  height: 54px;
-  border-radius: var(--radius-md);
-  object-fit: cover;
-}
-
-.card-title-group h4 {
-  font-size: 1rem;
-  font-weight: 600;
-}
-
-.card-title-group p {
-  font-size: 0.78rem;
-  color: var(--text-muted);
-  margin-top: 2px;
-}
-
-.card-actions {
-  display: flex;
-  gap: 8px;
-}
-
 /* Buttons */
 .btn-primary {
-  background-color: var(--primary-blue);
-  color: #ffffff;
+  background-color: var(--primary-btn-bg);
+  color: var(--color-white);
   border: none;
   border-radius: var(--radius-sm);
-  padding: 8px 16px;
+  padding: 10px 18px;
   font-weight: 500;
   cursor: pointer;
   transition: background 0.2s;
@@ -299,13 +194,13 @@ body {
 }
 
 .btn-primary:hover {
-  background-color: var(--primary-blue-hover);
+  background-color: var(--primary-btn-hover);
 }
 
 .btn-secondary {
-  background-color: var(--secondary-bg);
+  background-color: var(--secondary-btn-bg);
   color: var(--text-dark);
-  border: none;
+  border: 1px solid var(--border-light);
   border-radius: var(--radius-sm);
   padding: 8px 14px;
   font-weight: 500;
@@ -315,32 +210,35 @@ body {
 }
 
 .btn-secondary:hover {
-  background-color: var(--secondary-hover);
+  background-color: var(--color-light-grey);
 }
-/* Full Canvas Outer Page */
+
+/* ==========================================
+   SPLIT-SCREEN LANDING & AUTH PAGES (Login / Register)
+   ========================================== */
 .landing-page-container {
   min-height: 100vh;
   width: 100vw;
-  background-color: #dbe4f0;
+  background-color: var(--main-bg);
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 40px;
+  padding: 32px;
 }
 
-/* Central Split Card */
 .landing-card {
   width: 100%;
-  max-width: 1100px;
-  height: 640px;
-  background: #ffffff;
-  border-radius: 24px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+  max-width: 1040px;
+  height: 600px;
+  background: var(--card-bg);
+  border-radius: 20px;
+  box-shadow: var(--shadow-card);
   display: flex;
   overflow: hidden;
+  border: 1px solid var(--border-light);
 }
 
-/* Left Form Area */
+/* Form Section (Left Side) */
 .landing-form-section {
   flex: 1;
   padding: 48px;
@@ -352,26 +250,27 @@ body {
 .landing-brand-header {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
 }
 
 .brand-logo-icon {
-  width: 32px;
-  height: 32px;
-  background-color: var(--primary-blue, #4f75b7);
-  color: #fff;
-  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  background-color: var(--color-black);
+  color: var(--color-white);
+  border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 700;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
 }
 
 .brand-name {
   font-weight: 700;
-  font-size: 1.1rem;
-  color: var(--primary-blue, #4f75b7);
+  font-size: 1.05rem;
+  letter-spacing: -0.3px;
+  color: var(--text-dark);
 }
 
 .landing-form-content {
@@ -381,31 +280,43 @@ body {
 }
 
 .landing-form-content h2 {
-  font-size: 1.8rem;
+  font-size: 1.6rem;
   font-weight: 700;
-  color: var(--text-dark, #1f2937);
-  margin-bottom: 36px;
+  color: var(--text-dark);
+  margin-bottom: 32px;
   text-align: center;
+  letter-spacing: -0.5px;
 }
 
-/* Minimalist Underline Inputs */
+/* Underline Inputs */
 .minimal-input-group {
-  margin-bottom: 24px;
+  margin-bottom: 22px;
 }
 
 .minimal-input-group input {
   width: 100%;
   border: none;
-  border-bottom: 1px solid #e5e7eb;
-  padding: 10px 4px;
-  font-size: 0.95rem;
+  border-bottom: 1px solid var(--border-light);
+  padding: 10px 0;
+  font-size: 0.9rem;
   outline: none;
   background: transparent;
+  color: var(--text-dark);
   transition: border-color 0.2s;
 }
 
+.minimal-input-group input::placeholder {
+  color: var(--color-slate-grey);
+}
+
 .minimal-input-group input:focus {
-  border-bottom-color: var(--primary-blue, #4f75b7);
+  border-bottom-color: var(--color-black);
+}
+
+.register-name-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
 }
 
 .forgot-link-wrapper {
@@ -415,51 +326,49 @@ body {
 
 .forgot-link-wrapper a {
   font-size: 0.8rem;
-  color: #9ca3af;
+  color: var(--text-muted);
   text-decoration: none;
+  transition: color 0.2s;
 }
 
 .forgot-link-wrapper a:hover {
-  color: var(--primary-blue, #4f75b7);
+  color: var(--text-dark);
 }
 
-/* Rounded Pill Button */
 .btn-pill-submit {
   width: 100%;
-  padding: 14px;
+  padding: 13px;
   border-radius: 50px;
-  background-color: var(--primary-blue, #4f75b7);
-  color: #ffffff;
+  background-color: var(--color-black);
+  color: var(--color-white);
   border: none;
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: 0.5px;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   cursor: pointer;
-  box-shadow: 0 8px 16px rgba(79, 117, 183, 0.3);
-  transition: transform 0.1s, background-color 0.2s;
+  transition: background-color 0.2s, transform 0.1s;
 }
 
 .btn-pill-submit:hover {
-  background-color: var(--primary-blue-hover, #40629c);
+  background-color: var(--color-dark-grey);
   transform: translateY(-1px);
 }
 
-/* Right Hero Section with Gradient Overlay */
+/* Hero Overlay Banner (Right Side) */
 .landing-hero-section {
-  flex: 1.2;
+  flex: 1.1;
   background: linear-gradient(
-      135deg,
-      rgba(79, 117, 183, 0.9),
-      rgba(44, 46, 53, 0.95)
+      140deg,
+      rgba(13, 13, 13, 0.92),
+      rgba(64, 64, 64, 0.95)
     ),
-    url("https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=1200&q=80")
+    url("https://images.unsplash.com/photo-1507652313519-d4e9174996dd?auto=format&fit=crop&w=1200&q=80")
       center/cover no-repeat;
-  padding: 40px;
+  padding: 48px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  color: #ffffff;
-  position: relative;
+  color: var(--color-white);
 }
 
 .hero-top-nav {
@@ -468,38 +377,41 @@ body {
   justify-content: flex-end;
   gap: 16px;
   font-size: 0.85rem;
+  color: var(--color-light-grey);
 }
 
 .btn-hero-outline {
-  border: 1px solid rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.25);
   padding: 8px 20px;
   border-radius: 50px;
-  color: #ffffff;
+  color: var(--color-white);
   text-decoration: none;
   font-weight: 500;
+  font-size: 0.82rem;
   transition: background 0.2s, border-color 0.2s;
 }
 
 .btn-hero-outline:hover {
-  background: rgba(255, 255, 255, 0.15);
-  border-color: #ffffff;
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.6);
 }
 
 .hero-content {
-  max-width: 420px;
+  max-width: 380px;
 }
 
 .hero-content h1 {
-  font-size: 2.4rem;
+  font-size: 2.1rem;
   font-weight: 700;
   margin-bottom: 12px;
-  line-height: 1.2;
+  letter-spacing: -0.5px;
+  line-height: 1.25;
 }
 
 .hero-content p {
-  font-size: 0.95rem;
-  color: rgba(255, 255, 255, 0.8);
-  line-height: 1.5;
+  font-size: 0.9rem;
+  color: var(--color-light-grey);
+  line-height: 1.6;
 }
 
 .hero-pagination-dots {
@@ -508,13 +420,258 @@ body {
 }
 
 .hero-pagination-dots .dot {
-  width: 16px;
+  width: 14px;
   height: 4px;
   border-radius: 2px;
-  background: rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.2);
 }
 
 .hero-pagination-dots .dot.active {
-  background: #ffffff;
+  background: var(--color-white);
   width: 24px;
+}
+
+/* Error Alert */
+.auth-error-alert {
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: var(--radius-md);
+  background-color: #fef2f2;
+  color: #dc2626;
+  font-size: 0.85rem;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+/*register page */
+/* Centered Single Card Container (No Split Screen) */
+.auth-centered-container {
+  min-height: 100vh;
+  width: 100vw;
+  background-color: var(--main-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.auth-single-card {
+  width: 100%;
+  max-width: 460px;
+  background: var(--card-bg);
+  border-radius: 16px;
+  box-shadow: var(--shadow-card);
+  border: 1px solid var(--border-light);
+  padding: 40px;
+}
+
+/* Header & Brand Layout */
+.auth-single-card .brand-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+.auth-single-card h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  text-align: center;
+  margin-bottom: 8px;
+  letter-spacing: -0.5px;
+}
+
+.auth-subtitle {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+/* Grid & Navigation Links */
+.register-name-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.auth-footer-link {
+  text-align: center;
+  margin-top: 24px;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.auth-footer-link a {
+  color: var(--text-dark);
+  font-weight: 600;
+  text-decoration: none;
+  margin-left: 4px;
+}
+
+.auth-footer-link a:hover {
+  text-decoration: underline;
+}
+
+/* Container layout matching Register structure without card wrappers */
+.profile-page-flat {
+  width: 100%;
+  max-width: 440px;
+  padding: 10px 20px;
+}
+
+.profile-inline-header h2 {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--text-dark, #111827);
+  margin: 0;
+}
+
+/* Form section headings */
+.profile-section-title {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--text-dark, #111827);
+  
+}
+
+/* Button variants with reduced sizing */
+.btn-pill-submit-sm {
+  width: 100%;
+  padding: 9px 18px;
+  border-radius: 50px;
+  background-color: #000;
+  color: #fff;
+  border: none;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  font-size: 0.78rem;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.1s;
+}
+
+.btn-pill-submit-sm:hover {
+  opacity: 0.9;
+}
+
+.btn-pill-outline-sm {
+  width: 100%;
+  padding: 9px 18px;
+  border-radius: 50px;
+  background-color: transparent;
+  color: var(--text-dark, #111827);
+  border: 1px solid var(--border-light, #d1d5db);
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  font-size: 0.78rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btn-pill-outline-sm:hover {
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+.btn-pill-danger-sm {
+  width: 100%;
+  padding: 9px 18px;
+  border-radius: 50px;
+  background-color: #dc2626;
+  color: #ffffff;
+  border: none;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  font-size: 0.78rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btn-pill-danger-sm:hover {
+  background-color: #b91c1c;
+}
+
+.profile-divider {
+  border: 0;
+  border-top: 1px solid var(--border-light, #e5e7eb);
+  margin: 24px 0;
+}
+/*home/dashbpoard*/
+/* Container Layout */
+.dashboard-container {
+  width: 100%;
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 32px 20px;
+  box-sizing: border-box;
+}
+
+/* Header Alignment: Title Left, Button Right */
+.dashboard-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: 32px;
+}
+
+.dashboard-brand-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.dashboard-brand-title h1 {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--text-dark, #111827);
+  margin: 0;
+}
+
+/* Centered Empty State Container */
+.dashboard-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  width: 100%;
+  padding: 48px 16px;
+  box-sizing: border-box;
+}
+
+/* Empty State Image */
+.empty-state-image {
+  width: 140px;
+  height: auto;
+  margin: 0 auto 16px auto;
+  display: block;
+}
+
+/* Centered Text Under Image */
+.dashboard-empty-state p {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--text-dark, #111827);
+  margin: 0 0 16px 0;
+  text-align: center;
+}
+
+/* Standardized Small Pill Buttons */
+.btn-pill-submit-sm {
+  padding: 9px 18px;
+  border-radius: 50px;
+  background-color: #000000;
+  color: #ffffff;
+  border: none;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  font-size: 0.78rem;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.btn-pill-submit-sm:hover {
+  opacity: 0.85;
 }

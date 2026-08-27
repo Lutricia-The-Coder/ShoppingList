@@ -1,11 +1,6 @@
 import { type FormEvent, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-
-import {
-  registerUser,
-  getUserByEmail,
-} from "../services/authService";
-
+import { registerUser, getUserByEmail } from "../services/authService";
 import { hashPassword } from "../types/encryption";
 
 const Register = () => {
@@ -22,9 +17,7 @@ const Register = () => {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
-  const handleChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
 
     setFormData((previous) => ({
@@ -40,7 +33,6 @@ const Register = () => {
     setSuccess("");
 
     try {
-      // Check that all fields have been completed
       if (
         !formData.email ||
         !formData.password ||
@@ -52,28 +44,16 @@ const Register = () => {
         return;
       }
 
-      // Convert email to lowercase
-      const email = formData.email
-        .trim()
-        .toLowerCase();
-
-      // Check if the email is already registered
-      const existingUser =
-        await getUserByEmail(email);
+      const email = formData.email.trim().toLowerCase();
+      const existingUser = await getUserByEmail(email);
 
       if (existingUser) {
-        setError(
-          "An account with this email already exists. Try signing in."
-        );
+        setError("An account with this email already exists. Try signing in.");
         return;
       }
 
-      // Hash the password before sending it
-      // to JSON Server.
-      const hashedPassword =
-        hashPassword(formData.password);
+      const hashedPassword = hashPassword(formData.password);
 
-      // Create the user
       await registerUser({
         email,
         password: hashedPassword,
@@ -82,125 +62,111 @@ const Register = () => {
         cellNumber: formData.cellNumber.trim(),
       });
 
-      setSuccess(
-        "Registration successful! Redirecting to login..."
-      );
+      setSuccess("Registration successful! Redirecting to login...");
 
       setTimeout(() => {
         navigate("/login");
       }, 1000);
     } catch (error) {
-      console.error(
-        "Registration error:",
-        error
-      );
-
-      setError(
-        "Something went wrong during registration."
-      );
+      console.error("Registration error:", error);
+      setError("Something went wrong during registration.");
     }
   };
 
   return (
-    <main className="auth-page">
-      <h1>Create Account</h1>
+    <div className="auth-centered-container">
+      <div className="auth-single-card">
+        <div className="brand-header">
+          <span className="brand-logo-icon">G</span>
+          <span className="brand-name">mbank</span>
+        </div>
 
-      {error && (
-        <p role="alert">
-          {error}
+        <h2>Create Account</h2>
+        <p className="auth-subtitle">
+          Enter your details below to create your account
         </p>
-      )}
 
-      {success && (
-        <p role="status">
-          {success}
-        </p>
-      )}
+        {error && <div className="auth-error-alert" role="alert">{error}</div>}
+        {success && <div className="auth-success-alert" role="status">{success}</div>}
 
-      <form onSubmit={handleSubmit}>
-        <label htmlFor="name">
-          Name
-        </label>
+        <form onSubmit={handleSubmit}>
+          
+            <div className="minimal-input-group">
+              <input
+                id="name"
+                type="text"
+                name="name"
+                placeholder="First Name"
+                value={formData.name}
+                onChange={handleChange}
+                required
+              />
+            </div>
 
-        <input
-          id="name"
-          type="text"
-          name="name"
-          placeholder="Your name"
-          value={formData.name}
-          onChange={handleChange}
-          required
-        />
+            <div className="minimal-input-group">
+              <input
+                id="surname"
+                type="text"
+                name="surname"
+                placeholder="Last Name"
+                value={formData.surname}
+                onChange={handleChange}
+                required
+              />
+            </div>
+          
 
-        <label htmlFor="surname">
-          Surname
-        </label>
+          <div className="minimal-input-group">
+            <input
+              id="email"
+              type="email"
+              name="email"
+              placeholder="Email Address"
+              value={formData.email}
+              onChange={handleChange}
+              required
+            />
+          </div>
 
-        <input
-          id="surname"
-          type="text"
-          name="surname"
-          placeholder="Your surname"
-          value={formData.surname}
-          onChange={handleChange}
-          required
-        />
+          <div className="minimal-input-group">
+            <input
+              id="cellNumber"
+              type="tel"
+              name="cellNumber"
+              placeholder="Cell Number"
+              value={formData.cellNumber}
+              onChange={handleChange}
+              required
+            />
+          </div>
 
-        <label htmlFor="email">
-          Email
-        </label>
+          <div className="minimal-input-group">
+            <input
+              id="password"
+              type="password"
+              name="password"
+              placeholder="Password"
+              minLength={8}
+              value={formData.password}
+              onChange={handleChange}
+              required
+            />
+          </div>
 
-        <input
-          id="email"
-          type="email"
-          name="email"
-          placeholder="example@email.com"
-          value={formData.email}
-          onChange={handleChange}
-          required
-        />
+          <button
+            type="submit"
+            className="btn-pill-submit"
+            style={{ marginTop: "16px" }}
+          >
+            REGISTER
+          </button>
+        </form>
 
-        <label htmlFor="cellNumber">
-          Cell Number
-        </label>
-
-        <input
-          id="cellNumber"
-          type="tel"
-          name="cellNumber"
-          placeholder="Cell number"
-          value={formData.cellNumber}
-          onChange={handleChange}
-          required
-        />
-
-        <label htmlFor="password">
-          Password
-        </label>
-
-        <input
-          id="password"
-          type="password"
-          name="password"
-          placeholder="Password"
-          minLength={8}
-          value={formData.password}
-          onChange={handleChange}
-          required
-        />
-
-        <button type="submit">
-          Register
-        </button>
-      </form>
-
-      <p>
-        Already have an account?{" "}
-        <Link to="/login">
-          Login
-        </Link>
-      </p>
-    </main>
+        <div className="auth-footer-link">
+          Already have an account? <Link to="/login">Login</Link>
+        </div>
+      </div>
+    </div>
   );
 };
 

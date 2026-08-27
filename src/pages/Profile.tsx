@@ -1,362 +1,207 @@
 import { type FormEvent, useState } from "react";
-
-import {
-  useAppDispatch,
-  useAppSelector,
-} from "../store/hooks";
-
-import {
-  login,
-  logout,
-} from "../features/auth/authSlice";
-
-import { updateUser , getUserByEmail} from "../services/authService";
+import { useAppDispatch, useAppSelector } from "../store/hooks";
+import { login, logout } from "../features/auth/authSlice";
+import { updateUser, getUserByEmail } from "../services/authService";
 import { hashPassword } from "../types/encryption";
 
 const Profile = () => {
   const dispatch = useAppDispatch();
+  const currentUser = useAppSelector((state) => state.auth.currentUser);
 
-  const currentUser = useAppSelector(
-    (state) => state.auth.currentUser
-  );
+  const [editing, setEditing] = useState(false);
+  const [changingPassword, setChangingPassword] = useState(false);
 
-  const [editing, setEditing] =
-    useState(false);
+  const [name, setName] = useState(currentUser?.name ?? "");
+  const [surname, setSurname] = useState(currentUser?.surname ?? "");
+  const [email, setEmail] = useState(currentUser?.email ?? "");
+  const [cellNumber, setCellNumber] = useState(currentUser?.cellNumber ?? "");
 
-  const [changingPassword, setChangingPassword] =
-    useState(false);
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
-  const [name, setName] = useState(
-    currentUser?.name ?? ""
-  );
-
-  const [surname, setSurname] = useState(
-    currentUser?.surname ?? ""
-  );
-
-  const [email, setEmail] = useState(
-    currentUser?.email ?? ""
-  );
-
-  const [cellNumber, setCellNumber] =
-    useState(
-      currentUser?.cellNumber ?? ""
-    );
-
-  const [password, setPassword] =
-    useState("");
-
-  const [confirmPassword, setConfirmPassword] =
-    useState("");
-
-  const [message, setMessage] =
-    useState("");
-
-  const [error, setError] =
-    useState("");
+  const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
 
   if (!currentUser) {
     return null;
   }
 
-  /*
-   * Update personal information
-   */
-  const handleProfileUpdate = async (
-  event: FormEvent
-) => {
-  event.preventDefault();
-
-  setMessage("");
-  setError("");
-
-  try {
-    const trimmedEmail =
-      email.trim().toLowerCase();
-
-    // Check if another user already uses this email
-    const existingUser =
-      await getUserByEmail(trimmedEmail);
-
-    if (
-      existingUser &&
-      existingUser.id !== currentUser.id
-    ) {
-      setError(
-        "That email address is already registered."
-      );
-      return;
-    }
-
-    const updatedUser =
-      await updateUser(
-        currentUser.id,
-        {
-          name: name.trim(),
-          surname: surname.trim(),
-          email: trimmedEmail,
-          cellNumber: cellNumber.trim(),
-        }
-      );
-
-    dispatch(login(updatedUser));
-
-    setMessage(
-      "Profile updated successfully."
-    );
-
-    setEditing(false);
-  } catch (error) {
-    console.error(
-      "Profile update error:",
-      error
-    );
-
-    setError(
-      "Unable to update your profile."
-    );
-  }
-};
-  /*
-   * Update password
-   */
-  const handlePasswordUpdate = async (
-    event: FormEvent
-  ) => {
+  const handleProfileUpdate = async (event: FormEvent) => {
     event.preventDefault();
+    setMessage("");
+    setError("");
 
+    try {
+      const trimmedEmail = email.trim().toLowerCase();
+      const existingUser = await getUserByEmail(trimmedEmail);
+
+      if (existingUser && existingUser.id !== currentUser.id) {
+        setError("That email address is already registered.");
+        return;
+      }
+
+      const updatedUser = await updateUser(currentUser.id, {
+        name: name.trim(),
+        surname: surname.trim(),
+        email: trimmedEmail,
+        cellNumber: cellNumber.trim(),
+      });
+
+      dispatch(login(updatedUser));
+      setMessage("Profile details updated successfully.");
+      setEditing(false);
+    } catch (error) {
+      console.error("Profile update error:", error);
+      setError("Unable to update your profile.");
+    }
+  };
+
+  const handlePasswordUpdate = async (event: FormEvent) => {
+    event.preventDefault();
     setMessage("");
     setError("");
 
     if (password.length < 8) {
-      setError(
-        "Password must be at least 8 characters."
-      );
+      setError("Password must be at least 8 characters.");
       return;
     }
 
     if (password !== confirmPassword) {
-      setError(
-        "Passwords do not match."
-      );
+      setError("Passwords do not match.");
       return;
     }
 
     try {
-      /*
-       * Hash the new password before
-       * sending it to JSON Server.
-       */
-      const hashedPassword =
-        hashPassword(password);
-
-      const updatedUser =
-        await updateUser(
-          currentUser.id,
-          {
-            password: hashedPassword,
-          }
-        );
+      const hashedPassword = hashPassword(password);
+      const updatedUser = await updateUser(currentUser.id, {
+        password: hashedPassword,
+      });
 
       dispatch(login(updatedUser));
-
       setPassword("");
       setConfirmPassword("");
-
-      setMessage(
-        "Password updated successfully."
-      );
-
+      setMessage("Password changed successfully.");
       setChangingPassword(false);
     } catch (error) {
-      console.error(
-        "Password update error:",
-        error
-      );
-
-      setError(
-        "Unable to update your password."
-      );
+      console.error("Password update error:", error);
+      setError("Unable to update your password.");
     }
   };
 
-  /*
-   * Logout
-   */
-  const handleLogout = () => {
-    dispatch(logout());
-  };
-
   return (
-    <main className="profile-page">
-      <h1>My Profile</h1>
+    <div className="profile-page-flat">
 
-      {message && (
-        <p role="status">
-          {message}
-        </p>
-      )}
+      {message && <div className="auth-success-alert" role="status">{message}</div>}
+      {error && <div className="auth-error-alert" role="alert">{error}</div>}
 
-      {error && (
-        <p role="alert">
-          {error}
-        </p>
-      )}
-
-      {/* Personal information */}
+      {/* Personal Details Section */}
       <section className="profile-section">
-        <h2>
-          Personal Information
-        </h2>
+        <h3 className="profile-section-title">Personal Details</h3>
 
         {!editing ? (
-          <>
-            <p>
-              <strong>Name:</strong>{" "}
-              {currentUser.name}
-            </p>
+          <div>
+            <div className="minimal-input-group">
+              <input type="text" value={currentUser.name} readOnly placeholder="First Name" />
+            </div>
 
-            <p>
-              <strong>Surname:</strong>{" "}
-              {currentUser.surname}
-            </p>
+            <div className="minimal-input-group">
+              <input type="text" value={currentUser.surname} readOnly placeholder="Last Name" />
+            </div>
 
-            <p>
-              <strong>Email:</strong>{" "}
-              {currentUser.email}
-            </p>
-
-            <p>
-              <strong>Cell Number:</strong>{" "}
-              {currentUser.cellNumber}
-            </p>
+            <div className="minimal-input-group">
+              <input type="tel" value={currentUser.cellNumber} readOnly placeholder="Cell Number" />
+            </div>
 
             <button
               type="button"
+              className="btn-pill-submit-sm"
+              style={{ marginTop: "8px" }}
               onClick={() => {
-                setName(
-                  currentUser.name
-                );
-                setSurname(
-                  currentUser.surname
-                );
-                setEmail(
-                  currentUser.email
-                );
-                setCellNumber(
-                  currentUser.cellNumber
-                );
-
+                setName(currentUser.name);
+                setSurname(currentUser.surname);
+                setEmail(currentUser.email);
+                setCellNumber(currentUser.cellNumber);
                 setMessage("");
                 setError("");
                 setEditing(true);
               }}
             >
-              Edit Profile
+              EDIT DETAILS
             </button>
-          </>
+          </div>
         ) : (
-          <form
-            onSubmit={
-              handleProfileUpdate
-            }
-          >
-            <label htmlFor="profile-name">
-              Name
-            </label>
-
-            <input
-              id="profile-name"
-              type="text"
-              value={name}
-              onChange={(event) =>
-                setName(
-                  event.target.value
-                )
-              }
-              required
-            />
-
-            <label htmlFor="profile-surname">
-              Surname
-            </label>
-
-            <input
-              id="profile-surname"
-              type="text"
-              value={surname}
-              onChange={(event) =>
-                setSurname(
-                  event.target.value
-                )
-              }
-              required
-            />
-
-            <label htmlFor="profile-email">
-              Email
-            </label>
-
-            <input
-              id="profile-email"
-              type="email"
-              value={email}
-              onChange={(event) =>
-                setEmail(
-                  event.target.value
-                )
-              }
-              required
-            />
-
-            <label htmlFor="profile-cell">
-              Cell Number
-            </label>
-
-            <input
-              id="profile-cell"
-              type="tel"
-              value={cellNumber}
-              onChange={(event) =>
-                setCellNumber(
-                  event.target.value
-                )
-              }
-              required
-            />
-
-            <div className="form-actions">
-              <button type="submit">
-                Save Changes
-              </button>
-
-              <button
-                type="button"
-                onClick={() =>
-                  setEditing(false)
-                }
-              >
-                Cancel
-              </button>
+          <form onSubmit={handleProfileUpdate}>
+            <div className="minimal-input-group">
+              <input
+                id="name"
+                type="text"
+                name="name"
+                placeholder="First Name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                required
+              />
             </div>
+
+            <div className="minimal-input-group">
+              <input
+                id="surname"
+                type="text"
+                name="surname"
+                placeholder="Last Name"
+                value={surname}
+                onChange={(e) => setSurname(e.target.value)}
+                required
+              />
+            </div>
+
+            <div className="minimal-input-group">
+              <input
+                id="cellNumber"
+                type="tel"
+                name="cellNumber"
+                placeholder="Cell Number"
+                value={cellNumber}
+                onChange={(e) => setCellNumber(e.target.value)}
+                required
+              />
+            </div>
+
+            <button
+              type="submit"
+              className="btn-pill-submit-sm"
+              style={{ marginTop: "8px" }}
+            >
+              SAVE CHANGES
+            </button>
+
+            <button
+              type="button"
+              className="btn-pill-outline-sm"
+              style={{ marginTop: "8px" }}
+              onClick={() => setEditing(false)}
+            >
+              CANCEL
+            </button>
           </form>
         )}
       </section>
 
-      {/* Login credentials */}
-      <section className="profile-section">
-        <h2>
-          Login Credentials
-        </h2>
+      <hr className="profile-divider" />
 
-        <p>
-          <strong>Email:</strong>{" "}
-          {currentUser.email}
-        </p>
+      {/* Login Credentials Section */}
+      <section className="profile-section">
+        <h3 className="profile-section-title">Login Credentials</h3>
+
+        <div className="minimal-input-group">
+          <input type="email" value={currentUser.email} readOnly placeholder="Email Address" />
+        </div>
 
         {!changingPassword ? (
           <button
             type="button"
+            className="btn-pill-outline-sm"
+            style={{ marginTop: "8px" }}
             onClick={() => {
               setPassword("");
               setConfirmPassword("");
@@ -365,80 +210,71 @@ const Profile = () => {
               setChangingPassword(true);
             }}
           >
-            Change Password
+            CHANGE PASSWORD
           </button>
         ) : (
-          <form
-            onSubmit={
-              handlePasswordUpdate
-            }
-          >
-            <label htmlFor="new-password">
-              New Password
-            </label>
-
-            <input
-              id="new-password"
-              type="password"
-              minLength={8}
-              value={password}
-              onChange={(event) =>
-                setPassword(
-                  event.target.value
-                )
-              }
-              required
-            />
-
-            <label htmlFor="confirm-password">
-              Confirm Password
-            </label>
-
-            <input
-              id="confirm-password"
-              type="password"
-              minLength={8}
-              value={confirmPassword}
-              onChange={(event) =>
-                setConfirmPassword(
-                  event.target.value
-                )
-              }
-              required
-            />
-
-            <div className="form-actions">
-              <button type="submit">
-                Update Password
-              </button>
-
-              <button
-                type="button"
-                onClick={() => {
-                  setChangingPassword(
-                    false
-                  );
-                  setPassword("");
-                  setConfirmPassword("");
-                }}
-              >
-                Cancel
-              </button>
+          <form onSubmit={handlePasswordUpdate}>
+            <div className="minimal-input-group">
+              <input
+                id="new-password"
+                type="password"
+                placeholder="New Password"
+                minLength={8}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
             </div>
+
+            <div className="minimal-input-group">
+              <input
+                id="confirm-password"
+                type="password"
+                placeholder="Confirm New Password"
+                minLength={8}
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                required
+              />
+            </div>
+
+            <button
+              type="submit"
+              className="btn-pill-submit-sm"
+              style={{ marginTop: "8px" }}
+            >
+              UPDATE PASSWORD
+            </button>
+
+            <button
+              type="button"
+              className="btn-pill-outline-sm"
+              style={{ marginTop: "8px" }}
+              onClick={() => {
+                setChangingPassword(false);
+                setPassword("");
+                setConfirmPassword("");
+              }}
+            >
+              CANCEL
+            </button>
           </form>
         )}
       </section>
 
-      {/* Logout */}
-      <section className="profile-section">
+      <hr className="profile-divider" />
+
+      {/* Red Pill Logout Button */}
+      <section>
         <button
           type="button"
-          onClick={handleLogout}
+          className="btn-pill-danger-sm"
+          onClick={() => dispatch(logout())}
         >
-          Logout
+          LOGOUT
         </button>
       </section>
-    </main>
+    </div>
   );
 };
 
