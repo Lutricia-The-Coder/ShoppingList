@@ -1,118 +1,257 @@
-
 import {
   type FormEvent,
   useEffect,
   useState,
 } from "react";
 
-import type { ShoppingItem } from "../types";
+import type {
+  ShoppingItem,
+  ShoppingList,
+} from "../types";
+
 import { searchUnsplashImage } from "../services/unsplashService";
 
-interface ShoppingItemFormProps {
-  listId: string;
-  existingItem?: ShoppingItem | null;
+interface NewListItem {
+  name: string;
+  quantity: number;
+  notes: string;
+  image: string;
+  imageAuthor: string;
+  imageUsername: string;
+}
+
+interface CategoryGroup {
+  id: string;
+  category: string;
+  items: NewListItem[];
+}
+
+interface ShoppingListFormProps {
+  existingList?: ShoppingList | null;
+
+  /*
+   * When true, this form is being used
+   * to add items to an existing list.
+   */
+  addItemMode?: boolean;
+
+  /*
+   * The existing list ID when adding items.
+   */
+  listId?: string;
 
   onSubmit: (
-    item: Omit<ShoppingItem, "id">
+    shoppingList: Omit<ShoppingList, "id">,
+    items?: Omit<
+      ShoppingItem,
+      "id" | "listId"
+    >[]
   ) => void;
 
   onCancel: () => void;
 }
 
-const ShoppingItemForm = ({
+const createEmptyItem = (): NewListItem => ({
+  name: "",
+  quantity: 1,
+  notes: "",
+  image: "",
+  imageAuthor: "",
+  imageUsername: "",
+});
+
+const createCategoryGroup = (): CategoryGroup => ({
+  id: crypto.randomUUID(),
+  category: "",
+  items: [createEmptyItem()],
+});
+
+const ShoppingListForm = ({
+  existingList,
+  addItemMode = false,
   listId,
-  existingItem,
   onSubmit,
   onCancel,
-}: ShoppingItemFormProps) => {
+}: ShoppingListFormProps) => {
   const [name, setName] = useState("");
-  const [quantity, setQuantity] = useState(1);
-  const [notes, setNotes] = useState("");
-  const [category, setCategory] = useState("");
 
-  const [image, setImage] = useState("");
-  const [imageAuthor, setImageAuthor] =
-    useState("");
-  const [imageUsername, setImageUsername] =
-    useState("");
+  const [categories, setCategories] =
+    useState<CategoryGroup[]>([
+      createCategoryGroup(),
+    ]);
 
-  const [completed, setCompleted] =
-    useState(false);
-
-  const [imageLoading, setImageLoading] =
-    useState(false);
+  const [loadingImage, setLoadingImage] =
+    useState<string | null>(null);
 
   const [imageError, setImageError] =
-    useState("");
+    useState<string | null>(null);
 
   /*
-   * Populate the form when editing.
-   * Reset the form when adding a new item.
+   * Populate/reset form.
    */
   useEffect(() => {
-    if (existingItem) {
-      setName(existingItem.name);
-      setQuantity(existingItem.quantity);
-      setNotes(existingItem.notes ?? "");
-      setCategory(existingItem.category);
-      setImage(existingItem.image ?? "");
-      setImageAuthor(
-        existingItem.imageAuthor ?? ""
-      );
-      setImageUsername(
-        existingItem.imageUsername ?? ""
-      );
-      setCompleted(existingItem.completed);
-    } else {
-      setName("");
-      setQuantity(1);
-      setNotes("");
-      setCategory("");
-      setImage("");
-      setImageAuthor("");
-      setImageUsername("");
-      setCompleted(false);
+    /*
+     * ADD ITEM MODE
+     *
+     * We are adding items to an existing
+     * shopping list.
+     */
+    if (addItemMode && existingList) {
+      setName(existingList.name);
+
+      setCategories([
+        createCategoryGroup(),
+      ]);
+
+      setImageError(null);
+      setLoadingImage(null);
+
+      return;
     }
 
-    setImageError("");
-  }, [existingItem]);
+    /*
+     * EDIT EXISTING LIST
+     */
+    if (existingList) {
+      setName(existingList.name);
+
+      /*
+       * Existing list items are managed
+       * separately on ShoppingListDetails.
+       */
+      setCategories([]);
+
+      setImageError(null);
+      setLoadingImage(null);
+
+      return;
+    }
+
+    /*
+     * CREATE NEW LIST
+     */
+    setName("");
+
+    setCategories([
+      createCategoryGroup(),
+    ]);
+
+    setImageError(null);
+    setLoadingImage(null);
+  }, [existingList, addItemMode]);
+
+  /*
+   * Change category.
+   */
+  const handleCategoryChange = (
+    categoryId: string,
+    value: string
+  ) => {
+    setCategories((previous) =>
+      previous.map((group) =>
+        group.id === categoryId
+          ? {
+              ...group,
+              category: value,
+            }
+          : group
+      )
+    );
+  };
+
+  /*
+   * Change item field.
+   */
+  const handleItemChange = (
+    categoryId: string,
+    itemIndex: number,
+    field: keyof NewListItem,
+    value: string | number
+  ) => {
+    setCategories((previous) =>
+      previous.map((group) => {
+        if (group.id !== categoryId) {
+          return group;
+        }
+
+        return {
+          ...group,
+
+          items: group.items.map(
+            (item, index) =>
+              index === itemIndex
+                ? {
+                    ...item,
+                    [field]: value,
+                  }
+                : item
+          ),
+        };
+      })
+    );
+  };
 
   /*
    * Find an image from Unsplash.
    */
-  const handleImageSearch = async () => {
-    if (!name.trim()) {
-      setImageError(
-        "Please enter an item name first."
-      );
+  const handleFindImage = async (
+    categoryId: string,
+    itemIndex: number,
+    itemName: string
+  ) => {
+    if (!itemName.trim()) {
       return;
     }
 
+    const loadingKey =
+      `${categoryId}-${itemIndex}`;
+
     try {
-      setImageLoading(true);
-      setImageError("");
+      setLoadingImage(loadingKey);
+      setImageError(null);
 
       const photo =
         await searchUnsplashImage(
-          name.trim()
+          itemName.trim()
         );
 
       if (!photo) {
-        setImage("");
-        setImageAuthor("");
-        setImageUsername("");
-
         setImageError(
-          `No image found for "${name}".`
+          `No image found for "${itemName}".`
         );
 
         return;
       }
 
-      setImage(photo.urls.small);
-      setImageAuthor(photo.user.name);
-      setImageUsername(
-        photo.user.username
+      setCategories((previous) =>
+        previous.map((group) => {
+          if (group.id !== categoryId) {
+            return group;
+          }
+
+          return {
+            ...group,
+
+            items: group.items.map(
+              (item, index) => {
+                if (index !== itemIndex) {
+                  return item;
+                }
+
+                return {
+                  ...item,
+                  image: photo.urls.small,
+                  imageAuthor:
+                    photo.user.name,
+                  imageUsername:
+                    photo.user.username,
+                  imageAuthorUrl:
+                    `https://unsplash.com/@${photo.user.username}`,
+                };
+              }
+            ),
+          };
+        })
       );
     } catch (error) {
       console.error(
@@ -124,299 +263,729 @@ const ShoppingItemForm = ({
         "Unable to find an image right now."
       );
     } finally {
-      setImageLoading(false);
+      setLoadingImage(null);
     }
   };
 
   /*
-   * Search image when leaving the item name.
+   * Add another item to the
+   * same category.
    */
-  const handleNameBlur = () => {
-    if (
-      name.trim() &&
-      !image
-    ) {
-      handleImageSearch();
-    }
+  const handleAddItem = (
+    categoryId: string
+  ) => {
+    setCategories((previous) =>
+      previous.map((group) =>
+        group.id === categoryId
+          ? {
+              ...group,
+              items: [
+                ...group.items,
+                createEmptyItem(),
+              ],
+            }
+          : group
+      )
+    );
   };
 
   /*
-   * Submit item.
+   * Remove an item.
+   */
+  const handleRemoveItem = (
+    categoryId: string,
+    itemIndex: number
+  ) => {
+    setCategories((previous) =>
+      previous.map((group) => {
+        if (group.id !== categoryId) {
+          return group;
+        }
+
+        return {
+          ...group,
+
+          items: group.items.filter(
+            (_, index) =>
+              index !== itemIndex
+          ),
+        };
+      })
+    );
+  };
+
+  /*
+   * Add another category.
+   */
+  const handleAddCategory = () => {
+    setCategories((previous) => [
+      ...previous,
+      createCategoryGroup(),
+    ]);
+  };
+
+  /*
+   * Remove a category.
+   */
+  const handleRemoveCategory = (
+    categoryId: string
+  ) => {
+    setCategories((previous) =>
+      previous.filter(
+        (group) => group.id !== categoryId
+      )
+    );
+  };
+
+  /*
+   * Submit form.
    */
   const handleSubmit = (
     event: FormEvent
   ) => {
     event.preventDefault();
 
-    setImageError("");
+    setImageError(null);
+
+    /*
+     * =================================================
+     * ADD ITEM MODE
+     * =================================================
+     *
+     * We do NOT create a new ShoppingList.
+     *
+     * We only return the items so that
+     * ShoppingListDetails can save them
+     * using the existing list ID.
+     */
+    if (addItemMode) {
+      if (!listId) {
+        setImageError(
+          "Unable to identify the shopping list."
+        );
+
+        return;
+      }
+
+      const invalidCategory =
+        categories.some(
+          (group) => !group.category
+        );
+
+      if (invalidCategory) {
+        setImageError(
+          "Please select a category for every section."
+        );
+
+        return;
+      }
+
+      const emptyCategory =
+        categories.some(
+          (group) =>
+            group.items.length === 0
+        );
+
+      if (emptyCategory) {
+        setImageError(
+          "Every category must contain at least one item."
+        );
+
+        return;
+      }
+
+      const invalidItem =
+        categories.some((group) =>
+          group.items.some(
+            (item) =>
+              !item.name.trim() ||
+              item.quantity < 1
+          )
+        );
+
+      if (invalidItem) {
+        setImageError(
+          "Please enter a name and valid quantity for every item."
+        );
+
+        return;
+      }
+
+      const dateAdded =
+        new Date().toISOString();
+
+      const shoppingItems =
+        categories.flatMap(
+          (group) =>
+            group.items.map((item) => ({
+              name: item.name.trim(),
+              quantity: item.quantity,
+              notes: item.notes.trim(),
+              category: group.category,
+              image: item.image,
+              imageAuthor:
+                item.imageAuthor,
+              imageUsername:
+                item.imageUsername,
+              completed: false,
+              dateAdded,
+            }))
+        );
+
+      /*
+       * We don't need to create a new list.
+       *
+       * The parent already knows which list
+       * we're adding these items to.
+       */
+      onSubmit(
+        {
+          name:
+            existingList?.name ?? "",
+          userId:
+            existingList?.userId ?? "",
+          dateAdded:
+            existingList?.dateAdded ??
+            dateAdded,
+        },
+        shoppingItems
+      );
+
+      return;
+    }
+
+    /*
+     * =================================================
+     * EDIT EXISTING LIST
+     * =================================================
+     */
+    if (existingList) {
+      if (!name.trim()) {
+        setImageError(
+          "Please enter a shopping list name."
+        );
+
+        return;
+      }
+
+      onSubmit({
+        name: name.trim(),
+        userId: existingList.userId,
+        dateAdded: existingList.dateAdded,
+      });
+
+      return;
+    }
+
+    /*
+     * =================================================
+     * CREATE NEW LIST
+     * =================================================
+     */
 
     if (!name.trim()) {
       setImageError(
-        "Please enter an item name."
+        "Please enter a shopping list name."
       );
+
       return;
     }
 
-    if (quantity < 1) {
+    /*
+     * Validate categories.
+     */
+    const invalidCategory =
+      categories.some(
+        (group) => !group.category
+      );
+
+    if (invalidCategory) {
       setImageError(
-        "Quantity must be at least 1."
+        "Please select a category for every section."
       );
+
       return;
     }
 
-    if (!category) {
+    /*
+     * Make sure every category
+     * has an item.
+     */
+    const emptyCategory =
+      categories.some(
+        (group) =>
+          group.items.length === 0
+      );
+
+    if (emptyCategory) {
       setImageError(
-        "Please select a category."
+        "Every category must contain at least one item."
       );
+
       return;
     }
 
-    onSubmit({
-      listId,
+    /*
+     * Validate items.
+     */
+    const invalidItem =
+      categories.some((group) =>
+        group.items.some(
+          (item) =>
+            !item.name.trim() ||
+            item.quantity < 1
+        )
+      );
+
+    if (invalidItem) {
+      setImageError(
+        "Please enter a name and valid quantity for every item."
+      );
+
+      return;
+    }
+
+    const dateAdded =
+      new Date().toISOString();
+
+    /*
+     * Create the shopping list.
+     */
+    const shoppingList: Omit<
+      ShoppingList,
+      "id"
+    > = {
       name: name.trim(),
-      quantity,
-      notes: notes.trim(),
-      category,
-      image,
-      imageAuthor,
-      imageUsername,
-      completed,
-      dateAdded:
-        existingItem?.dateAdded ??
-        new Date().toISOString(),
-    });
+      userId: "",
+      dateAdded,
+    };
+
+    /*
+     * Convert categories into items.
+     */
+    const shoppingItems: Omit<
+      ShoppingItem,
+      "id" | "listId"
+    >[] = categories.flatMap(
+      (group) =>
+        group.items.map((item) => ({
+          name: item.name.trim(),
+          quantity: item.quantity,
+          notes: item.notes.trim(),
+          category: group.category,
+          image: item.image,
+          imageAuthor:
+            item.imageAuthor,
+          imageUsername:
+            item.imageUsername,
+          completed: false,
+          dateAdded,
+        }))
+    );
+
+    onSubmit(
+      shoppingList,
+      shoppingItems
+    );
   };
 
   return (
-    <main className="dashboard-container">
-      <section className="dashboard-form-section">
-        <form
-          className="shopping-list-form"
-          onSubmit={handleSubmit}
-        >
-          {/* HEADER */}
+    <form
+      className="shopping-list-form"
+      onSubmit={handleSubmit}
+    >
+      {/* HEADER */}
 
-          <h2>
-            {existingItem
-              ? "Edit Shopping Item"
-              : "Add Shopping Item"}
-          </h2>
+      <div className="shopping-list-form-header">
+        <h2>
+          {existingList
+            ? addItemMode
+              ? "Add Shopping Items"
+              : "Edit Shopping List"
+            : "Create Shopping List"}
+        </h2>
 
-          {/* ITEM NAME */}
+        <p>
+          {existingList
+            ? addItemMode
+              ? `Add items to "${existingList.name}".`
+              : "Update the details of your shopping list."
+            : "Create a shopping list and add your items."}
+        </p>
+      </div>
 
-          <label htmlFor="item-name">
-            Item name
+      {/* LIST NAME */}
+
+      {!addItemMode && (
+        <>
+          <label htmlFor="list-name">
+            List name
           </label>
 
           <input
-            id="item-name"
+            id="list-name"
             type="text"
             value={name}
             onChange={(event) =>
               setName(event.target.value)
             }
-            onBlur={handleNameBlur}
-            onKeyDown={(event) => {
-              if (
-                event.key === "Enter"
-              ) {
-                event.preventDefault();
-
-                if (name.trim()) {
-                  handleImageSearch();
-                }
-              }
-            }}
-            placeholder="e.g. Milk"
+            placeholder="e.g. Weekend Shopping"
             required
           />
+        </>
+      )}
 
-          {/* CATEGORY */}
+      {/* EXISTING LIST NAME */}
 
-          <label htmlFor="item-category">
-            Category
-          </label>
+      {addItemMode && existingList && (
+        <div className="shopping-form-existing-list">
+          <span>Shopping list</span>
 
-          <select
-            id="item-category"
-            value={category}
-            onChange={(event) =>
-              setCategory(
-                event.target.value
-              )
-            }
-            required
-          >
-            <option value="">
-              Select a category
-            </option>
+          <strong>
+            {existingList.name}
+          </strong>
+        </div>
+      )}
 
-            <option value="Groceries">
-              Groceries
-            </option>
+      {/* CATEGORY GROUPS */}
 
-            <option value="Household">
-              Household
-            </option>
-
-            <option value="Electronics">
-              Electronics
-            </option>
-
-            <option value="Clothing">
-              Clothing
-            </option>
-
-            <option value="Other">
-              Other
-            </option>
-          </select>
-
-          {/* IMAGE SEARCH */}
-
-          <div className="shopping-form-field">
-            <label>
-              Item image
-            </label>
-
-            <button
-              type="button"
-              className="shopping-image-search-button"
-              onClick={handleImageSearch}
-              disabled={imageLoading}
-            >
-              {imageLoading
-                ? "Searching..."
-                : "Search Unsplash"}
-            </button>
-
-            {imageError && (
-              <p
-                className="shopping-image-error"
-                role="alert"
+      {(!existingList ||
+        addItemMode) && (
+        <>
+          {categories.map(
+            (group, categoryIndex) => (
+              <section
+                className="category-group"
+                key={group.id}
               >
-                {imageError}
-              </p>
-            )}
+                {/* CATEGORY HEADER */}
 
-            {image && (
-              <div className="item-image-preview">
-                <img
-                  src={image}
-                  alt={
-                    name ||
-                    "Shopping item"
-                  }
-                />
+                <div className="category-header">
+                  <h3>
+                    Category{" "}
+                    {categoryIndex + 1}
+                  </h3>
 
-                {imageAuthor && (
-                  <small>
-                    Photo by{" "}
-                    <a
-                      href={
-                        imageUsername
-                          ? `https://unsplash.com/@${imageUsername}?utm_source=shopping_list_app&utm_medium=referral`
-                          : "https://unsplash.com/?utm_source=shopping_list_app&utm_medium=referral"
+                  {categories.length >
+                    1 && (
+                    <button
+                      type="button"
+                      onClick={() =>
+                        handleRemoveCategory(
+                          group.id
+                        )
                       }
-                      target="_blank"
-                      rel="noreferrer"
                     >
-                      {imageAuthor}
-                    </a>{" "}
-                    on{" "}
-                    <a
-                      href="https://unsplash.com/?utm_source=shopping_list_app&utm_medium=referral"
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      Unsplash
-                    </a>
-                  </small>
-                )}
-              </div>
-            )}
-          </div>
+                      Remove Category
+                    </button>
+                  )}
+                </div>
 
-          {/* QUANTITY */}
+                {/* CATEGORY */}
 
-          <label htmlFor="item-quantity">
-            Quantity
-          </label>
+                <label
+                  htmlFor={`category-${group.id}`}
+                >
+                  Category
+                </label>
 
-          <input
-            id="item-quantity"
-            type="number"
-            min="1"
-            value={quantity}
-            onChange={(event) =>
-              setQuantity(
-                Number(event.target.value)
-              )
-            }
-            required
-          />
+                <select
+                  id={`category-${group.id}`}
+                  value={group.category}
+                  onChange={(event) =>
+                    handleCategoryChange(
+                      group.id,
+                      event.target.value
+                    )
+                  }
+                  required
+                >
+                  <option value="">
+                    Select a category
+                  </option>
 
-          {/* NOTES */}
+                  <option value="Groceries">
+                    Groceries
+                  </option>
 
-          <label htmlFor="item-notes">
-            Notes
-          </label>
+                  <option value="Household">
+                    Household
+                  </option>
 
-          <textarea
-            id="item-notes"
-            value={notes}
-            onChange={(event) =>
-              setNotes(
-                event.target.value
-              )
-            }
-            placeholder="Optional notes"
-            rows={3}
-          />
+                  <option value="Electronics">
+                    Electronics
+                  </option>
 
-          {/* COMPLETED */}
+                  <option value="Clothing">
+                    Clothing
+                  </option>
 
-          {existingItem && (
-            <label className="shopping-completed-option">
-              <input
-                type="checkbox"
-                checked={completed}
-                onChange={(event) =>
-                  setCompleted(
-                    event.target.checked
-                  )
-                }
-              />
+                  <option value="Other">
+                    Other
+                  </option>
+                </select>
 
-              <span>
-                Already bought
-              </span>
-            </label>
+                {/* ITEMS */}
+
+                <div className="category-items">
+                  {group.items.map(
+                    (
+                      item,
+                      itemIndex
+                    ) => {
+                      const loadingKey =
+                        `${group.id}-${itemIndex}`;
+
+                      return (
+                        <div
+                          className="new-item"
+                          key={`${group.id}-${itemIndex}`}
+                        >
+                          {/* ITEM NAME */}
+
+                          <label
+                            htmlFor={`item-name-${group.id}-${itemIndex}`}
+                          >
+                            Item name
+                          </label>
+
+                          <input
+                            id={`item-name-${group.id}-${itemIndex}`}
+                            type="text"
+                            value={item.name}
+                            onChange={(
+                              event
+                            ) =>
+                              handleItemChange(
+                                group.id,
+                                itemIndex,
+                                "name",
+                                event.target
+                                  .value
+                              )
+                            }
+                            onBlur={() =>
+                              handleFindImage(
+                                group.id,
+                                itemIndex,
+                                item.name
+                              )
+                            }
+                            onKeyDown={(
+                              event
+                            ) => {
+                              if (
+                                event.key ===
+                                "Enter"
+                              ) {
+                                event.preventDefault();
+
+                                handleFindImage(
+                                  group.id,
+                                  itemIndex,
+                                  item.name
+                                );
+                              }
+                            }}
+                            placeholder="e.g. Milk"
+                            required
+                          />
+
+                          {/* IMAGE LOADING */}
+
+                          {loadingImage ===
+                            loadingKey && (
+                            <p>
+                              Finding image...
+                            </p>
+                          )}
+
+                          {/* IMAGE */}
+
+                          {item.image && (
+                            <div className="item-image-preview">
+                              <img
+                                src={
+                                  item.image
+                                }
+                                alt={
+                                  item.name
+                                }
+                              />
+
+                              {item.imageAuthor && (
+                                <small>
+                                  Photo by{" "}
+                                  <a
+                                    href={`https://unsplash.com/@${item.imageUsername}?utm_source=shopping_list_app&utm_medium=referral`}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                  >
+                                    {
+                                      item.imageAuthor
+                                    }
+                                  </a>{" "}
+                                  on{" "}
+                                  <a
+                                    href="https://unsplash.com/?utm_source=shopping_list_app&utm_medium=referral"
+                                    target="_blank"
+                                    rel="noreferrer"
+                                  >
+                                    Unsplash
+                                  </a>
+                                </small>
+                              )}
+                            </div>
+                          )}
+
+                          {/* QUANTITY */}
+
+                          <label
+                            htmlFor={`item-quantity-${group.id}-${itemIndex}`}
+                          >
+                            Quantity
+                          </label>
+
+                          <input
+                            id={`item-quantity-${group.id}-${itemIndex}`}
+                            type="number"
+                            min="1"
+                            value={
+                              item.quantity
+                            }
+                            onChange={(
+                              event
+                            ) =>
+                              handleItemChange(
+                                group.id,
+                                itemIndex,
+                                "quantity",
+                                Number(
+                                  event.target
+                                    .value
+                                )
+                              )
+                            }
+                            required
+                          />
+
+                          {/* NOTES */}
+
+                          <label
+                            htmlFor={`item-notes-${group.id}-${itemIndex}`}
+                          >
+                            Notes
+                          </label>
+
+                          <textarea
+                            id={`item-notes-${group.id}-${itemIndex}`}
+                            value={
+                              item.notes
+                            }
+                            onChange={(
+                              event
+                            ) =>
+                              handleItemChange(
+                                group.id,
+                                itemIndex,
+                                "notes",
+                                event.target
+                                  .value
+                              )
+                            }
+                            placeholder="Optional notes"
+                            rows={3}
+                          />
+
+                          {/* REMOVE ITEM */}
+
+                          {group.items.length >
+                            1 && (
+                            <button
+                              type="button"
+                              onClick={() =>
+                                handleRemoveItem(
+                                  group.id,
+                                  itemIndex
+                                )
+                              }
+                            >
+                              Remove Item
+                            </button>
+                          )}
+                        </div>
+                      );
+                    }
+                  )}
+                </div>
+
+                {/* ADD ITEM */}
+
+                <div className="category-action-row">
+                  <button
+                    type="button"
+                    onClick={() =>
+                      handleAddItem(
+                        group.id
+                      )
+                    }
+                  >
+                    + ADD ANOTHER ITEM
+                  </button>
+                </div>
+              </section>
+            )
           )}
 
-          {/* ACTIONS */}
+          {/* ADD CATEGORY */}
 
-          <div className="form-actions">
-            <button
-              type="submit"
-            >
-              {existingItem
-                ? "Save Changes"
-                : "Add Item"}
-            </button>
+          <button
+            type="button"
+            onClick={handleAddCategory}
+          >
+            + ADD ANOTHER CATEGORY
+          </button>
 
-            <button
-              type="button"
-              onClick={onCancel}
-            >
-              Cancel
-            </button>
-          </div>
-        </form>
-      </section>
-    </main>
+          {/* ERROR */}
+
+          {imageError && (
+            <p role="alert">
+              {imageError}
+            </p>
+          )}
+        </>
+      )}
+
+      {/* EDIT LIST ERROR */}
+
+      {existingList &&
+        !addItemMode &&
+        imageError && (
+          <p role="alert">
+            {imageError}
+          </p>
+        )}
+
+      {/* FORM ACTIONS */}
+
+      <div className="form-actions">
+        <button type="submit">
+          {existingList
+            ? addItemMode
+              ? "Add Items"
+              : "Save Changes"
+            : "Create List"}
+        </button>
+
+        <button
+          type="button"
+          onClick={onCancel}
+        >
+          Cancel
+        </button>
+      </div>
+    </form>
   );
 };
 
-export default ShoppingItemForm;
-
+export default ShoppingListForm;
