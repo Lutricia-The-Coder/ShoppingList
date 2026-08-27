@@ -31,7 +31,8 @@ const ShoppingItemForm = ({
 
   const [imageLoading, setImageLoading] = useState(false);
   const [imageError, setImageError] = useState("");
-
+const [imageAuthor, setImageAuthor] = useState("");
+const [imageUsername, setImageUsername] = useState("");
   useEffect(() => {
     if (existingItem) {
       setName(existingItem.name);
@@ -40,6 +41,8 @@ const ShoppingItemForm = ({
       setCategory(existingItem.category);
       setImage(existingItem.image ?? "");
       setCompleted(existingItem.completed);
+      setImageAuthor(existingItem.imageAuthor ?? "");
+setImageUsername(existingItem.imageUsername ?? "");
     } else {
       setName("");
       setQuantity(1);
@@ -96,19 +99,20 @@ const ShoppingItemForm = ({
     if (!name.trim()) return;
     if (quantity < 1) return;
     if (!category) return;
-
-    onSubmit({
-      listId,
-      name: name.trim(),
-      quantity,
-      notes: notes.trim(),
-      category,
-      image,
-      completed,
-      dateAdded:
-        existingItem?.dateAdded ??
-        new Date().toISOString(),
-    });
+onSubmit({
+  listId,
+  name: name.trim(),
+  quantity,
+  notes: notes.trim(),
+  category,
+  image,
+  imageAuthor,
+  imageUsername,
+  completed,
+  dateAdded:
+    existingItem?.dateAdded ??
+    new Date().toISOString(),
+});
   };
 
   return (
@@ -119,16 +123,16 @@ const ShoppingItemForm = ({
       >
        <div className="shopping-list-form-header">
   <h2>
-    {existingItem
-      ? "Edit Shopping Item"
-      : "Add Shopping Item"}
-  </h2>
+      {existingItem
+        ? "Edit Shopping Item"
+        : "Add Shopping Item"}
+    </h2>
 
-  <p>
-    {existingItem
-      ? "Update the details of your shopping item."
-      : "Add a new item to your shopping list."}
-  </p>
+    <p>
+      {existingItem
+        ? "Update the details of your shopping item."
+        : `Add an item to "${listId ? "this shopping list" : "your shopping list"}."`}
+    </p>
 </div>
 
         {/* ITEM NAME */}

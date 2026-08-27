@@ -9,7 +9,9 @@ import {
   useAppDispatch,
   useAppSelector,
 } from "../store/hooks";
+
 import CategoryGroupedItems from "../components/CategoryGroupedItems";
+
 import {
   setItems,
   addItem,
@@ -48,7 +50,9 @@ const ShoppingListDetails = () => {
   const shoppingList = lists.find(
     (list) => list.id === listId
   );
-const [message, setMessage] =useState("");
+
+  const [message, setMessage] = useState("");
+
   const [searchParams, setSearchParams] =
     useSearchParams();
 
@@ -65,7 +69,7 @@ const [message, setMessage] =useState("");
     useState<ShoppingItem | null>(null);
 
   /*
-   * Load items
+   * LOAD ITEMS
    */
   useEffect(() => {
     if (!listId) {
@@ -96,15 +100,12 @@ const [message, setMessage] =useState("");
   }, [listId, dispatch]);
 
   /*
-   * Search and sorting
+   * SEARCH + SORT
    */
   const filteredAndSortedItems =
     useMemo(() => {
       let result = [...items];
 
-      /*
-       * Search by item name
-       */
       if (searchQuery.trim()) {
         const search =
           searchQuery
@@ -118,9 +119,6 @@ const [message, setMessage] =useState("");
         );
       }
 
-      /*
-       * Sort items
-       */
       result.sort((a, b) => {
         switch (sortValue) {
           case "name":
@@ -149,24 +147,33 @@ const [message, setMessage] =useState("");
       });
 
       return result;
-    }, [items, searchQuery, sortValue]);
-const totalItems = items.length;
+    }, [
+      items,
+      searchQuery,
+      sortValue,
+    ]);
 
-const boughtItems = items.filter(
-  (item) => item.completed
-).length;
-
-const remainingItems =
-  totalItems - boughtItems;
-
-const progressPercentage =
-  totalItems > 0
-    ? Math.round(
-        (boughtItems / totalItems) * 100
-      )
-    : 0;
   /*
-   * Search handler
+   * PROGRESS
+   */
+  const totalItems = items.length;
+
+  const boughtItems = items.filter(
+    (item) => item.completed
+  ).length;
+
+  const remainingItems =
+    totalItems - boughtItems;
+
+  const progressPercentage =
+    totalItems > 0
+      ? Math.round(
+          (boughtItems / totalItems) * 100
+        )
+      : 0;
+
+  /*
+   * SEARCH
    */
   const handleSearchChange = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -186,7 +193,7 @@ const progressPercentage =
   };
 
   /*
-   * Sort handler
+   * SORT
    */
   const handleSortChange = (
     event: React.ChangeEvent<HTMLSelectElement>
@@ -204,29 +211,36 @@ const progressPercentage =
 
     setSearchParams(newParams);
   };
-/* check */
-const handleToggleItem = async (
-  item: ShoppingItem
-) => {
-  try {
-    dispatch(setError(null));
 
-    const updatedItem =
-      await updateShoppingItem(item.id, {
-        completed: !item.completed,
-      });
-
-    dispatch(updateItem(updatedItem));
-  } catch {
-    dispatch(
-      setError(
-        "Unable to update shopping item."
-      )
-    );
-  }
-};
   /*
-   * Create item
+   * TOGGLE ITEM
+   */
+  const handleToggleItem = async (
+    item: ShoppingItem
+  ) => {
+    try {
+      dispatch(setError(null));
+
+      const updatedItem =
+        await updateShoppingItem(
+          item.id,
+          {
+            completed: !item.completed,
+          }
+        );
+
+      dispatch(updateItem(updatedItem));
+    } catch {
+      dispatch(
+        setError(
+          "Unable to update shopping item."
+        )
+      );
+    }
+  };
+
+  /*
+   * ADD ITEM
    */
   const handleCreateItem = async (
     item: Omit<ShoppingItem, "id">
@@ -235,25 +249,35 @@ const handleToggleItem = async (
       dispatch(setError(null));
 
       const newItem =
-        await createShoppingItem(item);
+        await createShoppingItem({
+          ...item,
+          listId: listId!,
+        });
 
       dispatch(addItem(newItem));
-setMessage(
-  "Shopping item added successfully."
-);
+
+      setMessage(
+        "Shopping item added successfully."
+      );
+
+      setEditingItem(null);
       setShowForm(false);
-    } catch {
+    } catch (error) {
+      console.error(
+        "Create shopping item error:",
+        error
+      );
+
       dispatch(
         setError(
           "Unable to create shopping item."
         )
       );
-
     }
   };
 
   /*
-   * Update item
+   * UPDATE ITEM
    */
   const handleUpdateItem = async (
     item: Omit<ShoppingItem, "id">
@@ -272,9 +296,11 @@ setMessage(
         );
 
       dispatch(updateItem(updatedItem));
-setMessage(
-  "Shopping item updated successfully."
-);
+
+      setMessage(
+        "Shopping item updated successfully."
+      );
+
       setEditingItem(null);
       setShowForm(false);
     } catch {
@@ -287,14 +313,15 @@ setMessage(
   };
 
   /*
-   * Delete item
+   * DELETE ITEM
    */
   const handleDeleteItem = async (
     id: string
   ) => {
-    const confirmed = window.confirm(
-      "Are you sure you want to delete this item?"
-    );
+    const confirmed =
+      window.confirm(
+        "Are you sure you want to delete this item?"
+      );
 
     if (!confirmed) {
       return;
@@ -302,12 +329,14 @@ setMessage(
 
     try {
       dispatch(setError(null));
-setMessage(
-  "Shopping item deleted successfully."
-);
+
       await deleteShoppingItem(id);
 
       dispatch(deleteItem(id));
+
+      setMessage(
+        "Shopping item deleted successfully."
+      );
     } catch {
       dispatch(
         setError(
@@ -318,23 +347,42 @@ setMessage(
   };
 
   /*
-   * Edit item
+   * EDIT ITEM
    */
   const handleEdit = (
     item: ShoppingItem
   ) => {
     setEditingItem(item);
     setShowForm(true);
+    setMessage("");
+    dispatch(setError(null));
   };
 
   /*
-   * Cancel form
+   * OPEN ADD ITEM FORM
+   *
+   * This is the important part.
+   * It opens ONLY the form.
+   */
+  const handleAddItem = () => {
+    setEditingItem(null);
+    setShowForm(true);
+    setMessage("");
+    dispatch(setError(null));
+  };
+
+  /*
+   * CANCEL
    */
   const handleCancel = () => {
     setEditingItem(null);
     setShowForm(false);
+    dispatch(setError(null));
   };
 
+  /*
+   * LIST NOT FOUND
+   */
   if (!shoppingList) {
     return (
       <main>
@@ -347,169 +395,263 @@ setMessage(
     );
   }
 
- /* NEW JSX */
-return (
-  <main>
-    <div className="list-top-bar">
-      <Link to="/" className="back-link">
-        &lt; Back to Shopping Lists
-      </Link>
-      <button
-        type="button"
-        className="add-item-btn-blue"
-        onClick={() => {
-          setEditingItem(null);
-          setShowForm(true);
-        }}
-      >
-        + Add Item
-      </button>
-    </div>
-
-    <header>
-      <h1>{shoppingList.name}</h1>
-      <p>
-        Created:{" "}
-        {new Date(shoppingList.dateAdded).toLocaleDateString()}
-      </p>
-
-      <div className="shopping-progress">
-        <div className="shopping-progress-header">
-          <span>{boughtItems} of {totalItems} items bought</span>
-          <span>{progressPercentage}%</span>
-        </div>
-
-        <div
-          className="shopping-progress-bar"
-          aria-label={`${progressPercentage}% of items bought`}
-        >
-          <div
-            className="shopping-progress-fill"
-            style={{ width: `${progressPercentage}%` }}
+  /*
+   * =====================================================
+   * ADD / EDIT FORM VIEW
+   *
+   * When showForm is true, EVERYTHING ELSE is hidden.
+   * The Navbar remains because it is outside this page.
+   * =====================================================
+   */
+  if (showForm) {
+    return (
+      <main className="dashboard-container">
+        <section className="dashboard-form-section">
+          <ShoppingItemForm
+            listId={listId!}
+            existingItem={editingItem}
+            onSubmit={
+              editingItem
+                ? handleUpdateItem
+                : handleCreateItem
+            }
+            onCancel={handleCancel}
           />
-        </div>
+        </section>
+      </main>
+    );
+  }
 
-        {remainingItems > 0 ? (
-          <p>{remainingItems} {remainingItems === 1 ? "item" : "items"} remaining</p>
-        ) : totalItems > 0 ? (
-          <p>All items bought!</p>
-        ) : (
-          <p>Add items to start shopping.</p>
-        )}
+  /*
+   * =====================================================
+   * NORMAL SHOPPING LIST VIEW
+   * =====================================================
+   */
+  return (
+    <main className="dashboard-container">
+
+      {/* TOP BAR */}
+
+      <div className="list-top-bar">
+
+        <Link
+          to="/"
+          className="back-link"
+        >
+          &lt; Back to Shopping Lists
+        </Link>
+
+        <button
+          type="button"
+          className="add-item-btn-blue"
+          onClick={handleAddItem}
+        >
+          + Add Item
+        </button>
+
       </div>
-    </header>
-    
-    {/* Remove the original "+ Add Item" button here so it isn't duplicated */}
-{message && (
-  <p role="status">
-    {message}
-  </p>
-)}
+
+      {/* HEADER */}
+
+      <header>
+        <h1>
+          {shoppingList.name}
+        </h1>
+
+        <p>
+          Created:{" "}
+          {new Date(
+            shoppingList.dateAdded
+          ).toLocaleDateString()}
+        </p>
+
+        {/* PROGRESS */}
+
+        <div className="shopping-progress">
+
+          <div className="shopping-progress-header">
+
+            <span>
+              {boughtItems} of{" "}
+              {totalItems} items bought
+            </span>
+
+            <span>
+              {progressPercentage}%
+            </span>
+
+          </div>
+
+          <div
+            className="shopping-progress-bar"
+            aria-label={`${progressPercentage}% of items bought`}
+          >
+            <div
+              className="shopping-progress-fill"
+              style={{
+                width: `${progressPercentage}%`,
+              }}
+            />
+          </div>
+
+          {remainingItems > 0 ? (
+            <p>
+              {remainingItems}{" "}
+              {remainingItems === 1
+                ? "item"
+                : "items"}{" "}
+              remaining
+            </p>
+          ) : totalItems > 0 ? (
+            <p>
+              All items bought!
+            </p>
+          ) : (
+            <p>
+              Add items to start shopping.
+            </p>
+          )}
+
+        </div>
+      </header>
+
+      {/* SUCCESS */}
+
+      {message && (
+        <p
+          role="status"
+          className="auth-success-alert"
+        >
+          {message}
+        </p>
+      )}
+
+      {/* ERROR */}
+
       {error && (
-        <p role="alert">
+        <p
+          role="alert"
+          className="auth-error-alert"
+        >
           {error}
         </p>
       )}
 
-      {showForm && (
-        <ShoppingItemForm
-          listId={listId!}
-          existingItem={editingItem}
-          onSubmit={
-            editingItem
-              ? handleUpdateItem
-              : handleCreateItem
-          }
-          onCancel={handleCancel}
-        />
-      )}
+      {/* SEARCH + SORT */}
 
-      {/* Search and sorting */}
-  <section className="shopping-list-controls">
-     <div className="shopping-list-control">
-        <label htmlFor="item-search">
-          Search items
-        </label>
+      <section className="shopping-list-controls">
 
-        <input
-          id="item-search"
-          type="search"
-          value={searchQuery}
-          onChange={handleSearchChange}
-          placeholder="Search by item name..."
-        />
-<div className="shopping-list-control">
-        <label htmlFor="item-sort">
-          Sort by
-        </label>
+        <div className="shopping-list-control">
 
-        <select
-          id="item-sort"
-          value={sortValue}
-          onChange={handleSortChange}
-        >
-          <option value="name">
-            Name
-          </option>
+          <label htmlFor="item-search">
+            Search items
+          </label>
 
-          <option value="category">
-            Category
-          </option>
+          <input
+            id="item-search"
+            type="search"
+            value={searchQuery}
+            onChange={handleSearchChange}
+            placeholder="Search by item name..."
+          />
 
-          <option value="date">
-            Date added
-          </option>
-        </select>
         </div>
+
+        <div className="shopping-list-control">
+
+          <label htmlFor="item-sort">
+            Sort by
+          </label>
+
+          <select
+            id="item-sort"
+            value={sortValue}
+            onChange={handleSortChange}
+          >
+            <option value="name">
+              Name
+            </option>
+
+            <option value="category">
+              Category
+            </option>
+
+            <option value="date">
+              Date added
+            </option>
+          </select>
+
         </div>
+
       </section>
 
-<section className="shopping-list-items-section">
-  <h2>
-    Items ({filteredAndSortedItems.length})
-  </h2>
+      {/* ITEMS */}
 
-  {loading && (
-    <p>Loading items...</p>
-  )}
+      <section className="shopping-list-items-section">
 
-  {!loading &&
-    filteredAndSortedItems.length === 0 && (
-      <p>
-        {searchQuery
-          ? "No items match your search."
-          : "This shopping list doesn't have any items yet."}
-      </p>
-    )}
+        <h2>
+          Items (
+          {filteredAndSortedItems.length}
+          )
+        </h2>
 
-  {!loading &&
-    filteredAndSortedItems.length > 0 && (
-      <>
-        {sortValue === "category" ? (
-          <CategoryGroupedItems
-            items={filteredAndSortedItems}
-            onEdit={handleEdit}
-            onDelete={handleDeleteItem}
-            onToggle={handleToggleItem}
-          />
-        ) : (
-          <div>
-            {filteredAndSortedItems.map(
-              (item) => (
-                <ShoppingItemCard
-  key={item.id}
-  item={item}
-  onEdit={handleEdit}
-  onDelete={handleDeleteItem}
-  onToggle={handleToggleItem}
-/>
-              )
-            )}
-          </div>
+        {loading && (
+          <p>
+            Loading items...
+          </p>
         )}
-      </>
-    )}
-</section>
+
+        {!loading &&
+          filteredAndSortedItems.length ===
+            0 && (
+            <p>
+              {searchQuery
+                ? "No items match your search."
+                : "This shopping list doesn't have any items yet."}
+            </p>
+          )}
+
+        {!loading &&
+          filteredAndSortedItems.length >
+            0 && (
+            <>
+              {sortValue === "category" ? (
+                <CategoryGroupedItems
+                  items={
+                    filteredAndSortedItems
+                  }
+                  onEdit={handleEdit}
+                  onDelete={
+                    handleDeleteItem
+                  }
+                  onToggle={
+                    handleToggleItem
+                  }
+                />
+              ) : (
+                <div>
+                  {filteredAndSortedItems.map(
+                    (item) => (
+                      <ShoppingItemCard
+                        key={item.id}
+                        item={item}
+                        onEdit={handleEdit}
+                        onDelete={
+                          handleDeleteItem
+                        }
+                        onToggle={
+                          handleToggleItem
+                        }
+                      />
+                    )
+                  )}
+                </div>
+              )}
+            </>
+          )}
+
+      </section>
+
     </main>
   );
 };

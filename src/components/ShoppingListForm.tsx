@@ -1,212 +1,118 @@
+
 import {
   type FormEvent,
   useEffect,
   useState,
 } from "react";
 
-import type {
-  ShoppingItem,
-  ShoppingList,
-} from "../types";
-
+import type { ShoppingItem } from "../types";
 import { searchUnsplashImage } from "../services/unsplashService";
 
-interface NewListItem {
-  name: string;
-  quantity: number;
-  notes: string;
-  image: string;
-  imageAuthor: string;
-imageUsername: string;
-
-}
-
-interface CategoryGroup {
-  id: string;
-  category: string;
-  items: NewListItem[];
-}
-
-interface ShoppingListFormProps {
-  existingList?: ShoppingList | null;
+interface ShoppingItemFormProps {
+  listId: string;
+  existingItem?: ShoppingItem | null;
 
   onSubmit: (
-    shoppingList: Omit<ShoppingList, "id">,
-    items?: Omit<
-      ShoppingItem,
-      "id" | "listId"
-    >[]
+    item: Omit<ShoppingItem, "id">
   ) => void;
 
   onCancel: () => void;
 }
 
-const createEmptyItem = (): NewListItem => ({
-  name: "",
-  quantity: 1,
-  notes: "",
-  image: "",
-  imageAuthor: "",
-    imageUsername: "",
-});
-
-const createCategoryGroup = (): CategoryGroup => ({
-  id: crypto.randomUUID(),
-  category: "",
-  items: [createEmptyItem()],
-});
-
-const ShoppingListForm = ({
-  existingList,
+const ShoppingItemForm = ({
+  listId,
+  existingItem,
   onSubmit,
   onCancel,
-}: ShoppingListFormProps) => {
+}: ShoppingItemFormProps) => {
   const [name, setName] = useState("");
+  const [quantity, setQuantity] = useState(1);
+  const [notes, setNotes] = useState("");
+  const [category, setCategory] = useState("");
 
-  const [categories, setCategories] =
-    useState<CategoryGroup[]>([
-      createCategoryGroup(),
-    ]);
+  const [image, setImage] = useState("");
+  const [imageAuthor, setImageAuthor] =
+    useState("");
+  const [imageUsername, setImageUsername] =
+    useState("");
 
-  const [loadingImage, setLoadingImage] =
-    useState<string | null>(null);
+  const [completed, setCompleted] =
+    useState(false);
+
+  const [imageLoading, setImageLoading] =
+    useState(false);
 
   const [imageError, setImageError] =
-    useState<string | null>(null);
+    useState("");
 
   /*
-   * Populate form when editing
-   * or reset it when creating.
+   * Populate the form when editing.
+   * Reset the form when adding a new item.
    */
   useEffect(() => {
-    if (existingList) {
-      setName(existingList.name);
-
-      /*
-       * Items are managed separately
-       * on the ShoppingListDetails page.
-       */
-      setCategories([]);
+    if (existingItem) {
+      setName(existingItem.name);
+      setQuantity(existingItem.quantity);
+      setNotes(existingItem.notes ?? "");
+      setCategory(existingItem.category);
+      setImage(existingItem.image ?? "");
+      setImageAuthor(
+        existingItem.imageAuthor ?? ""
+      );
+      setImageUsername(
+        existingItem.imageUsername ?? ""
+      );
+      setCompleted(existingItem.completed);
     } else {
       setName("");
-
-      setCategories([
-        createCategoryGroup(),
-      ]);
+      setQuantity(1);
+      setNotes("");
+      setCategory("");
+      setImage("");
+      setImageAuthor("");
+      setImageUsername("");
+      setCompleted(false);
     }
 
-    setImageError(null);
-  }, [existingList]);
+    setImageError("");
+  }, [existingItem]);
 
   /*
-   * Change category
+   * Find an image from Unsplash.
    */
-  const handleCategoryChange = (
-    categoryId: string,
-    value: string
-  ) => {
-    setCategories((previous) =>
-      previous.map((group) =>
-        group.id === categoryId
-          ? {
-              ...group,
-              category: value,
-            }
-          : group
-      )
-    );
-  };
-
-  /*
-   * Change item field
-   */
-  const handleItemChange = (
-    categoryId: string,
-    itemIndex: number,
-    field: keyof NewListItem,
-    value: string | number
-  ) => {
-    setCategories((previous) =>
-      previous.map((group) => {
-        if (group.id !== categoryId) {
-          return group;
-        }
-
-        return {
-          ...group,
-          items: group.items.map(
-            (item, index) =>
-              index === itemIndex
-                ? {
-                    ...item,
-                    [field]: value,
-                  }
-                : item
-          ),
-        };
-      })
-    );
-  };
-
-  /*
-   * Find an image from Unsplash
-   *
-   * Runs when the user leaves
-   * the item name field.
-   */
-  const handleFindImage = async (
-    categoryId: string,
-    itemIndex: number,
-    itemName: string
-  ) => {
-    if (!itemName.trim()) {
+  const handleImageSearch = async () => {
+    if (!name.trim()) {
+      setImageError(
+        "Please enter an item name first."
+      );
       return;
     }
 
-    const loadingKey =
-      `${categoryId}-${itemIndex}`;
-
     try {
-      setLoadingImage(loadingKey);
-      setImageError(null);
+      setImageLoading(true);
+      setImageError("");
 
       const photo =
-        await searchUnsplashImage(itemName);
+        await searchUnsplashImage(
+          name.trim()
+        );
 
       if (!photo) {
+        setImage("");
+        setImageAuthor("");
+        setImageUsername("");
+
         setImageError(
-          `No image found for "${itemName}".`
+          `No image found for "${name}".`
         );
 
         return;
       }
 
-      setCategories((previous) =>
-        previous.map((group) => {
-          if (group.id !== categoryId) {
-            return group;
-          }
-
-          return {
-            ...group,
-
-            items: group.items.map(
-              (item, index) => {
-                if (index !== itemIndex) {
-                  return item;
-                }
-
-                return {
-                  ...item,
-                  image: photo.urls.small,
-                  imageAuthor: photo.user.name,
-                  imageAuthorUrl:
-                    `https://unsplash.com/@${photo.user.username}`,
-                };
-              }
-            ),
-          };
-        })
+      setImage(photo.urls.small);
+      setImageAuthor(photo.user.name);
+      setImageUsername(
+        photo.user.username
       );
     } catch (error) {
       console.error(
@@ -218,529 +124,299 @@ const ShoppingListForm = ({
         "Unable to find an image right now."
       );
     } finally {
-      setLoadingImage(null);
+      setImageLoading(false);
     }
   };
 
   /*
-   * Add another item to the
-   * SAME category.
+   * Search image when leaving the item name.
    */
-  const handleAddItem = (
-    categoryId: string
-  ) => {
-    setCategories((previous) =>
-      previous.map((group) =>
-        group.id === categoryId
-          ? {
-              ...group,
-              items: [
-                ...group.items,
-                createEmptyItem(),
-              ],
-            }
-          : group
-      )
-    );
+  const handleNameBlur = () => {
+    if (
+      name.trim() &&
+      !image
+    ) {
+      handleImageSearch();
+    }
   };
 
   /*
-   * Remove an item
-   */
-  const handleRemoveItem = (
-    categoryId: string,
-    itemIndex: number
-  ) => {
-    setCategories((previous) =>
-      previous.map((group) => {
-        if (group.id !== categoryId) {
-          return group;
-        }
-
-        return {
-          ...group,
-          items: group.items.filter(
-            (_, index) =>
-              index !== itemIndex
-          ),
-        };
-      })
-    );
-  };
-
-  /*
-   * Add another category
-   */
-  const handleAddCategory = () => {
-    setCategories((previous) => [
-      ...previous,
-      createCategoryGroup(),
-    ]);
-  };
-
-  /*
-   * Remove a category
-   */
-  const handleRemoveCategory = (
-    categoryId: string
-  ) => {
-    setCategories((previous) =>
-      previous.filter(
-        (group) => group.id !== categoryId
-      )
-    );
-  };
-
-  /*
-   * Submit form
+   * Submit item.
    */
   const handleSubmit = (
     event: FormEvent
   ) => {
     event.preventDefault();
 
-    setImageError(null);
+    setImageError("");
 
     if (!name.trim()) {
       setImageError(
-        "Please enter a shopping list name."
+        "Please enter an item name."
       );
       return;
     }
 
-    /*
-     * Editing an existing list only
-     * changes the list name.
-     */
-    if (existingList) {
-      onSubmit({
-        name: name.trim(),
-        userId: existingList.userId,
-        dateAdded: existingList.dateAdded,
-      });
-
-      return;
-    }
-
-    /*
-     * Make sure every category
-     * has been selected.
-     */
-    const invalidCategory =
-      categories.some(
-        (group) => !group.category
-      );
-
-    if (invalidCategory) {
+    if (quantity < 1) {
       setImageError(
-        "Please select a category for every section."
+        "Quantity must be at least 1."
       );
-
       return;
     }
 
-    /*
-     * Make sure every category
-     * contains at least one item.
-     */
-    const emptyCategory =
-      categories.some(
-        (group) =>
-          group.items.length === 0
-      );
-
-    if (emptyCategory) {
+    if (!category) {
       setImageError(
-        "Every category must contain at least one item."
+        "Please select a category."
       );
-
       return;
     }
 
-    /*
-     * Validate item names and quantities.
-     */
-    const invalidItem =
-      categories.some((group) =>
-        group.items.some(
-          (item) =>
-            !item.name.trim() ||
-            item.quantity < 1
-        )
-      );
-
-    if (invalidItem) {
-      setImageError(
-        "Please enter a name and valid quantity for every item."
-      );
-
-      return;
-    }
-
-    const dateAdded =
-      new Date().toISOString();
-
-    /*
-     * Create the shopping list.
-     */
-    const shoppingList: Omit<
-      ShoppingList,
-      "id"
-    > = {
+    onSubmit({
+      listId,
       name: name.trim(),
-      userId: "",
-      dateAdded,
-    };
-
-    /*
-     * Convert category groups into
-     * individual ShoppingItems.
-     *
-     * The category selected for the
-     * group is saved on every item.
-     */
-    const shoppingItems: Omit<
-      ShoppingItem,
-      "id" | "listId"
-    >[] = categories.flatMap(
-      (group) =>
-        group.items.map((item) => ({
-          name: item.name.trim(),
-          quantity: item.quantity,
-          notes: item.notes.trim(),
-          category: group.category,
-          image: item.image,
-          imageAuthor: item.imageAuthor,
-      
-          imageUsername: item.imageUsername,
-          completed: false,
-          dateAdded,
-        }))
-    );
-
-    onSubmit(
-      shoppingList,
-      shoppingItems
-    );
+      quantity,
+      notes: notes.trim(),
+      category,
+      image,
+      imageAuthor,
+      imageUsername,
+      completed,
+      dateAdded:
+        existingItem?.dateAdded ??
+        new Date().toISOString(),
+    });
   };
 
- 
-return (
-  
-  <form
-    className="shopping-list-form"
-    onSubmit={handleSubmit}
-  >
-    <h2>
-      {existingList
-        ? "Edit Shopping List"
-        : "Create Shopping List"}
-    </h2>
+  return (
+    <main className="dashboard-container">
+      <section className="dashboard-form-section">
+        <form
+          className="shopping-list-form"
+          onSubmit={handleSubmit}
+        >
+          {/* HEADER */}
 
-    {/* LIST NAME */}
+          <h2>
+            {existingItem
+              ? "Edit Shopping Item"
+              : "Add Shopping Item"}
+          </h2>
 
-    <label htmlFor="list-name">
-      List name
-    </label>
+          {/* ITEM NAME */}
 
-    <input
-      id="list-name"
-      type="text"
-      value={name}
-      onChange={(event) =>
-        setName(event.target.value)
-      }
-      placeholder="e.g. Weekend Shopping"
-      required
-    />
+          <label htmlFor="item-name">
+            Item name
+          </label>
 
-    {!existingList && (
-      <>
-        {/* CATEGORY GROUPS */}
+          <input
+            id="item-name"
+            type="text"
+            value={name}
+            onChange={(event) =>
+              setName(event.target.value)
+            }
+            onBlur={handleNameBlur}
+            onKeyDown={(event) => {
+              if (
+                event.key === "Enter"
+              ) {
+                event.preventDefault();
 
-        {categories.map((group, categoryIndex) => (
-          <section
-            className="category-group"
-            key={group.id}
+                if (name.trim()) {
+                  handleImageSearch();
+                }
+              }
+            }}
+            placeholder="e.g. Milk"
+            required
+          />
+
+          {/* CATEGORY */}
+
+          <label htmlFor="item-category">
+            Category
+          </label>
+
+          <select
+            id="item-category"
+            value={category}
+            onChange={(event) =>
+              setCategory(
+                event.target.value
+              )
+            }
+            required
           >
-            {/* CATEGORY HEADER */}
+            <option value="">
+              Select a category
+            </option>
 
-            <div className="category-header">
-              <h3>
-                Category {categoryIndex + 1}
-              </h3>
+            <option value="Groceries">
+              Groceries
+            </option>
 
-              {categories.length > 1 && (
-                <button
-                  type="button"
-                  onClick={() =>
-                    handleRemoveCategory(group.id)
-                  }
-                >
-                  Remove Category
-                </button>
-              )}
-            </div>
+            <option value="Household">
+              Household
+            </option>
 
-            {/* CATEGORY */}
+            <option value="Electronics">
+              Electronics
+            </option>
 
-            <label
-              htmlFor={`category-${group.id}`}
-            >
-              Category
+            <option value="Clothing">
+              Clothing
+            </option>
+
+            <option value="Other">
+              Other
+            </option>
+          </select>
+
+          {/* IMAGE SEARCH */}
+
+          <div className="shopping-form-field">
+            <label>
+              Item image
             </label>
 
-            <select
-              id={`category-${group.id}`}
-              value={group.category}
-              onChange={(event) =>
-                handleCategoryChange(
-                  group.id,
-                  event.target.value
-                )
-              }
-              required
+            <button
+              type="button"
+              className="shopping-image-search-button"
+              onClick={handleImageSearch}
+              disabled={imageLoading}
             >
-              <option value="">
-                Select a category
-              </option>
+              {imageLoading
+                ? "Searching..."
+                : "Search Unsplash"}
+            </button>
 
-              <option value="Groceries">
-                Groceries
-              </option>
+            {imageError && (
+              <p
+                className="shopping-image-error"
+                role="alert"
+              >
+                {imageError}
+              </p>
+            )}
 
-              <option value="Household">
-                Household
-              </option>
+            {image && (
+              <div className="item-image-preview">
+                <img
+                  src={image}
+                  alt={
+                    name ||
+                    "Shopping item"
+                  }
+                />
 
-              <option value="Electronics">
-                Electronics
-              </option>
-
-              <option value="Clothing">
-                Clothing
-              </option>
-
-              <option value="Other">
-                Other
-              </option>
-            </select>
-
-            {/* ITEMS */}
-
-            <div className="category-items">
-              {group.items.map(
-                (item, itemIndex) => {
-                  const loadingKey =
-                    `${group.id}-${itemIndex}`;
-
-                  return (
-                    <div
-                      className="new-item"
-                      key={`${group.id}-${itemIndex}`}
+                {imageAuthor && (
+                  <small>
+                    Photo by{" "}
+                    <a
+                      href={
+                        imageUsername
+                          ? `https://unsplash.com/@${imageUsername}?utm_source=shopping_list_app&utm_medium=referral`
+                          : "https://unsplash.com/?utm_source=shopping_list_app&utm_medium=referral"
+                      }
+                      target="_blank"
+                      rel="noreferrer"
                     >
-                      {/* ITEM NAME */}
+                      {imageAuthor}
+                    </a>{" "}
+                    on{" "}
+                    <a
+                      href="https://unsplash.com/?utm_source=shopping_list_app&utm_medium=referral"
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      Unsplash
+                    </a>
+                  </small>
+                )}
+              </div>
+            )}
+          </div>
 
-                      <label
-                        htmlFor={`item-name-${group.id}-${itemIndex}`}
-                      >
-                        Item name
-                      </label>
+          {/* QUANTITY */}
 
-                      <input
-  id={`item-name-${group.id}-${itemIndex}`}
-  type="text"
-  value={item.name}
-  onChange={(event) =>
-    handleItemChange(
-      group.id,
-      itemIndex,
-      "name",
-      event.target.value
-    )
-  }
-  onBlur={() =>
-    handleFindImage(
-      group.id,
-      itemIndex,
-      item.name
-    )
-  }
-  onKeyDown={(event) => {
-    if (event.key === "Enter") {
-      event.preventDefault();
+          <label htmlFor="item-quantity">
+            Quantity
+          </label>
 
-      handleFindImage(
-        group.id,
-        itemIndex,
-        item.name
-      );
-    }
-  }}
-  placeholder="e.g. Milk"
-  required
-/>
+          <input
+            id="item-quantity"
+            type="number"
+            min="1"
+            value={quantity}
+            onChange={(event) =>
+              setQuantity(
+                Number(event.target.value)
+              )
+            }
+            required
+          />
 
-                      {/* IMAGE LOADING */}
+          {/* NOTES */}
 
-                      {loadingImage ===
-                        loadingKey && (
-                        <p>
-                          Finding image...
-                        </p>
-                      )}
+          <label htmlFor="item-notes">
+            Notes
+          </label>
 
-                      {/* IMAGE */}
+          <textarea
+            id="item-notes"
+            value={notes}
+            onChange={(event) =>
+              setNotes(
+                event.target.value
+              )
+            }
+            placeholder="Optional notes"
+            rows={3}
+          />
 
-                      {item.image && (
-                        <div className="item-image-preview">
-                          <img
-                            src={item.image}
-                            alt={item.name}
-                          />
+          {/* COMPLETED */}
 
-                          {item.imageAuthor && (
-                            <small>
-                              Photo by{" "}
-                              <a
-                                href={`${item.imageUsername}?utm_source=shopping_list_app&utm_medium=referral`}
-                                target="_blank"
-                                rel="noreferrer"
-                              >
-                                {item.imageAuthor}
-                              </a>{" "}
-                              on{" "}
-                              <a
-                                href="https://unsplash.com/?utm_source=shopping_list_app&utm_medium=referral" 
-                                target="_blank" 
-                                rel="noreferrer" 
-                              > 
-                                Unsplash 
-                              </a> 
-                            </small> 
-                          )} 
-                        </div> 
-                      )} 
- 
-                      {/* QUANTITY */} 
- 
-                      <label 
-                        htmlFor={`item-quantity-${group.id}-${itemIndex}`} 
-                      > 
-                        Quantity 
-                      </label> 
- 
-                      <input 
-                        id={`item-quantity-${group.id}-${itemIndex}`} 
-                        type="number" 
-                        min="1" 
-                        value={item.quantity} 
-                        onChange={(event) => 
-                          handleItemChange( 
-                            group.id, 
-                            itemIndex, 
-                            "quantity", 
-                            Number( 
-                              event.target.value 
-                            ) 
-                          ) 
-                        } 
-                        required 
-                      /> 
- 
-                      {/* NOTES */} 
- 
-                      <label 
-                        htmlFor={`item-notes-${group.id}-${itemIndex}`} 
-                      > 
-                        Notes 
-                      </label> 
- 
-                      <textarea 
-                        id={`item-notes-${group.id}-${itemIndex}`} 
-                        value={item.notes} 
-                        onChange={(event) => 
-                          handleItemChange( 
-                            group.id, 
-                            itemIndex, 
-                            "notes", 
-                            event.target.value 
-                          ) 
-                        } 
-                        placeholder="Optional notes" 
-                        rows={3} 
-                      /> 
- 
-                      {/* REMOVE ITEM */} 
- 
-                      {group.items.length > 1 && ( 
-                        <button 
-                          type="button" 
-                          onClick={() => 
-                            handleRemoveItem( 
-                              group.id, 
-                              itemIndex 
-                            ) 
-                          } 
-                        > 
-                          Remove Item 
-                        </button> 
-                      )} 
-                    </div> 
-                  ); 
-                } 
-              )} 
-            </div> 
- 
-            {/* CATEGORY BUTTONS */} 
- 
-            <div className="category-action-row"> 
-              <button 
-                type="button" 
-                onClick={() => 
-                  handleAddItem(group.id) 
-                } 
-              > 
-                + ADD ANOTHER ITEM 
-              </button> 
- 
-            </div> 
-          </section> 
-        ))} 
- 
-              <button 
-                type="button" 
-                onClick={handleAddCategory} 
-              > 
-                + ADD ANOTHER CATEGORY 
-              </button> 
-        {/* ERROR */} 
- 
-        {imageError && ( 
-          <p role="alert"> 
-            {imageError} 
-          </p> 
-        )} 
-      </> 
-    )} 
- 
-    {/* FORM ACTIONS */} 
- 
-    <div className="form-actions"> 
-      <button type="submit"> 
-        {existingList 
-          ? "Save Changes" 
-          : "Create List"} 
-      </button> 
- 
-      <button 
-        type="button" 
-        onClick={onCancel} 
-      > 
-        Cancel 
-      </button> 
-    </div> 
-  </form> 
-); 
-} 
-export default ShoppingListForm; 
+          {existingItem && (
+            <label className="shopping-completed-option">
+              <input
+                type="checkbox"
+                checked={completed}
+                onChange={(event) =>
+                  setCompleted(
+                    event.target.checked
+                  )
+                }
+              />
+
+              <span>
+                Already bought
+              </span>
+            </label>
+          )}
+
+          {/* ACTIONS */}
+
+          <div className="form-actions">
+            <button
+              type="submit"
+            >
+              {existingItem
+                ? "Save Changes"
+                : "Add Item"}
+            </button>
+
+            <button
+              type="button"
+              onClick={onCancel}
+            >
+              Cancel
+            </button>
+          </div>
+        </form>
+      </section>
+    </main>
+  );
+};
+
+export default ShoppingItemForm;
+
