@@ -180,9 +180,7 @@ const Home = () => {
     }
   };
 
-  /*
-   * DELETE SHOPPING LIST
-   */
+
   const handleDeleteList = async (
     id: string
   ) => {
@@ -214,9 +212,6 @@ const Home = () => {
     }
   };
 
-  /*
-   * EDIT SHOPPING LIST
-   */
   const handleEdit = (
     shoppingList: ShoppingList
   ) => {
@@ -224,17 +219,13 @@ const Home = () => {
     setShowForm(true);
   };
 
-  /*
-   * CANCEL FORM
-   */
+ 
   const handleCancel = () => {
     setShowForm(false);
     setEditingList(null);
   };
 
-  /*
-   * SHARE SHOPPING LIST
-   */
+  
   const handleShare = async (
     shoppingList: ShoppingList
   ) => {
@@ -272,9 +263,7 @@ const Home = () => {
     }
   };
 
-  /*
-   * OPEN NEW LIST FORM
-   */
+
   const handleNewList = () => {
     setEditingList(null);
     setShowForm(true);
@@ -288,10 +277,6 @@ const Home = () => {
 
   return (
     <main className="dashboard-container">
-
-      {/* =================================================
-          DASHBOARD HEADER
-      ================================================= */}
 
       <header className="dashboard-header">
 
@@ -314,10 +299,6 @@ const Home = () => {
       </header>
 
 
-      {/* =================================================
-          SUCCESS MESSAGE
-      ================================================= */}
-
       {message && (
         <div
           className="auth-success-alert"
@@ -326,11 +307,6 @@ const Home = () => {
           {message}
         </div>
       )}
-
-
-      {/* =================================================
-          ERROR MESSAGE
-      ================================================= */}
 
       {error && (
         <div
@@ -341,10 +317,6 @@ const Home = () => {
         </div>
       )}
 
-
-      {/* =================================================
-          SHOPPING LIST FORM
-      ================================================= */}
 
       {showForm && (
         <section className="dashboard-form-section">
@@ -363,10 +335,7 @@ const Home = () => {
       )}
 
 
-      {/* =================================================
-          LOADING
-      ================================================= */}
-
+   
       {loading && (
         <div className="dashboard-loading">
           <p>
@@ -374,12 +343,6 @@ const Home = () => {
           </p>
         </div>
       )}
-
-
-      {/* =================================================
-          EMPTY STATE
-          DO NOT CHANGE THIS STRUCTURE
-      ================================================= */}
 
       {!loading &&
         lists.length === 0 &&
@@ -414,10 +377,6 @@ const Home = () => {
           </section>
         )}
 
-
-      {/* =================================================
-          SHOPPING LISTS
-      ================================================= */}
 
       {!loading &&
         lists.length > 0 &&

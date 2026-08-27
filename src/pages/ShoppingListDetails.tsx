@@ -68,9 +68,6 @@ const ShoppingListDetails = () => {
   const [editingItem, setEditingItem] =
     useState<ShoppingItem | null>(null);
 
-  /*
-   * LOAD ITEMS
-   */
   useEffect(() => {
     if (!listId) {
       return;
@@ -99,9 +96,7 @@ const ShoppingListDetails = () => {
     loadItems();
   }, [listId, dispatch]);
 
-  /*
-   * SEARCH + SORT
-   */
+ 
   const filteredAndSortedItems =
     useMemo(() => {
       let result = [...items];
@@ -153,9 +148,6 @@ const ShoppingListDetails = () => {
       sortValue,
     ]);
 
-  /*
-   * PROGRESS
-   */
   const totalItems = items.length;
 
   const boughtItems = items.filter(
@@ -172,9 +164,7 @@ const ShoppingListDetails = () => {
         )
       : 0;
 
-  /*
-   * SEARCH
-   */
+ 
   const handleSearchChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -192,9 +182,7 @@ const ShoppingListDetails = () => {
     setSearchParams(newParams);
   };
 
-  /*
-   * SORT
-   */
+
   const handleSortChange = (
     event: React.ChangeEvent<HTMLSelectElement>
   ) => {
@@ -212,9 +200,7 @@ const ShoppingListDetails = () => {
     setSearchParams(newParams);
   };
 
-  /*
-   * TOGGLE ITEM
-   */
+
   const handleToggleItem = async (
     item: ShoppingItem
   ) => {
@@ -239,9 +225,7 @@ const ShoppingListDetails = () => {
     }
   };
 
-  /*
-   * ADD ITEM
-   */
+
   const handleCreateItem = async (
     item: Omit<ShoppingItem, "id">
   ) => {
@@ -276,9 +260,7 @@ const ShoppingListDetails = () => {
     }
   };
 
-  /*
-   * UPDATE ITEM
-   */
+
   const handleUpdateItem = async (
     item: Omit<ShoppingItem, "id">
   ) => {
@@ -312,9 +294,7 @@ const ShoppingListDetails = () => {
     }
   };
 
-  /*
-   * DELETE ITEM
-   */
+ 
   const handleDeleteItem = async (
     id: string
   ) => {
@@ -346,9 +326,7 @@ const ShoppingListDetails = () => {
     }
   };
 
-  /*
-   * EDIT ITEM
-   */
+ 
   const handleEdit = (
     item: ShoppingItem
   ) => {
@@ -358,12 +336,7 @@ const ShoppingListDetails = () => {
     dispatch(setError(null));
   };
 
-  /*
-   * OPEN ADD ITEM FORM
-   *
-   * This is the important part.
-   * It opens ONLY the form.
-   */
+ 
   const handleAddItem = () => {
     setEditingItem(null);
     setShowForm(true);
@@ -371,18 +344,13 @@ const ShoppingListDetails = () => {
     dispatch(setError(null));
   };
 
-  /*
-   * CANCEL
-   */
+ 
   const handleCancel = () => {
     setEditingItem(null);
     setShowForm(false);
     dispatch(setError(null));
   };
 
-  /*
-   * LIST NOT FOUND
-   */
   if (!shoppingList) {
     return (
       <main>
@@ -395,14 +363,6 @@ const ShoppingListDetails = () => {
     );
   }
 
-  /*
-   * =====================================================
-   * ADD / EDIT FORM VIEW
-   *
-   * When showForm is true, EVERYTHING ELSE is hidden.
-   * The Navbar remains because it is outside this page.
-   * =====================================================
-   */
   if (showForm) {
     return (
       <main className="dashboard-container">
@@ -422,15 +382,10 @@ const ShoppingListDetails = () => {
     );
   }
 
-  /*
-   * =====================================================
-   * NORMAL SHOPPING LIST VIEW
-   * =====================================================
-   */
+
   return (
     <main className="dashboard-container">
 
-      {/* TOP BAR */}
 
       <div className="list-top-bar">
 
@@ -451,7 +406,6 @@ const ShoppingListDetails = () => {
 
       </div>
 
-      {/* HEADER */}
 
       <header>
         <h1>
@@ -465,7 +419,6 @@ const ShoppingListDetails = () => {
           ).toLocaleDateString()}
         </p>
 
-        {/* PROGRESS */}
 
         <div className="shopping-progress">
 
@@ -515,7 +468,7 @@ const ShoppingListDetails = () => {
         </div>
       </header>
 
-      {/* SUCCESS */}
+      
 
       {message && (
         <p
@@ -526,8 +479,6 @@ const ShoppingListDetails = () => {
         </p>
       )}
 
-      {/* ERROR */}
-
       {error && (
         <p
           role="alert"
@@ -537,7 +488,6 @@ const ShoppingListDetails = () => {
         </p>
       )}
 
-      {/* SEARCH + SORT */}
 
       <section className="shopping-list-controls">
 
@@ -585,8 +535,7 @@ const ShoppingListDetails = () => {
 
       </section>
 
-      {/* ITEMS */}
-
+      
       <section className="shopping-list-items-section">
 
         <h2>

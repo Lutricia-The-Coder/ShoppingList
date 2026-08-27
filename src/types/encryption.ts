@@ -2,11 +2,7 @@ import CryptoJS from "crypto-js";
 
 const SECRET_KEY = "shopping-list-secret-key";
 
-/**
- * Hashes a password using SHA-256.
- * The same password will always produce
- * the same hash.
- */
+
 export const hashPassword = (
   password: string
 ): string => {
@@ -15,9 +11,7 @@ export const hashPassword = (
   );
 };
 
-/**
- * Encrypts general data using AES.
- */
+
 export const encrypt = (
   value: string
 ): string => {

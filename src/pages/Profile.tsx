@@ -94,7 +94,6 @@ const Profile = () => {
       {message && <div className="auth-success-alert" role="status">{message}</div>}
       {error && <div className="auth-error-alert" role="alert">{error}</div>}
 
-      {/* Personal Details Section */}
       <section className="profile-section">
         <h3 className="profile-section-title">Personal Details</h3>
 
@@ -189,7 +188,6 @@ const Profile = () => {
 
       <hr className="profile-divider" />
 
-      {/* Login Credentials Section */}
       <section className="profile-section">
         <h3 className="profile-section-title">Login Credentials</h3>
 
@@ -264,7 +262,7 @@ const Profile = () => {
 
       <hr className="profile-divider" />
 
-      {/* Red Pill Logout Button */}
+     
       <section>
         <button
           type="button"

@@ -22,7 +22,7 @@ const AppRoutes = () => {
 
   return (
     <Routes>
-      {/* PUBLIC ROUTES */}
+   
 
       <Route
         path="/"
@@ -53,7 +53,7 @@ const AppRoutes = () => {
         element={<ForgotPassword />}
       />
 
-      {/* PROTECTED ROUTES */}
+     
 
       {isAuthenticated ? (
         <Route element={<AppLayout />}>

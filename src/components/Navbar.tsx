@@ -54,9 +54,7 @@ const Navbar = () => {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
-  /*
-   * No logged-in user
-   */
+
   if (!currentUser) {
     return null;
   }
@@ -69,9 +67,7 @@ const Navbar = () => {
     currentUser.name?.charAt(0).toUpperCase() ||
     "U";
 
-  /*
-   * OPEN PROFILE
-   */
+  
   const handleOpenProfile = () => {
     setShowProfile(true);
     setEditingDetails(false);
@@ -80,9 +76,7 @@ const Navbar = () => {
     setSuccess("");
   };
 
-  /*
-   * OPEN EDIT DETAILS
-   */
+
   const handleEditDetails = () => {
     setName(currentUser.name || "");
     setSurname(currentUser.surname || "");
@@ -95,14 +89,6 @@ const Navbar = () => {
     setEditingDetails(true);
   };
 
-  /*
-   * SAVE EDITED DETAILS
-   *
-   * Uses the existing:
-   * updateUser()
-   *
-   * PATCH /users/:id
-   */
   const handleSaveDetails = async () => {
     if (!name.trim() || !surname.trim()) {
       setError("Name and surname are required.");
@@ -123,13 +109,7 @@ const Navbar = () => {
         }
       );
 
-      /*
-       * Do NOT store password in Redux/localStorage.
-       *
-       * Your API may return the password because it
-       * exists in db.json, so remove it before saving
-       * the user to Redux.
-       */
+    
       const {
         password: _password,
         ...safeUser
@@ -154,14 +134,7 @@ const Navbar = () => {
     }
   };
 
-  /*
-   * OPEN CHANGE PASSWORD
-   *
-   * IMPORTANT:
-   * We do NOT close the profile.
-   * We only switch the content inside
-   * the existing profile panel.
-   */
+
   const handleChangePassword = () => {
     setError("");
     setSuccess("");
@@ -174,15 +147,7 @@ const Navbar = () => {
     setChangingPassword(true);
   };
 
-  /*
-   * SAVE NEW PASSWORD
-   *
-   * The new password is hashed BEFORE
-   * being sent to json-server.
-   *
-   * Therefore db.json contains ONLY
-   * the SHA-256 hash.
-   */
+
   const handleSavePassword = async () => {
     if (!currentPassword) {
       setError("Please enter your current password.");
@@ -214,25 +179,9 @@ const Navbar = () => {
       setError("");
       setSuccess("");
 
-      /*
-       * HASH THE NEW PASSWORD.
-       *
-       * This uses your existing encryption.ts:
-       *
-       * hashPassword(password)
-       */
       const hashedPassword =
         hashPassword(newPassword);
 
-      /*
-       * PATCH ONLY THE PASSWORD.
-       *
-       * The database receives:
-       *
-       * {
-       *   password: "SHA256_HASH_HERE"
-       * }
-       */
       const updatedUser = await updateUser(
         currentUser.id,
         {
@@ -240,9 +189,6 @@ const Navbar = () => {
         }
       );
 
-      /*
-       * Never put password into Redux/localStorage.
-       */
       const {
         password: _password,
         ...safeUser
@@ -250,18 +196,12 @@ const Navbar = () => {
 
       dispatch(updateCurrentUser(safeUser));
 
-      /*
-       * Clear password fields.
-       */
+    
       setCurrentPassword("");
       setNewPassword("");
       setConfirmPassword("");
 
-      /*
-       * Return to the normal profile view.
-       *
-       * The profile panel itself stays open.
-       */
+  
       setChangingPassword(false);
 
       setSuccess(
@@ -281,9 +221,7 @@ const Navbar = () => {
     }
   };
 
-  /*
-   * LOGOUT
-   */
+  
   const handleLogout = () => {
     dispatch(logout());
     setShowProfile(false);
@@ -293,9 +231,6 @@ const Navbar = () => {
     navigate("/login");
   };
 
-  /*
-   * CLOSE PROFILE
-   */
   const handleCloseProfile = () => {
     setShowProfile(false);
     setEditingDetails(false);
@@ -309,18 +244,14 @@ const Navbar = () => {
     setConfirmPassword("");
   };
 
-  /*
-   * CANCEL EDIT
-   */
+  
   const handleCancelEdit = () => {
     setEditingDetails(false);
     setError("");
     setSuccess("");
   };
 
-  /*
-   * CANCEL PASSWORD CHANGE
-   */
+
   const handleCancelPassword = () => {
     setChangingPassword(false);
 
@@ -334,13 +265,9 @@ const Navbar = () => {
 
   return (
     <>
-      {/* =====================================================
-          NAVBAR
-      ===================================================== */}
-
+    
       <header className="top-navbar">
 
-        {/* LOGO */}
         <Link
           to="/dashboard"
           className="navbar-logo"
@@ -352,7 +279,6 @@ const Navbar = () => {
           <span>ShopList</span>
         </Link>
 
-        {/* PROFILE BUTTON */}
         <button
           type="button"
           className="navbar-profile-button"
@@ -363,24 +289,16 @@ const Navbar = () => {
         </button>
       </header>
 
-      {/* =====================================================
-          PROFILE PANEL
-      ===================================================== */}
 
       {showProfile && (
         <>
-          {/* Overlay */}
+       
           <div
             className="profile-overlay"
             onClick={handleCloseProfile}
           />
 
-          {/* Panel */}
           <aside className="profile-panel">
-
-            {/* =================================================
-                HEADER
-            ================================================= */}
 
             <div className="profile-panel-header">
 
@@ -403,10 +321,6 @@ const Navbar = () => {
 
             </div>
 
-            {/* =================================================
-                ERROR
-            ================================================= */}
-
             {error && (
               <div
                 className="profile-form-error"
@@ -416,10 +330,7 @@ const Navbar = () => {
               </div>
             )}
 
-            {/* =================================================
-                SUCCESS
-            ================================================= */}
-
+        
             {success && (
               <div
                 className="profile-form-success"
@@ -429,10 +340,7 @@ const Navbar = () => {
               </div>
             )}
 
-            {/* =================================================
-                EDIT DETAILS
-            ================================================= */}
-
+          
             {editingDetails ? (
               <section className="profile-edit-form">
 
@@ -501,10 +409,6 @@ const Navbar = () => {
 
               </section>
             ) : changingPassword ? (
-
-              /* ===============================================
-                 CHANGE PASSWORD
-              =============================================== */
 
               <section className="profile-edit-form">
 
@@ -604,12 +508,8 @@ const Navbar = () => {
 
             ) : (
 
-              /* ===============================================
-                 NORMAL PROFILE
-              =============================================== */
-
               <>
-                {/* PROFILE SUMMARY */}
+              
                 <div className="profile-summary">
 
                   <div className="profile-large-avatar">
@@ -627,9 +527,6 @@ const Navbar = () => {
 
                 </div>
 
-                {/* =================================================
-                    PERSONAL DETAILS
-                ================================================= */}
 
                 <section className="profile-section">
 
@@ -675,10 +572,6 @@ const Navbar = () => {
 
                 </section>
 
-                {/* =================================================
-                    LOGIN CREDENTIALS
-                ================================================= */}
-
                 <section className="profile-section">
 
                   <h4>
@@ -714,10 +607,7 @@ const Navbar = () => {
 
                 </section>
 
-                {/* =================================================
-                    LOGOUT
-                ================================================= */}
-
+            
                 <button
                   type="button"
                   className="profile-logout-button"

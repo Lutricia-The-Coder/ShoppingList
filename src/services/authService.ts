@@ -9,9 +9,7 @@ export interface RegisterData {
   cellNumber: string;
 }
 
-/*
- * Register user
- */
+
 export const registerUser = async (
   userData: RegisterData
 ): Promise<User> => {
@@ -29,9 +27,6 @@ export const registerUser = async (
   return response.data;
 };
 
-/*
- * Find user by email
- */
 export const getUserByEmail = async (
   email: string
 ): Promise<User | null> => {
@@ -51,21 +46,7 @@ export const getUserByEmail = async (
     : null;
 };
 
-/*
- * Normalise a South African
- * cell number.
- *
- * Examples:
- *
- * 0712345678
- * 071 234 5678
- * +27712345678
- * +27 71 234 5678
- *
- * All become:
- *
- * 0712345678
- */
+
 const normalizeCellNumber = (
   cellNumber: string
 ): string => {
@@ -96,9 +77,7 @@ export const getUserByCellNumber = async (
   return user ?? null;
 };
 
-/*
- * Update user using PATCH
- */
+
 export const updateUser = async (
   id: string,
   updates: Partial<User>

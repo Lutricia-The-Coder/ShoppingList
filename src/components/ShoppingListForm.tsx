@@ -29,15 +29,9 @@ interface CategoryGroup {
 interface ShoppingListFormProps {
   existingList?: ShoppingList | null;
 
-  /*
-   * When true, this form is being used
-   * to add items to an existing list.
-   */
+ 
   addItemMode?: boolean;
 
-  /*
-   * The existing list ID when adding items.
-   */
   listId?: string;
 
   onSubmit: (
@@ -86,16 +80,8 @@ const ShoppingListForm = ({
   const [imageError, setImageError] =
     useState<string | null>(null);
 
-  /*
-   * Populate/reset form.
-   */
   useEffect(() => {
-    /*
-     * ADD ITEM MODE
-     *
-     * We are adding items to an existing
-     * shopping list.
-     */
+
     if (addItemMode && existingList) {
       setName(existingList.name);
 
@@ -109,16 +95,9 @@ const ShoppingListForm = ({
       return;
     }
 
-    /*
-     * EDIT EXISTING LIST
-     */
     if (existingList) {
       setName(existingList.name);
 
-      /*
-       * Existing list items are managed
-       * separately on ShoppingListDetails.
-       */
       setCategories([]);
 
       setImageError(null);
@@ -127,9 +106,7 @@ const ShoppingListForm = ({
       return;
     }
 
-    /*
-     * CREATE NEW LIST
-     */
+    
     setName("");
 
     setCategories([
@@ -140,9 +117,6 @@ const ShoppingListForm = ({
     setLoadingImage(null);
   }, [existingList, addItemMode]);
 
-  /*
-   * Change category.
-   */
   const handleCategoryChange = (
     categoryId: string,
     value: string
@@ -159,9 +133,7 @@ const ShoppingListForm = ({
     );
   };
 
-  /*
-   * Change item field.
-   */
+ 
   const handleItemChange = (
     categoryId: string,
     itemIndex: number,
@@ -191,9 +163,7 @@ const ShoppingListForm = ({
     );
   };
 
-  /*
-   * Find an image from Unsplash.
-   */
+ 
   const handleFindImage = async (
     categoryId: string,
     itemIndex: number,
@@ -267,10 +237,7 @@ const ShoppingListForm = ({
     }
   };
 
-  /*
-   * Add another item to the
-   * same category.
-   */
+
   const handleAddItem = (
     categoryId: string
   ) => {
@@ -289,9 +256,7 @@ const ShoppingListForm = ({
     );
   };
 
-  /*
-   * Remove an item.
-   */
+
   const handleRemoveItem = (
     categoryId: string,
     itemIndex: number
@@ -314,9 +279,7 @@ const ShoppingListForm = ({
     );
   };
 
-  /*
-   * Add another category.
-   */
+
   const handleAddCategory = () => {
     setCategories((previous) => [
       ...previous,
@@ -324,9 +287,7 @@ const ShoppingListForm = ({
     ]);
   };
 
-  /*
-   * Remove a category.
-   */
+
   const handleRemoveCategory = (
     categoryId: string
   ) => {
@@ -337,9 +298,7 @@ const ShoppingListForm = ({
     );
   };
 
-  /*
-   * Submit form.
-   */
+  
   const handleSubmit = (
     event: FormEvent
   ) => {
@@ -347,17 +306,8 @@ const ShoppingListForm = ({
 
     setImageError(null);
 
-    /*
-     * =================================================
-     * ADD ITEM MODE
-     * =================================================
-     *
-     * We do NOT create a new ShoppingList.
-     *
-     * We only return the items so that
-     * ShoppingListDetails can save them
-     * using the existing list ID.
-     */
+    
+   
     if (addItemMode) {
       if (!listId) {
         setImageError(
@@ -432,12 +382,8 @@ const ShoppingListForm = ({
             }))
         );
 
-      /*
-       * We don't need to create a new list.
-       *
-       * The parent already knows which list
-       * we're adding these items to.
-       */
+     
+
       onSubmit(
         {
           name:
@@ -454,11 +400,6 @@ const ShoppingListForm = ({
       return;
     }
 
-    /*
-     * =================================================
-     * EDIT EXISTING LIST
-     * =================================================
-     */
     if (existingList) {
       if (!name.trim()) {
         setImageError(
@@ -477,12 +418,6 @@ const ShoppingListForm = ({
       return;
     }
 
-    /*
-     * =================================================
-     * CREATE NEW LIST
-     * =================================================
-     */
-
     if (!name.trim()) {
       setImageError(
         "Please enter a shopping list name."
@@ -491,9 +426,7 @@ const ShoppingListForm = ({
       return;
     }
 
-    /*
-     * Validate categories.
-     */
+   
     const invalidCategory =
       categories.some(
         (group) => !group.category
@@ -507,10 +440,6 @@ const ShoppingListForm = ({
       return;
     }
 
-    /*
-     * Make sure every category
-     * has an item.
-     */
     const emptyCategory =
       categories.some(
         (group) =>
@@ -525,9 +454,7 @@ const ShoppingListForm = ({
       return;
     }
 
-    /*
-     * Validate items.
-     */
+
     const invalidItem =
       categories.some((group) =>
         group.items.some(
@@ -548,9 +475,7 @@ const ShoppingListForm = ({
     const dateAdded =
       new Date().toISOString();
 
-    /*
-     * Create the shopping list.
-     */
+    
     const shoppingList: Omit<
       ShoppingList,
       "id"
@@ -560,9 +485,7 @@ const ShoppingListForm = ({
       dateAdded,
     };
 
-    /*
-     * Convert categories into items.
-     */
+ 
     const shoppingItems: Omit<
       ShoppingItem,
       "id" | "listId"
@@ -594,7 +517,7 @@ const ShoppingListForm = ({
       className="shopping-list-form"
       onSubmit={handleSubmit}
     >
-      {/* HEADER */}
+   
 
       <div className="shopping-list-form-header">
         <h2>
@@ -614,7 +537,7 @@ const ShoppingListForm = ({
         </p>
       </div>
 
-      {/* LIST NAME */}
+      
 
       {!addItemMode && (
         <>
@@ -635,7 +558,6 @@ const ShoppingListForm = ({
         </>
       )}
 
-      {/* EXISTING LIST NAME */}
 
       {addItemMode && existingList && (
         <div className="shopping-form-existing-list">
@@ -647,7 +569,7 @@ const ShoppingListForm = ({
         </div>
       )}
 
-      {/* CATEGORY GROUPS */}
+    
 
       {(!existingList ||
         addItemMode) && (
@@ -658,7 +580,7 @@ const ShoppingListForm = ({
                 className="category-group"
                 key={group.id}
               >
-                {/* CATEGORY HEADER */}
+                
 
                 <div className="category-header">
                   <h3>
@@ -681,7 +603,6 @@ const ShoppingListForm = ({
                   )}
                 </div>
 
-                {/* CATEGORY */}
 
                 <label
                   htmlFor={`category-${group.id}`}
@@ -725,7 +646,7 @@ const ShoppingListForm = ({
                   </option>
                 </select>
 
-                {/* ITEMS */}
+               
 
                 <div className="category-items">
                   {group.items.map(
@@ -741,7 +662,7 @@ const ShoppingListForm = ({
                           className="new-item"
                           key={`${group.id}-${itemIndex}`}
                         >
-                          {/* ITEM NAME */}
+                         
 
                           <label
                             htmlFor={`item-name-${group.id}-${itemIndex}`}
@@ -791,7 +712,7 @@ const ShoppingListForm = ({
                             required
                           />
 
-                          {/* IMAGE LOADING */}
+                         
 
                           {loadingImage ===
                             loadingKey && (
@@ -800,7 +721,7 @@ const ShoppingListForm = ({
                             </p>
                           )}
 
-                          {/* IMAGE */}
+                        
 
                           {item.image && (
                             <div className="item-image-preview">
@@ -838,7 +759,7 @@ const ShoppingListForm = ({
                             </div>
                           )}
 
-                          {/* QUANTITY */}
+                       
 
                           <label
                             htmlFor={`item-quantity-${group.id}-${itemIndex}`}
@@ -869,7 +790,7 @@ const ShoppingListForm = ({
                             required
                           />
 
-                          {/* NOTES */}
+                        
 
                           <label
                             htmlFor={`item-notes-${group.id}-${itemIndex}`}
@@ -897,7 +818,7 @@ const ShoppingListForm = ({
                             rows={3}
                           />
 
-                          {/* REMOVE ITEM */}
+                       
 
                           {group.items.length >
                             1 && (
@@ -919,8 +840,7 @@ const ShoppingListForm = ({
                   )}
                 </div>
 
-                {/* ADD ITEM */}
-
+          
                 <div className="category-action-row">
                   <button
                     type="button"
@@ -937,7 +857,7 @@ const ShoppingListForm = ({
             )
           )}
 
-          {/* ADD CATEGORY */}
+          
 
           <button
             type="button"
@@ -946,7 +866,6 @@ const ShoppingListForm = ({
             + ADD ANOTHER CATEGORY
           </button>
 
-          {/* ERROR */}
 
           {imageError && (
             <p role="alert">
@@ -956,7 +875,6 @@ const ShoppingListForm = ({
         </>
       )}
 
-      {/* EDIT LIST ERROR */}
 
       {existingList &&
         !addItemMode &&
@@ -966,7 +884,7 @@ const ShoppingListForm = ({
           </p>
         )}
 
-      {/* FORM ACTIONS */}
+   
 
       <div className="form-actions">
         <button type="submit">

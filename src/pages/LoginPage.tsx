@@ -53,7 +53,7 @@ const LoginPage = () => {
   return (
     <div className="landing-page-container">
       <div className="landing-card">
-        {/* Left Form Section */}
+      
         <div className="landing-form-section">
           <div className="landing-brand-header">
             <span className="brand-logo-icon">OL</span>
@@ -103,7 +103,7 @@ const LoginPage = () => {
           </div>
         </div>
 
-        {/* Right Hero Gradient/Image Banner Section */}
+        
         <div className="landing-hero-section">
           <div className="hero-top-nav">
             <span>Don't have an account ?</span>

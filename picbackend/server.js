@@ -14,7 +14,7 @@ app.use(express.json());
 const SERPAPI_API_KEY =
   process.env.SERPAPI_API_KEY;
 
-/*
+
  * Search Google Shopping for a product
  * and return its image.
  */

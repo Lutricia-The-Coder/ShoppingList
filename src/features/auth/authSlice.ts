@@ -47,12 +47,7 @@ const authSlice = createSlice({
       );
     },
 
-    /*
-     * Update the currently logged-in user's details.
-     *
-     * The password is deliberately not handled here.
-     * Password changes are sent to the API separately.
-     */
+  
     updateCurrentUser: (
       state,
       action: PayloadAction<StoredUser>

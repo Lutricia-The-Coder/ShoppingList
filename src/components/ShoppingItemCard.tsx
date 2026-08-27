@@ -23,7 +23,7 @@ const ShoppingItemCard = ({
           : ""
       }`}
     >
-      {/* CHECKBOX */}
+   
       <div className="shopping-item-checkbox">
         <input
           type="checkbox"
@@ -37,7 +37,7 @@ const ShoppingItemCard = ({
         />
       </div>
 
-      {/* IMAGE */}
+   
       {item.image && (
         <div className="shopping-item-image">
           <img
@@ -47,7 +47,7 @@ const ShoppingItemCard = ({
         </div>
       )}
 
-      {/* ITEM INFORMATION */}
+    
       <div className="shopping-item-content">
         <div className="shopping-item-main">
           <h3>{item.name}</h3>
@@ -83,7 +83,7 @@ const ShoppingItemCard = ({
         </span>
       </div>
 
-      {/* ACTIONS */}
+   
       <div className="shopping-item-actions">
         <button
           type="button"

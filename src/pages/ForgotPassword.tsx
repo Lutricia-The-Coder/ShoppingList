@@ -39,10 +39,6 @@ const ForgotPassword = () => {
   const [numberVerified, setNumberVerified] =
     useState(false);
 
-  /*
-   * Check if the cell number exists
-   * in the database.
-   */
   const handleVerifyNumber = async (
     event: FormEvent
   ) => {
@@ -71,11 +67,7 @@ const ForgotPassword = () => {
         return;
       }
 
-      /*
-       * Store only the user's ID.
-       *
-       * We do NOT store the password.
-       */
+   
       setUserId(user.id);
       setNumberVerified(true);
 
@@ -96,12 +88,6 @@ const ForgotPassword = () => {
     }
   };
 
-  /*
-   * Change password.
-   *
-   * The new password is hashed BEFORE
-   * being sent to json-server.
-   */
   const handleChangePassword = async (
     event: FormEvent
   ) => {
@@ -143,18 +129,9 @@ const ForgotPassword = () => {
     try {
       setLoading(true);
 
-      /*
-       * Hash the password using the SAME
-       * SHA-256 function used during registration.
-       */
       const hashedPassword =
         hashPassword(newPassword);
 
-      /*
-       * PATCH the existing user.
-       *
-       * Only the password field is changed.
-       */
       await updateUser(userId, {
         password: hashedPassword,
       });
@@ -187,7 +164,6 @@ const ForgotPassword = () => {
     <div className="auth-centered-container">
       <div className="auth-single-card">
 
-        {/* Brand */}
         <div className="brand-header">
           <span className="brand-logo-icon">
             OL

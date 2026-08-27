@@ -55,10 +55,6 @@ setImageUsername(existingItem.imageUsername ?? "");
     setImageError("");
   }, [existingItem]);
 
-  /*
-   * Search Unsplash when the user finishes
-   * entering the item name.
-   */
   const handleImageSearch = async () => {
     if (!name.trim()) {
       setImageError("Enter an item name first.");
@@ -135,7 +131,7 @@ onSubmit({
     </p>
 </div>
 
-        {/* ITEM NAME */}
+    
 
         <div className="test-styler">
           <label htmlFor="item-name">
@@ -154,7 +150,7 @@ onSubmit({
           />
         </div>
 
-        {/* QUANTITY */}
+      
 
         <div className="shopping-form-field">
           <label htmlFor="item-quantity">
@@ -175,7 +171,6 @@ onSubmit({
           />
         </div>
 
-        {/* CATEGORY */}
 
         <div className="shopping-form-field">
           <label htmlFor="item-category">
@@ -216,7 +211,6 @@ onSubmit({
           </select>
         </div>
 
-        {/* NOTES */}
 
         <div className="shopping-form-field">
           <label htmlFor="item-notes">
@@ -234,7 +228,6 @@ onSubmit({
           />
         </div>
 
-        {/* UNSPLASH IMAGE */}
 
         <div className="shopping-form-field">
   <label>Item image</label>
@@ -263,7 +256,7 @@ onSubmit({
   )}
 </div>
 
-        {/* COMPLETED */}
+     
 
         {existingItem && (
           <label className="shopping-completed-option">
@@ -281,7 +274,7 @@ onSubmit({
           </label>
         )}
 
-        {/* ACTIONS */}
+
 
         <div className="shopping-item-form-actions">
           <button
