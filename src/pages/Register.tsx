@@ -77,8 +77,8 @@ const Register = () => {
     <div className="auth-centered-container">
       <div className="auth-single-card">
         <div className="brand-header">
-          <span className="brand-logo-icon">G</span>
-          <span className="brand-name">mbank</span>
+          <span className="brand-logo-icon">OL</span>
+          <span className="brand-name">OrgList</span>
         </div>
 
         <h2>Create Account</h2>

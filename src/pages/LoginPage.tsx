@@ -56,7 +56,7 @@ const LoginPage = () => {
         {/* Left Form Section */}
         <div className="landing-form-section">
           <div className="landing-brand-header">
-            <span className="brand-logo-icon">G</span>
+            <span className="brand-logo-icon">OL</span>
             <span className="brand-name">OrgLists</span>
           </div>
 

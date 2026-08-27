@@ -18,12 +18,6 @@ const ForgotPassword = () => {
   const [cellNumber, setCellNumber] =
     useState("");
 
-  const [verificationCode, setVerificationCode] =
-    useState("");
-
-  const [enteredCode, setEnteredCode] =
-    useState("");
-
   const [newPassword, setNewPassword] =
     useState("");
 
@@ -41,12 +35,16 @@ const ForgotPassword = () => {
   const [error, setError] =
     useState("");
 
+  const [loading, setLoading] =
+    useState(false);
+
   /*
-   * Step 1:
-   * Find the user and generate
-   * a verification code.
+   * STEP 1
+   *
+   * Find the account using the
+   * user's cell number.
    */
-  const handleSendCode = async (
+  const handleFindAccount = async (
     event: FormEvent
   ) => {
     event.preventDefault();
@@ -54,10 +52,23 @@ const ForgotPassword = () => {
     setMessage("");
     setError("");
 
+    const trimmedCellNumber =
+      cellNumber.trim();
+
+    if (!trimmedCellNumber) {
+      setError(
+        "Please enter your cell number."
+      );
+
+      return;
+    }
+
     try {
+      setLoading(true);
+
       const user =
         await getUserByCellNumber(
-          cellNumber
+          trimmedCellNumber
         );
 
       if (!user) {
@@ -69,72 +80,36 @@ const ForgotPassword = () => {
       }
 
       /*
-       * Generate a six digit code.
+       * Keep only the user ID.
+       *
+       * We don't need to store the
+       * existing password.
        */
-      const code =
-        Math.floor(
-          100000 +
-            Math.random() * 900000
-        ).toString();
-
       setUserId(user.id);
-      setVerificationCode(code);
 
-      /*
-       * Development/testing only.
-       * There is no real SMS service connected.
-       */
       setMessage(
-        `Verification code: ${code}`
+        "Account found. You can now create a new password."
       );
 
       setStep(2);
     } catch (error) {
       console.error(
-        "Forgot password error:",
+        "Find account error:",
         error
       );
 
       setError(
         "Something went wrong. Please try again."
       );
+    } finally {
+      setLoading(false);
     }
   };
 
   /*
-   * Step 2:
-   * Verify the code.
-   */
-  const handleVerifyCode = (
-    event: FormEvent
-  ) => {
-    event.preventDefault();
-
-    setMessage("");
-    setError("");
-
-    if (
-      enteredCode.trim() !==
-      verificationCode
-    ) {
-      setError(
-        "Invalid verification code."
-      );
-
-      return;
-    }
-
-    setMessage(
-      "Verification successful."
-    );
-
-    setStep(3);
-  };
-
-  /*
-   * Step 3:
-   * Hash the new password and
-   * update the user with PATCH.
+   * STEP 2
+   *
+   * Validate and update the password.
    */
   const handleResetPassword = async (
     event: FormEvent
@@ -143,6 +118,16 @@ const ForgotPassword = () => {
 
     setMessage("");
     setError("");
+
+    if (!userId) {
+      setError(
+        "Your account could not be identified. Please start again."
+      );
+
+      setStep(1);
+
+      return;
+    }
 
     if (newPassword.length < 8) {
       setError(
@@ -164,23 +149,27 @@ const ForgotPassword = () => {
     }
 
     try {
+      setLoading(true);
+
       /*
-       * Hash the password.
-       * We never decrypt it.
+       * Hash the new password before
+       * sending it to the API.
        */
       const hashedPassword =
         hashPassword(newPassword);
 
       /*
-       * PATCH only changes the
-       * password field.
+       * PATCH the existing user.
+       *
+       * Only the password field is
+       * changed.
        */
       await updateUser(userId, {
         password: hashedPassword,
       });
 
       setMessage(
-        "Password reset successfully."
+        "Password reset successfully. Redirecting to sign in..."
       );
 
       setNewPassword("");
@@ -188,7 +177,7 @@ const ForgotPassword = () => {
 
       setTimeout(() => {
         navigate("/login");
-      }, 1000);
+      }, 1500);
     } catch (error) {
       console.error(
         "Password reset error:",
@@ -196,10 +185,14 @@ const ForgotPassword = () => {
       );
 
       setError(
-        "Unable to reset your password."
+        "Unable to reset your password. Please try again."
       );
+    } finally {
+      setLoading(false);
     }
   };
+
+
 
   return (
     <main className="auth-page">
@@ -207,33 +200,39 @@ const ForgotPassword = () => {
         <h1>Reset your password</h1>
 
         <p>
-          Follow the steps below to
-          reset your password.
+          Reset your password using
+          your registered cell number.
         </p>
       </div>
 
       {message && (
-        <p role="status">
+        <p
+          className="auth-success-alert"
+          role="status"
+        >
           {message}
         </p>
       )}
 
       {error && (
-        <p role="alert">
+        <p
+          className="auth-error-alert"
+          role="alert"
+        >
           {error}
         </p>
       )}
 
-      {/* STEP 1 */}
+
       {step === 1 && (
         <form
           onSubmit={
-            handleSendCode
+            handleFindAccount
           }
         >
           <p>
-            Enter your cell number to
-            receive a verification code.
+            Enter the cell number
+            associated with your account.
           </p>
 
           <label htmlFor="forgot-phone">
@@ -250,62 +249,30 @@ const ForgotPassword = () => {
               )
             }
             placeholder="+27 123 456 7891"
+            autoComplete="tel"
             required
           />
 
-          <button type="submit">
-            Send verification code
+          <button
+            type="submit"
+            disabled={loading}
+          >
+            {loading
+              ? "Finding account..."
+              : "Continue"}
           </button>
         </form>
       )}
 
-      {/* STEP 2 */}
       {step === 2 && (
-        <form
-          onSubmit={
-            handleVerifyCode
-          }
-        >
-          <p>
-            Enter the verification
-            code sent to your cell
-            number.
-          </p>
-
-          <label htmlFor="verification-code">
-            Verification code
-          </label>
-
-          <input
-            id="verification-code"
-            type="text"
-            inputMode="numeric"
-            maxLength={6}
-            value={enteredCode}
-            onChange={(event) =>
-              setEnteredCode(
-                event.target.value
-              )
-            }
-            placeholder="123456"
-            required
-          />
-
-          <button type="submit">
-            Verify code
-          </button>
-        </form>
-      )}
-
-      {/* STEP 3 */}
-      {step === 3 && (
         <form
           onSubmit={
             handleResetPassword
           }
         >
           <p>
-            Enter your new password.
+            Create a new password for
+            your account.
           </p>
 
           <label htmlFor="new-password">
@@ -322,6 +289,8 @@ const ForgotPassword = () => {
                 event.target.value
               )
             }
+            autoComplete="new-password"
+            placeholder="Enter new password"
             required
           />
 
@@ -339,12 +308,20 @@ const ForgotPassword = () => {
                 event.target.value
               )
             }
+            autoComplete="new-password"
+            placeholder="Confirm new password"
             required
           />
 
-          <button type="submit">
-            Reset password
+          <button
+            type="submit"
+            disabled={loading}
+          >
+            {loading
+              ? "Resetting password..."
+              : "Reset password"}
           </button>
+
         </form>
       )}
 
@@ -354,6 +331,7 @@ const ForgotPassword = () => {
           onClick={() =>
             navigate("/login")
           }
+          disabled={loading}
         >
           Back to sign in
         </button>

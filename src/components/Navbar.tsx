@@ -46,18 +46,11 @@ const Navbar = () => {
           <User size={20} />
           <span>Profile</span>
         </Link>
-        
+
         <button
           type="button"
           onClick={handleLogout}
-          className="nav-item"
-          style={{
-            background: "none",
-            border: "none",
-            width: "100%",
-            textAlign: "left",
-            cursor: "pointer",
-          }}
+          className="nav-item nav-logout-btn"
         >
           <LogOut size={20} />
           <span>Logout</span>

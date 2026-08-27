@@ -14,9 +14,12 @@ import {
   getShoppingLists,
   updateShoppingList,
 } from "../services/shoppingListService";
+
+import { createShoppingItem } from "../services/shoppingItemService";
+
+import type { ShoppingItem, ShoppingList } from "../types";
 import ShoppingListCard from "../components/ShoppingListCard";
 import ShoppingListForm from "../components/ShoppingListForm";
-import type { ShoppingList } from "../types";
 import emptyCartImg from "../assets/empty-removebg-preview.png";
 
 const Home = () => {
@@ -50,26 +53,63 @@ const Home = () => {
     loadShoppingLists();
   }, [currentUser, dispatch]);
 
-  const handleCreateList = async (shoppingList: Omit<ShoppingList, "id">) => {
-    if (!currentUser) return;
+const handleCreateList = async (
+  shoppingList: Omit<ShoppingList, "id">,
+  items: Omit<
+    ShoppingItem,
+    "id" | "listId"
+  >[] = []
+) => {
+  if (!currentUser) {
+    return;
+  }
 
-    try {
-      dispatch(setError(null));
+  try {
+    dispatch(setError(null));
 
-      const newList = await createShoppingList({
+    /*
+     * Create the list first.
+     */
+    const newList =
+      await createShoppingList({
         ...shoppingList,
         userId: currentUser.id,
       });
 
-      dispatch(addList(newList));
-      setMessage("Shopping list created successfully.");
-      setShowForm(false);
-    } catch (err) {
-      console.error("Create shopping list error:", err);
-      dispatch(setError("Unable to create shopping list."));
+    /*
+     * Now create every item using
+     * the ID returned by JSON Server.
+     */
+    for (const item of items) {
+      await createShoppingItem({
+        ...item,
+        listId: newList.id,
+      });
     }
-  };
 
+    /*
+     * Add the list to Redux.
+     */
+    dispatch(addList(newList));
+
+    setMessage(
+      "Shopping list and items created successfully."
+    );
+
+    setShowForm(false);
+  } catch (error) {
+    console.error(
+      "Create shopping list error:",
+      error
+    );
+
+    dispatch(
+      setError(
+        "Unable to create shopping list."
+      )
+    );
+  }
+};
   const handleUpdateList = async (shoppingList: Omit<ShoppingList, "id">) => {
     if (!editingList) return;
 

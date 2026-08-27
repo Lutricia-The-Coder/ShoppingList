@@ -9,7 +9,7 @@ import {
   useAppDispatch,
   useAppSelector,
 } from "../store/hooks";
-
+import CategoryGroupedItems from "../components/CategoryGroupedItems";
 import {
   setItems,
   addItem,
@@ -150,7 +150,21 @@ const [message, setMessage] =useState("");
 
       return result;
     }, [items, searchQuery, sortValue]);
+const totalItems = items.length;
 
+const boughtItems = items.filter(
+  (item) => item.completed
+).length;
+
+const remainingItems =
+  totalItems - boughtItems;
+
+const progressPercentage =
+  totalItems > 0
+    ? Math.round(
+        (boughtItems / totalItems) * 100
+      )
+    : 0;
   /*
    * Search handler
    */
@@ -190,7 +204,27 @@ const [message, setMessage] =useState("");
 
     setSearchParams(newParams);
   };
+/* check */
+const handleToggleItem = async (
+  item: ShoppingItem
+) => {
+  try {
+    dispatch(setError(null));
 
+    const updatedItem =
+      await updateShoppingItem(item.id, {
+        completed: !item.completed,
+      });
+
+    dispatch(updateItem(updatedItem));
+  } catch {
+    dispatch(
+      setError(
+        "Unable to update shopping item."
+      )
+    );
+  }
+};
   /*
    * Create item
    */
@@ -328,7 +362,47 @@ setMessage(
             shoppingList.dateAdded
           ).toLocaleDateString()}
         </p>
+<div className="shopping-progress">
+  <div className="shopping-progress-header">
+    <span>
+      {boughtItems} of {totalItems} items bought
+    </span>
 
+    <span>
+      {progressPercentage}%
+    </span>
+  </div>
+
+  <div
+    className="shopping-progress-bar"
+    aria-label={`${progressPercentage}% of items bought`}
+  >
+    <div
+      className="shopping-progress-fill"
+      style={{
+        width: `${progressPercentage}%`,
+      }}
+    />
+  </div>
+
+  {remainingItems > 0 ? (
+    <p>
+      {remainingItems}{" "}
+      {remainingItems === 1
+        ? "item"
+        : "items"}{" "}
+      remaining
+    </p>
+  ) : totalItems > 0 ? (
+    <p>
+       All items bought!
+    </p>
+  ) : (
+    <p>
+      Add items to start shopping.
+    </p>
+  )}
+</div>
         <button
           type="button"
           onClick={() => {
@@ -401,45 +475,53 @@ setMessage(
       </section>
 
       {/* Items */}
-      <section>
-        <h2>
-          Items ({filteredAndSortedItems.length})
-        </h2>
+    {/* Items */}
+<section>
+  <h2>
+    Items ({filteredAndSortedItems.length})
+  </h2>
 
-        {loading && (
-          <p>
-            Loading items...
-          </p>
+  {loading && (
+    <p>Loading items...</p>
+  )}
+
+  {!loading &&
+    filteredAndSortedItems.length === 0 && (
+      <p>
+        {searchQuery
+          ? "No items match your search."
+          : "This shopping list doesn't have any items yet."}
+      </p>
+    )}
+
+  {!loading &&
+    filteredAndSortedItems.length > 0 && (
+      <>
+        {sortValue === "category" ? (
+          <CategoryGroupedItems
+            items={filteredAndSortedItems}
+            onEdit={handleEdit}
+            onDelete={handleDeleteItem}
+            onToggle={handleToggleItem}
+          />
+        ) : (
+          <div>
+            {filteredAndSortedItems.map(
+              (item) => (
+                <ShoppingItemCard
+  key={item.id}
+  item={item}
+  onEdit={handleEdit}
+  onDelete={handleDeleteItem}
+  onToggle={handleToggleItem}
+/>
+              )
+            )}
+          </div>
         )}
-
-        {!loading &&
-          filteredAndSortedItems.length ===
-            0 && (
-            <p>
-              {searchQuery
-                ? "No items match your search."
-                : "This shopping list doesn't have any items yet."}
-            </p>
-          )}
-
-        {!loading &&
-          filteredAndSortedItems.length > 0 && (
-            <div>
-              {filteredAndSortedItems.map(
-                (item) => (
-                  <ShoppingItemCard
-                    key={item.id}
-                    item={item}
-                    onEdit={handleEdit}
-                    onDelete={
-                      handleDeleteItem
-                    }
-                  />
-                )
-              )}
-            </div>
-          )}
-      </section>
+      </>
+    )}
+</section>
     </main>
   );
 };

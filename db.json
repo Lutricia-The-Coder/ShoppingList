@@ -15,9 +15,30 @@
       "surname": "ngomz",
       "cellNumber": "098765487654",
       "id": "VKWjE3bv8aI"
+    },
+    {
+      "email": "zoe@com",
+      "password": "8a9bcf1e51e812d0af8465a8dbcc9f741064bf0af3b3d08e6b0246437c19f7fb",
+      "name": "zoe",
+      "surname": "ngom",
+      "cellNumber": "0791234567",
+      "id": "5yNsmavjjIQ"
     }
   ],
-  "shoppingLists": [],
+  "shoppingLists": [
+    {
+      "name": "hhgj",
+      "userId": "zRFIQLXn_SA",
+      "dateAdded": "2026-08-27T08:53:47.290Z",
+      "id": "Ga0eNDFWDkI"
+    },
+    {
+      "name": "jhgm",
+      "userId": "zRFIQLXn_SA",
+      "dateAdded": "2026-08-27T09:58:37.531Z",
+      "id": "qDLsk37wLjQ"
+    }
+  ],
   "shoppingItems": [
     {
       "listId": "sXetyYM4VZQ",
@@ -58,6 +79,158 @@
       "image": "",
       "dateAdded": "2026-08-25T13:00:47.151Z",
       "id": "PcwIWVj1rTo"
+    },
+    {
+      "listId": "OLgX3L0eFHU",
+      "name": "trh",
+      "quantity": 1,
+      "notes": "tgfh",
+      "category": "Groceries",
+      "image": "",
+      "dateAdded": "2026-08-27T07:56:19.697Z",
+      "id": "Nw2mgw2Fr8Q"
+    },
+    {
+      "listId": "OLgX3L0eFHU",
+      "name": "szth",
+      "quantity": 1,
+      "notes": "",
+      "category": "Groceries",
+      "image": "",
+      "dateAdded": "2026-08-27T07:56:31.633Z",
+      "id": "IDypVZw_Rhs"
+    },
+    {
+      "listId": "OLgX3L0eFHU",
+      "name": "fh",
+      "quantity": 1,
+      "notes": "",
+      "category": "Household",
+      "image": "",
+      "dateAdded": "2026-08-27T07:56:44.937Z",
+      "id": "5mU7_P1dWpU"
+    },
+    {
+      "listId": "OLgX3L0eFHU",
+      "name": "fh",
+      "quantity": 1,
+      "notes": "",
+      "category": "Household",
+      "image": "",
+      "dateAdded": "2026-08-27T07:56:44.952Z",
+      "id": "8J3zE7yOgyE"
+    },
+    {
+      "listId": "OLgX3L0eFHU",
+      "name": "hs",
+      "quantity": 1,
+      "notes": "",
+      "category": "Clothing",
+      "image": "",
+      "dateAdded": "2026-08-27T07:57:00.041Z",
+      "id": "vaMI8Wt6O0c"
+    },
+    {
+      "name": "milk",
+      "quantity": 1,
+      "notes": "",
+      "category": "Groceries",
+      "image": "",
+      "dateAdded": "2026-08-27T08:41:54.003Z",
+      "listId": "XUoHVDtmBfw",
+      "id": "KhmIJzw6Q-0"
+    },
+    {
+      "name": "milk",
+      "quantity": 1,
+      "notes": "",
+      "category": "Groceries",
+      "image": "",
+      "dateAdded": "2026-08-27T08:41:53.987Z",
+      "listId": "XZGW1f47A_c",
+      "id": "IWJmIyhYJTM"
+    },
+    {
+      "name": "danone",
+      "quantity": 1,
+      "notes": "",
+      "category": "Groceries",
+      "image": "",
+      "dateAdded": "2026-08-27T08:41:54.003Z",
+      "listId": "XUoHVDtmBfw",
+      "id": "Ka5P-g3RGaw"
+    },
+    {
+      "name": "egg",
+      "quantity": 1,
+      "notes": "",
+      "category": "Groceries",
+      "image": "",
+      "dateAdded": "2026-08-27T08:41:53.987Z",
+      "listId": "XZGW1f47A_c",
+      "id": "AcFjhkZ7QoQ"
+    },
+    {
+      "name": "sdf",
+      "quantity": 1,
+      "notes": "",
+      "category": "Groceries",
+      "image": "",
+      "dateAdded": "2026-08-27T08:45:32.307Z",
+      "listId": "Z-gTWXEXjv0",
+      "id": "V_XNN0Saer4"
+    },
+    {
+      "name": "sdg",
+      "quantity": 1,
+      "notes": "",
+      "category": "Groceries",
+      "image": "",
+      "dateAdded": "2026-08-27T08:45:32.307Z",
+      "listId": "Z-gTWXEXjv0",
+      "id": "QWX900yLAtI"
+    },
+    {
+      "listId": "Z-gTWXEXjv0",
+      "name": "sgs",
+      "quantity": 1,
+      "notes": "",
+      "category": "Groceries",
+      "image": "",
+      "dateAdded": "2026-08-27T08:46:10.651Z",
+      "id": "pQniv_28SPg"
+    },
+    {
+      "name": "jghfc",
+      "quantity": 1,
+      "notes": "",
+      "category": "Groceries",
+      "image": "",
+      "dateAdded": "2026-08-27T08:53:47.290Z",
+      "listId": "Ga0eNDFWDkI",
+      "id": "kJFU5n0HSOU",
+      "completed": true
+    },
+    {
+      "name": "ghjg",
+      "quantity": 1,
+      "notes": "",
+      "category": "Groceries",
+      "image": "",
+      "dateAdded": "2026-08-27T08:53:47.290Z",
+      "listId": "Ga0eNDFWDkI",
+      "id": "ybYnlvjspg0",
+      "completed": true
+    },
+    {
+      "name": "gdjyh",
+      "quantity": 1,
+      "notes": "",
+      "category": "Household",
+      "image": "",
+      "dateAdded": "2026-08-27T08:53:47.290Z",
+      "listId": "Ga0eNDFWDkI",
+      "id": "Jtve79OOp4c"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"

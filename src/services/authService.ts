@@ -7,7 +7,7 @@ export interface RegisterData {
   name: string;
   surname: string;
   cellNumber: string;
-};
+}
 
 /*
  * Register user
@@ -22,22 +22,8 @@ export const registerUser = async (
       email: userData.email
         .trim()
         .toLowerCase(),
+      cellNumber: userData.cellNumber.trim(),
     }
-  );
-
-  return response.data;
-};
-
-/*
- * Update user using PATCH
- */
-export const updateUser = async (
-  id: string,
-  userData: Partial<User>
-): Promise<User> => {
-  const response = await api.patch<User>(
-    `/users/${id}`,
-    userData
   );
 
   return response.data;
@@ -66,21 +52,78 @@ export const getUserByEmail = async (
 };
 
 /*
- * Find user by cell number
+ * Normalise a South African
+ * cell number.
+ *
+ * Examples:
+ *
+ * 0712345678
+ * 071 234 5678
+ * +27712345678
+ * +27 71 234 5678
+ *
+ * All become:
+ *
+ * 0712345678
  */
-export const getUserByCellNumber = async (
+const normalizeCellNumber = (
   cellNumber: string
-): Promise<User | null> => {
-  const response = await api.get<User[]>(
-    "/users",
-    {
-      params: {
-        cellNumber: cellNumber.trim(),
-      },
-    }
-  );
+): string => {
+  let number =
+    cellNumber.replace(/\D/g, "");
 
-  return response.data.length > 0
-    ? response.data[0]
-    : null;
+  if (number.startsWith("27")) {
+    number =
+      `0${number.slice(2)}`;
+  }
+
+  return number;
+};
+
+/*
+ * Find user by cell number
+ *
+ * We load the users and compare
+ * normalised phone numbers so that
+ * formatting does not matter.
+ */
+export const getUserByCellNumber =
+  async (
+    cellNumber: string
+  ): Promise<User | null> => {
+    const response =
+      await api.get<User[]>(
+        "/users"
+      );
+
+    const normalizedNumber =
+      normalizeCellNumber(
+        cellNumber
+      );
+
+    const user =
+      response.data.find(
+        (user) =>
+          normalizeCellNumber(
+            user.cellNumber
+          ) === normalizedNumber
+      );
+
+    return user ?? null;
+  };
+
+/*
+ * Update user using PATCH
+ */
+export const updateUser = async (
+  id: string,
+  updates: Partial<User>
+): Promise<User> => {
+  const response =
+    await api.patch<User>(
+      `/users/${id}`,
+      updates
+    );
+
+  return response.data;
 };

@@ -598,80 +598,388 @@ body {
   margin: 24px 0;
 }
 /*home/dashbpoard*/
-/* Container Layout */
-.dashboard-container {
-  width: 100%;
-  max-width: 680px;
-  margin: 0 auto;
-  padding: 32px 20px;
+/* 1. Force outer main wrapper to take full screen width */
+main.dashboard-container {
+  width: 100% !important;
+  max-width: 600px !important; /* Adjust overall width of your content area here */
+  margin-left: auto !important;
+  margin-right: auto !important;
+  padding: 32px 16px !important;
+  box-sizing: border-box !important;
+}
+
+/* 2. Fix the header: title left, button right, single line */
+.dashboard-header {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  width: 100% !important;
+  margin-bottom: 32px !important;
+}
+
+.dashboard-brand-title h1 {
+  font-size: 1.4rem !important;
+  white-space: nowrap !important; /* Prevents "My Shopping Lists" from wrapping vertically */
+  margin: 0 !important;
+}
+
+/* 3. Center the Empty State Image, Text, and Button */
+.dashboard-empty-state {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+  width: 100% !important;
+  padding: 40px 0 !important;
+}
+
+.dashboard-empty-state img.empty-state-image {
+  width: 120px !important;
+  height: auto !important;
+  margin: 0 auto 16px auto !important;
+  display: block !important;
+}
+
+.dashboard-empty-state p {
+  text-align: center !important;
+  width: 100% !important;
+  margin: 0 0 16px 0 !important;
+}
+
+/* Fix button stretching */
+.btn-pill-submit-sm {
+  width: auto !important;
+  padding: 8px 18px !important;
+}
+/* Sidebar Container */
+.sidebar {
+  width: 260px;
+  min-height: 100vh;
+  background-color: #ffffff;
+  border-right: 1px solid #e5e7eb;
+  padding: 24px 16px;
+  display: flex;
+  flex-direction: column;
   box-sizing: border-box;
 }
 
-/* Header Alignment: Title Left, Button Right */
-.dashboard-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  margin-bottom: 32px;
+/* User Profile Section */
+.sidebar-profile {
+  padding-bottom: 20px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #f3f4f6;
 }
 
-.dashboard-brand-title {
+.sidebar-user-info h3 {
+  margin: 0 0 4px 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #111827;
+}
+
+.sidebar-user-info p {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #6b7280;
+  word-break: break-all;
+}
+
+/* Navigation Links & Buttons */
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  color: #4b5563;
+  text-decoration: none;
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.nav-item:hover {
+  background-color: #f3f4f6;
+  color: #111827;
+}
+
+.nav-item.active {
+  background-color: #000000;
+  color: #ffffff;
+}
+
+/* Logout Button Reset (Replaces Inline Styles) */
+.nav-logout-btn {
+  background: none;
+  border: none;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.nav-logout-btn:hover {
+  background-color: #fef2f2;
+  color: #ef4444;
+}
+
+/*createlist for,m*/
+/* Card Container */
+.shopping-list-form {
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Form Title */
+.form-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #111827;
+  margin: 0 0 20px 0;
+}
+
+/* Input Block */
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 20px;
+}
+
+.form-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #374151;
+}
+
+.form-input {
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  font-size: 0.95rem;
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-input:focus {
+  border-color: #000000;
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.05);
+}
+
+/* Buttons Flex Box */
+.form-actions {
   display: flex;
   align-items: center;
   gap: 12px;
 }
 
-.dashboard-brand-title h1 {
-  font-size: 1.4rem;
+/* Outline Pill Button for Cancel */
+.btn-pill-outline-sm {
+  padding: 9px 18px;
+  border-radius: 50px;
+  background-color: transparent;
+  color: #374151;
+  border: 1px solid #d1d5db;
+  font-weight: 600;
+  font-size: 0.78rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-pill-outline-sm:hover {
+  background-color: #f3f4f6;
+  border-color: #9ca3af;
+}
+/* --- Shopping List Card Styles --- */
+.shopping-lists-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+}
+
+.shopping-card {
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 16px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.shopping-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+.card-title {
+  font-size: 1.15rem;
   font-weight: 700;
-  color: var(--text-dark, #111827);
+  color: #111827;
+  margin: 0 0 4px 0;
+}
+
+.card-date {
+  font-size: 0.8rem;
+  color: #6b7280;
   margin: 0;
 }
 
-/* Centered Empty State Container */
-.dashboard-empty-state {
+.card-actions {
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.card-actions a {
+  text-decoration: none;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  text-align: center;
-  width: 100%;
-  padding: 48px 16px;
-  box-sizing: border-box;
 }
 
-/* Empty State Image */
-.empty-state-image {
-  width: 140px;
-  height: auto;
-  margin: 0 auto 16px auto;
-  display: block;
-}
-
-/* Centered Text Under Image */
-.dashboard-empty-state p {
-  font-size: 0.95rem;
-  font-weight: 500;
-  color: var(--text-dark, #111827);
-  margin: 0 0 16px 0;
-  text-align: center;
-}
-
-/* Standardized Small Pill Buttons */
-.btn-pill-submit-sm {
-  padding: 9px 18px;
+.btn-pill-danger-sm {
+  padding: 8px 16px;
   border-radius: 50px;
-  background-color: #000000;
+  background-color: #ef4444;
   color: #ffffff;
   border: none;
   font-weight: 600;
-  letter-spacing: 0.5px;
   font-size: 0.78rem;
   cursor: pointer;
   transition: opacity 0.2s;
 }
 
-.btn-pill-submit-sm:hover {
+.btn-pill-danger-sm:hover {
   opacity: 0.85;
+}
+
+/* --- Shopping Item Form Styles --- */
+.item-form-card {
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.form-row {
+  display: flex;
+  gap: 12px;
+}
+
+.flex-1 { flex: 1; }
+.flex-2 { flex: 2; }
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.form-select,
+.form-textarea {
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  font-size: 0.95rem;
+  outline: none;
+  box-sizing: border-box;
+  font-family: inherit;
+  transition: border-color 0.2s;
+}
+
+.form-select:focus,
+.form-textarea:focus {
+  border-color: #000000;
+}
+
+/*toggle*/
+.shopping-item-card {
+  transition: 0.2s ease;
+}
+
+.shopping-item-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.shopping-item-title input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}
+
+.shopping-item-completed {
+  opacity: 0.65;
+}
+
+.shopping-item-completed h3 {
+  text-decoration: line-through;
+}
+
+.shopping-item-status {
+  font-weight: 600;
+}
+
+.shopping-item-completed .shopping-item-status {
+  text-decoration: none;
+}
+.shopping-progress {
+  width: 100%;
+  max-width: 600px;
+  margin: 20px 0;
+}
+
+.shopping-progress-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.shopping-progress-bar {
+  width: 100%;
+  height: 10px;
+  background: #e5e7eb;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.shopping-progress-fill {
+  height: 100%;
+  border-radius: 999px;
+  transition: width 0.3s ease;
+}
+
+.shopping-progress p {
+  margin-top: 8px;
+  font-size: 14px;
 }
