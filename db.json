@@ -37,12 +37,6 @@
       "userId": "5yNsmavjjIQ",
       "dateAdded": "2026-08-27T18:22:44.329Z",
       "id": "2_xl_H7F2Q8"
-    },
-    {
-      "name": "tety",
-      "userId": "5yNsmavjjIQ",
-      "dateAdded": "2026-08-27T19:12:01.027Z",
-      "id": "-fhjOoMMs_s"
     }
   ],
   "shoppingItems": [
@@ -431,19 +425,6 @@
       "id": "C8HxL98Qoyk"
     },
     {
-      "name": "top",
-      "quantity": 1,
-      "notes": "",
-      "category": "Clothing",
-      "image": "https://images.unsplash.com/photo-1454942901704-3c44c11b2ad1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDQ1MjYyfDB8MXxzZWFyY2h8MXx8dG9wfGVufDB8fHx8MTc4Nzg1NzkxM3ww&ixlib=rb-4.1.0&q=80&w=400",
-      "imageAuthor": "Joshua Earle",
-      "imageUsername": "",
-      "completed": false,
-      "dateAdded": "2026-08-27T19:12:01.027Z",
-      "listId": "-fhjOoMMs_s",
-      "id": "jh2oK7uVQ8Q"
-    },
-    {
       "listId": "2_xl_H7F2Q8",
       "name": "cheese",
       "quantity": 1,
@@ -455,19 +436,6 @@
       "completed": true,
       "dateAdded": "2026-08-27T20:03:13.356Z",
       "id": "_frW1YlW6X4"
-    },
-    {
-      "listId": "2_xl_H7F2Q8",
-      "name": "cheese",
-      "quantity": 1,
-      "notes": "",
-      "category": "Clothing",
-      "image": "https://images.unsplash.com/photo-1683314573422-649a3c6ad784?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDQ1MjYyfDB8MXxzZWFyY2h8MXx8Y2hlZXNlfGVufDB8fHx8MTc4Nzg1MjkxMnww&ixlib=rb-4.1.0&q=80&w=400",
-      "imageAuthor": "",
-      "imageUsername": "",
-      "completed": true,
-      "dateAdded": "2026-08-27T20:03:35.461Z",
-      "id": "Zsn2xxhrPHU"
     },
     {
       "listId": "2_xl_H7F2Q8",

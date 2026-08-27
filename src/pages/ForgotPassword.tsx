@@ -1,9 +1,9 @@
+
 import {
   type FormEvent,
   useState,
 } from "react";
-
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import {
   getUserByCellNumber,
@@ -25,41 +25,34 @@ const ForgotPassword = () => {
     useState("");
 
   const [userId, setUserId] =
-    useState("");
-
-  const [step, setStep] = useState(1);
-
-  const [message, setMessage] =
-    useState("");
+    useState<string | null>(null);
 
   const [error, setError] =
+    useState("");
+
+  const [success, setSuccess] =
     useState("");
 
   const [loading, setLoading] =
     useState(false);
 
+  const [numberVerified, setNumberVerified] =
+    useState(false);
+
   /*
-   * STEP 1
-   *
-   * Find the account using the
-   * user's cell number.
+   * Check if the cell number exists
+   * in the database.
    */
-  const handleFindAccount = async (
+  const handleVerifyNumber = async (
     event: FormEvent
   ) => {
     event.preventDefault();
 
-    setMessage("");
     setError("");
+    setSuccess("");
 
-    const trimmedCellNumber =
-      cellNumber.trim();
-
-    if (!trimmedCellNumber) {
-      setError(
-        "Please enter your cell number."
-      );
-
+    if (!cellNumber.trim()) {
+      setError("Please enter your cell number.");
       return;
     }
 
@@ -68,38 +61,35 @@ const ForgotPassword = () => {
 
       const user =
         await getUserByCellNumber(
-          trimmedCellNumber
+          cellNumber
         );
 
       if (!user) {
         setError(
           "No account was found with that cell number."
         );
-
         return;
       }
 
       /*
-       * Keep only the user ID.
+       * Store only the user's ID.
        *
-       * We don't need to store the
-       * existing password.
+       * We do NOT store the password.
        */
       setUserId(user.id);
+      setNumberVerified(true);
 
-      setMessage(
-        "Account found. You can now create a new password."
+      setSuccess(
+        "Number verified. You can now create a new password."
       );
-
-      setStep(2);
     } catch (error) {
       console.error(
-        "Find account error:",
+        "Verify number error:",
         error
       );
 
       setError(
-        "Something went wrong. Please try again."
+        "Something went wrong while checking your number."
       );
     } finally {
       setLoading(false);
@@ -107,25 +97,30 @@ const ForgotPassword = () => {
   };
 
   /*
-   * STEP 2
+   * Change password.
    *
-   * Validate and update the password.
+   * The new password is hashed BEFORE
+   * being sent to json-server.
    */
-  const handleResetPassword = async (
+  const handleChangePassword = async (
     event: FormEvent
   ) => {
     event.preventDefault();
 
-    setMessage("");
     setError("");
+    setSuccess("");
 
     if (!userId) {
       setError(
-        "Your account could not be identified. Please start again."
+        "Please verify your cell number first."
       );
+      return;
+    }
 
-      setStep(1);
-
+    if (!newPassword) {
+      setError(
+        "Please enter a new password."
+      );
       return;
     }
 
@@ -133,18 +128,15 @@ const ForgotPassword = () => {
       setError(
         "Password must be at least 8 characters."
       );
-
       return;
     }
 
     if (
-      newPassword !==
-      confirmPassword
+      newPassword !== confirmPassword
     ) {
       setError(
         "Passwords do not match."
       );
-
       return;
     }
 
@@ -152,8 +144,8 @@ const ForgotPassword = () => {
       setLoading(true);
 
       /*
-       * Hash the new password before
-       * sending it to the API.
+       * Hash the password using the SAME
+       * SHA-256 function used during registration.
        */
       const hashedPassword =
         hashPassword(newPassword);
@@ -161,15 +153,14 @@ const ForgotPassword = () => {
       /*
        * PATCH the existing user.
        *
-       * Only the password field is
-       * changed.
+       * Only the password field is changed.
        */
       await updateUser(userId, {
         password: hashedPassword,
       });
 
-      setMessage(
-        "Password reset successfully. Redirecting to sign in..."
+      setSuccess(
+        "Password changed successfully. Redirecting to login..."
       );
 
       setNewPassword("");
@@ -177,167 +168,173 @@ const ForgotPassword = () => {
 
       setTimeout(() => {
         navigate("/login");
-      }, 1500);
+      }, 1200);
     } catch (error) {
       console.error(
-        "Password reset error:",
+        "Change password error:",
         error
       );
 
       setError(
-        "Unable to reset your password. Please try again."
+        "Unable to change your password. Please try again."
       );
     } finally {
       setLoading(false);
     }
   };
 
-
-
   return (
-    <main className="auth-page">
-      <div className="auth-header">
-        <h1>Reset your password</h1>
+    <div className="auth-centered-container">
+      <div className="auth-single-card">
 
-        <p>
-          Reset your password using
-          your registered cell number.
-        </p>
+        {/* Brand */}
+        <div className="brand-header">
+          <span className="brand-logo-icon">
+            OL
+          </span>
+
+          <span className="brand-name">
+            OrgList
+          </span>
+        </div>
+
+        {!numberVerified ? (
+          <>
+            <h2>Forgot Password</h2>
+
+            <p className="auth-subtitle">
+              Enter your cell number to verify
+              your account.
+            </p>
+
+            {error && (
+              <div
+                className="auth-error-alert"
+                role="alert"
+              >
+                {error}
+              </div>
+            )}
+
+            {success && (
+              <div
+                className="auth-success-alert"
+                role="status"
+              >
+                {success}
+              </div>
+            )}
+
+            <form
+              onSubmit={handleVerifyNumber}
+            >
+              <div className="minimal-input-group">
+                <input
+                  type="tel"
+                  placeholder="Cell Number"
+                  value={cellNumber}
+                  onChange={(event) =>
+                    setCellNumber(
+                      event.target.value
+                    )
+                  }
+                  required
+                />
+              </div>
+
+              <button
+                type="submit"
+                className="btn-pill-submit"
+                disabled={loading}
+              >
+                {loading
+                  ? "CHECKING..."
+                  : "VERIFY NUMBER"}
+              </button>
+            </form>
+
+            <div className="auth-footer-link">
+              Remember your password?
+              <Link to="/login">
+                Login
+              </Link>
+            </div>
+          </>
+        ) : (
+          <>
+            <h2>Change Password</h2>
+
+            <p className="auth-subtitle">
+              Enter your new password below.
+            </p>
+
+            {error && (
+              <div
+                className="auth-error-alert"
+                role="alert"
+              >
+                {error}
+              </div>
+            )}
+
+            {success && (
+              <div
+                className="auth-success-alert"
+                role="status"
+              >
+                {success}
+              </div>
+            )}
+
+            <form
+              onSubmit={handleChangePassword}
+            >
+              <div className="minimal-input-group">
+                <input
+                  type="password"
+                  placeholder="New Password"
+                  value={newPassword}
+                  onChange={(event) =>
+                    setNewPassword(
+                      event.target.value
+                    )
+                  }
+                  minLength={8}
+                  required
+                />
+              </div>
+
+              <div className="minimal-input-group">
+                <input
+                  type="password"
+                  placeholder="Confirm New Password"
+                  value={confirmPassword}
+                  onChange={(event) =>
+                    setConfirmPassword(
+                      event.target.value
+                    )
+                  }
+                  minLength={8}
+                  required
+                />
+              </div>
+
+              <button
+                type="submit"
+                className="btn-pill-submit"
+                disabled={loading}
+              >
+                {loading
+                  ? "CHANGING PASSWORD..."
+                  : "CHANGE PASSWORD"}
+              </button>
+            </form>
+          </>
+        )}
       </div>
-
-      {message && (
-        <p
-          className="auth-success-alert"
-          role="status"
-        >
-          {message}
-        </p>
-      )}
-
-      {error && (
-        <p
-          className="auth-error-alert"
-          role="alert"
-        >
-          {error}
-        </p>
-      )}
-
-
-      {step === 1 && (
-        <form
-          onSubmit={
-            handleFindAccount
-          }
-        >
-          <p>
-            Enter the cell number
-            associated with your account.
-          </p>
-
-          <label htmlFor="forgot-phone">
-            Cell number
-          </label>
-
-          <input
-            id="forgot-phone"
-            type="tel"
-            value={cellNumber}
-            onChange={(event) =>
-              setCellNumber(
-                event.target.value
-              )
-            }
-            placeholder="+27 123 456 7891"
-            autoComplete="tel"
-            required
-          />
-
-          <button
-            type="submit"
-            disabled={loading}
-          >
-            {loading
-              ? "Finding account..."
-              : "Continue"}
-          </button>
-        </form>
-      )}
-
-      {step === 2 && (
-        <form
-          onSubmit={
-            handleResetPassword
-          }
-        >
-          <p>
-            Create a new password for
-            your account.
-          </p>
-
-          <label htmlFor="new-password">
-            New password
-          </label>
-
-          <input
-            id="new-password"
-            type="password"
-            minLength={8}
-            value={newPassword}
-            onChange={(event) =>
-              setNewPassword(
-                event.target.value
-              )
-            }
-            autoComplete="new-password"
-            placeholder="Enter new password"
-            required
-          />
-
-          <label htmlFor="confirm-password">
-            Confirm password
-          </label>
-
-          <input
-            id="confirm-password"
-            type="password"
-            minLength={8}
-            value={confirmPassword}
-            onChange={(event) =>
-              setConfirmPassword(
-                event.target.value
-              )
-            }
-            autoComplete="new-password"
-            placeholder="Confirm new password"
-            required
-          />
-
-          <button
-            type="submit"
-            disabled={loading}
-          >
-            {loading
-              ? "Resetting password..."
-              : "Reset password"}
-          </button>
-
-        </form>
-      )}
-
-      <div>
-        <button
-          type="button"
-          onClick={() =>
-            navigate("/login")
-          }
-          disabled={loading}
-        >
-          Back to sign in
-        </button>
-      </div>
-    </main>
+    </div>
   );
 };
 
 export default ForgotPassword;
+

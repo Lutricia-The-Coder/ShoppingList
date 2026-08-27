@@ -1,5 +1,6 @@
+
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
-import type { StoredUser, User } from "../../types"
+import type { StoredUser, User } from "../../types";
 
 interface AuthState {
   currentUser: StoredUser | null;
@@ -46,6 +47,24 @@ const authSlice = createSlice({
       );
     },
 
+    /*
+     * Update the currently logged-in user's details.
+     *
+     * The password is deliberately not handled here.
+     * Password changes are sent to the API separately.
+     */
+    updateCurrentUser: (
+      state,
+      action: PayloadAction<StoredUser>
+    ) => {
+      state.currentUser = action.payload;
+
+      localStorage.setItem(
+        "shoppingListUser",
+        JSON.stringify(action.payload)
+      );
+    },
+
     logout: (state) => {
       state.currentUser = null;
       state.isAuthenticated = false;
@@ -55,6 +74,11 @@ const authSlice = createSlice({
   },
 });
 
-export const { login, logout } = authSlice.actions;
+export const {
+  login,
+  updateCurrentUser,
+  logout,
+} = authSlice.actions;
 
 export default authSlice.reducer;
+

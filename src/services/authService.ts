@@ -80,37 +80,21 @@ const normalizeCellNumber = (
   return number;
 };
 
-/*
- * Find user by cell number
- *
- * We load the users and compare
- * normalised phone numbers so that
- * formatting does not matter.
- */
-export const getUserByCellNumber =
-  async (
-    cellNumber: string
-  ): Promise<User | null> => {
-    const response =
-      await api.get<User[]>(
-        "/users"
-      );
 
-    const normalizedNumber =
-      normalizeCellNumber(
-        cellNumber
-      );
+export const getUserByCellNumber = async (
+  cellNumber: string
+): Promise<User | null> => {
+  const normalizedNumber = normalizeCellNumber(cellNumber);
 
-    const user =
-      response.data.find(
-        (user) =>
-          normalizeCellNumber(
-            user.cellNumber
-          ) === normalizedNumber
-      );
+  const response = await api.get<User[]>("/users");
 
-    return user ?? null;
-  };
+  const user = response.data.find(
+    (user) =>
+      normalizeCellNumber(user.cellNumber) === normalizedNumber
+  );
+
+  return user ?? null;
+};
 
 /*
  * Update user using PATCH
