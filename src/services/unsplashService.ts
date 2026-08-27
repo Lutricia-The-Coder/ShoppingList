@@ -1,5 +1,3 @@
-import api from "./api";
-
 export interface UnsplashPhoto {
   urls: {
     small: string;

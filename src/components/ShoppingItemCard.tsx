@@ -13,9 +13,7 @@ const ShoppingItemCard = ({
   onDelete,
   onToggle,
 }: ShoppingItemCardProps) => {
-  const unsplashAuthorUrl = item.imageUsername
-    ? `https://unsplash.com/@${item.imageUsername}?utm_source=shopping_list_app&utm_medium=referral`
-    : null;
+
 
   return (
     <article
@@ -25,110 +23,85 @@ const ShoppingItemCard = ({
           : ""
       }`}
     >
+      {/* CHECKBOX */}
+      <div className="shopping-item-checkbox">
+        <input
+          type="checkbox"
+          checked={item.completed}
+          onChange={() => onToggle(item)}
+          aria-label={`Mark ${item.name} as ${
+            item.completed
+              ? "not bought"
+              : "bought"
+          }`}
+        />
+      </div>
+
       {/* IMAGE */}
       {item.image && (
         <div className="shopping-item-image">
           <img
             src={item.image}
-            alt={`Picture of ${item.name}`}
-            onError={(event) => {
-              event.currentTarget.style.display = "none";
-            }}
+            alt={item.name}
           />
-
-          {item.imageAuthor && (
-            <small>
-              Photo by{" "}
-              {unsplashAuthorUrl ? (
-                <a
-                  href={unsplashAuthorUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  {item.imageAuthor}
-                </a>
-              ) : (
-                item.imageAuthor
-              )}{" "}
-              on{" "}
-              <a
-                href="https://unsplash.com/?utm_source=shopping_list_app&utm_medium=referral"
-                target="_blank"
-                rel="noreferrer"
-              >
-                Unsplash
-              </a>
-            </small>
-          )}
         </div>
       )}
 
-      {/* ITEM CONTENT */}
+      {/* ITEM INFORMATION */}
       <div className="shopping-item-content">
-
-        {/* NAME + CHECKBOX */}
-        <div className="shopping-item-title">
-          <input
-            type="checkbox"
-            checked={item.completed}
-            onChange={() => onToggle(item)}
-            aria-label={`Mark ${item.name} as ${
-              item.completed
-                ? "not bought"
-                : "bought"
-            }`}
-          />
-
+        <div className="shopping-item-main">
           <h3>{item.name}</h3>
+
+          <span className="shopping-item-category">
+            {item.category}
+          </span>
         </div>
 
-        <p>
-          Quantity: {item.quantity}
-        </p>
+        <div className="shopping-item-meta">
+          <span>
+            Quantity: {item.quantity}
+          </span>
 
-        <p>
-          Category: {item.category}
-        </p>
+          <span>
+            Added:{" "}
+            {new Date(
+              item.dateAdded
+            ).toLocaleDateString()}
+          </span>
+        </div>
 
         {item.notes && (
-          <p>
-            Notes: {item.notes}
+          <p className="shopping-item-notes">
+            {item.notes}
           </p>
         )}
 
-        <p>
-          Added:{" "}
-          {new Date(
-            item.dateAdded
-          ).toLocaleDateString()}
-        </p>
-
-        <p className="shopping-item-status">
+        <span className="shopping-item-status">
           {item.completed
             ? "✓ Bought"
             : "Not bought"}
-        </p>
-
-        {/* ACTION BUTTONS */}
-        <div className="shopping-item-actions">
-          <button
-            type="button"
-            onClick={() => onEdit(item)}
-          >
-            Edit
-          </button>
-
-          <button
-            type="button"
-            onClick={() =>
-              onDelete(item.id)
-            }
-          >
-            Delete
-          </button>
-        </div>
-
+        </span>
       </div>
+
+      {/* ACTIONS */}
+      <div className="shopping-item-actions">
+        <button
+          type="button"
+          onClick={() => onEdit(item)}
+        >
+          Edit
+        </button>
+
+        <button
+          type="button"
+          onClick={() =>
+            onDelete(item.id)
+          }
+        >
+          Delete
+        </button>
+      </div>
+
     </article>
   );
 };

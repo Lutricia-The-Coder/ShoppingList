@@ -347,72 +347,59 @@ setMessage(
     );
   }
 
-  return (
-    <main>
-      <Link to="/">
-        ← Back to My Shopping Lists
+ /* NEW JSX */
+return (
+  <main>
+    <div className="list-top-bar">
+      <Link to="/" className="back-link">
+        &lt; Back to Shopping Lists
       </Link>
+      <button
+        type="button"
+        className="add-item-btn-blue"
+        onClick={() => {
+          setEditingItem(null);
+          setShowForm(true);
+        }}
+      >
+        + Add Item
+      </button>
+    </div>
 
-      <header>
-        <h1>{shoppingList.name}</h1>
+    <header>
+      <h1>{shoppingList.name}</h1>
+      <p>
+        Created:{" "}
+        {new Date(shoppingList.dateAdded).toLocaleDateString()}
+      </p>
 
-        <p>
-          Created:{" "}
-          {new Date(
-            shoppingList.dateAdded
-          ).toLocaleDateString()}
-        </p>
-<div className="shopping-progress">
-  <div className="shopping-progress-header">
-    <span>
-      {boughtItems} of {totalItems} items bought
-    </span>
+      <div className="shopping-progress">
+        <div className="shopping-progress-header">
+          <span>{boughtItems} of {totalItems} items bought</span>
+          <span>{progressPercentage}%</span>
+        </div>
 
-    <span>
-      {progressPercentage}%
-    </span>
-  </div>
-
-  <div
-    className="shopping-progress-bar"
-    aria-label={`${progressPercentage}% of items bought`}
-  >
-    <div
-      className="shopping-progress-fill"
-      style={{
-        width: `${progressPercentage}%`,
-      }}
-    />
-  </div>
-
-  {remainingItems > 0 ? (
-    <p>
-      {remainingItems}{" "}
-      {remainingItems === 1
-        ? "item"
-        : "items"}{" "}
-      remaining
-    </p>
-  ) : totalItems > 0 ? (
-    <p>
-       All items bought!
-    </p>
-  ) : (
-    <p>
-      Add items to start shopping.
-    </p>
-  )}
-</div>
-        <button
-          type="button"
-          onClick={() => {
-            setEditingItem(null);
-            setShowForm(true);
-          }}
+        <div
+          className="shopping-progress-bar"
+          aria-label={`${progressPercentage}% of items bought`}
         >
-          + Add Item
-        </button>
-      </header>
+          <div
+            className="shopping-progress-fill"
+            style={{ width: `${progressPercentage}%` }}
+          />
+        </div>
+
+        {remainingItems > 0 ? (
+          <p>{remainingItems} {remainingItems === 1 ? "item" : "items"} remaining</p>
+        ) : totalItems > 0 ? (
+          <p>All items bought!</p>
+        ) : (
+          <p>Add items to start shopping.</p>
+        )}
+      </div>
+    </header>
+    
+    {/* Remove the original "+ Add Item" button here so it isn't duplicated */}
 {message && (
   <p role="status">
     {message}
@@ -438,7 +425,8 @@ setMessage(
       )}
 
       {/* Search and sorting */}
-      <section>
+  <section className="shopping-list-controls">
+     <div className="shopping-list-control">
         <label htmlFor="item-search">
           Search items
         </label>
@@ -450,7 +438,7 @@ setMessage(
           onChange={handleSearchChange}
           placeholder="Search by item name..."
         />
-
+<div className="shopping-list-control">
         <label htmlFor="item-sort">
           Sort by
         </label>
@@ -472,11 +460,11 @@ setMessage(
             Date added
           </option>
         </select>
+        </div>
+        </div>
       </section>
 
-      {/* Items */}
-    {/* Items */}
-<section>
+<section className="shopping-list-items-section">
   <h2>
     Items ({filteredAndSortedItems.length})
   </h2>

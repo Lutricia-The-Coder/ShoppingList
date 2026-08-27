@@ -18,13 +18,7 @@ const ShoppingListCard = ({
     <article className="shopping-card">
       <h2>{shoppingList.name}</h2>
 
-      <p>
-        Created:{" "}
-        {new Date(
-          shoppingList.dateAdded
-        ).toLocaleDateString()}
-      </p>
-
+  
       <div className="card-actions">
         <Link
           to={`/lists/${shoppingList.id}`}
