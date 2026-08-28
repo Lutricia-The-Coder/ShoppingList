@@ -9,20 +9,7 @@
       "id": "oN3MR7pWHDk"
     }
   ],
-  "shoppingLists": [
-    {
-      "name": "Breakfast",
-      "userId": "oN3MR7pWHDk",
-      "dateAdded": "2026-08-28T09:20:29.534Z",
-      "id": "tgCwfeS4xtE"
-    },
-    {
-      "name": "Breakfast",
-      "userId": "oN3MR7pWHDk",
-      "dateAdded": "2026-08-28T09:43:57.294Z",
-      "id": "q13fVC98FrY"
-    }
-  ],
+  "shoppingLists": [],
   "shoppingItems": [
     {
       "name": "egg",
