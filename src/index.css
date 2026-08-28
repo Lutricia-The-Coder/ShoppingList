@@ -49,8 +49,38 @@ a {
   min-height: 100vh;
   background: #f5f5f5;
 }
-:root { --bg-canvas: #F1F5F9; --card-bg: #FFFFFF; --text-main: #0F172A; --text-muted: #64748B; --border-light: #E2E8F0; --input-focus: #334155; --btn-primary: #0F172A; --btn-hover: #1E293B; --hero-bg-dark: #0F172A; }  Canvas Container */ .landing-page-container { min-height: 100vh; width: 100vw; background-color: var(--bg-canvas); display: flex; align-items: center; justify-content: center; padding: 32px; }  Split Card */ .landing-card { width: 100%; max-width: 1040px; height: 600px; background: var(--card-bg); border-radius: 20px; box-shadow: 0 12px 32px rgba(15, 23, 42, 0.05); display: flex; overflow: hidden; border: 1px solid var(--border-light); }  Left Form Area */ .landing-form-section { flex: 1; padding: 48px; display: flex; flex-direction: column; justify-content: space-between; } .landing-brand-header { display: flex; align-items: center; gap: 10px; } .brand-logo-icon { width: 30px; height: 30px; background-color: var(--btn-primary); color: var(--card-bg); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem; } .brand-name { font-weight: 700; font-size: 1.05rem; letter-spacing: -0.3px; color: var(--text-main); } .landing-form-content { max-width: 320px; width: 100%; margin: 0 auto; } .landing-form-content h2 { font-size: 1.6rem; font-weight: 700; color: var(--text-main); margin-bottom: 32px; text-align: center; letter-spacing: -0.5px; }  Minimal Underline Inputs */ .minimal-input-group { margin-bottom: 22px; } .minimal-input-group input { width: 100%; border: none; border-bottom: 1px solid var(--border-light); padding: 10px 0; font-size: 0.9rem; outline: none; background: transparent; color: var(--text-main); transition: border-color 0.2s; } .minimal-input-group input::placeholder { color: var(--text-muted); } .minimal-input-group input:focus { border-bottom-color: var(--input-focus); } .forgot-link-wrapper { text-align: right; margin-bottom: 32px; } .forgot-link-wrapper a { font-size: 0.8rem; color: var(--text-muted); text-decoration: none; transition: color 0.2s; } .forgot-link-wrapper a:hover { color: var(--text-main); }  Minimal Pill Button */ .btn-pill-submit { width: 100%; padding: 13px; border-radius: 50px; background-color: var(--btn-primary); color: var(--card-bg); border: none; font-weight: 600; letter-spacing: 0.5px; font-size: 0.85rem; cursor: pointer; transition: background-color 0.2s, transform 0.1s; } .btn-pill-submit:hover { background-color: var(--btn-hover); transform: translateY(-1px); }  Right Minimal Hero Area */ .landing-hero-section { flex: 1.1; background: linear-gradient( 140deg, rgba(15, 23, 42, 0.88), rgba(30, 41, 59, 0.94) ), url("https://images.unsplash.com/photo-1507652313519-d4e9174996dd?auto=format&fit=crop&w=1200&q=80") center/cover no-repeat; padding: 48px; display: flex; flex-direction: column; justify-content: space-between; color: var(--card-bg); } .hero-top-nav { display: flex; align-items: center; justify-content: flex-end; gap: 16px; font-size: 0.85rem; color: var(--text-muted); } .btn-hero-outline { border: 1px solid rgba(255, 255, 255, 0.25); padding: 8px 20px; border-radius: 50px; color: var(--card-bg); text-decoration: none; font-weight: 500; font-size: 0.82rem; transition: background 0.2s, border-color 0.2s; } .btn-hero-outline:hover { background: rgba(255, 255, 255, 0.1); border-color: rgba(255, 255, 255, 0.6); } .hero-content { max-width: 380px; } .hero-content h1 { font-size: 2.1rem; font-weight: 700; margin-bottom: 12px; letter-spacing: -0.5px; line-height: 1.25; } .hero-content p { font-size: 0.9rem; color: var(--text-muted); line-height: 1.6; } .hero-pagination-dots { display: flex; gap: 8px; } .hero-pagination-dots .dot { width: 14px; height: 4px; border-radius: 2px; background: rgba(255, 255, 255, 0.2); } .hero-pagination-dots .dot.active { background: var(--card-bg); width: 24px; }
-.auth-centered-container { min-height: 100vh; width: 100vw; background-color: var(--bg-canvas); display: flex; align-items: center; justify-content: center; padding: 24px; } .auth-single-card { width: 100%; max-width: 460px; background: var(--card-bg); border-radius: 16px; box-shadow: 0 12px 32px rgba(15, 23, 42, 0.05); border: 1px solid var(--border-light); padding: 40px; }  Header & Brand Layout */ .auth-single-card .brand-header { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 24px; } .auth-single-card h2 { font-size: 1.5rem; font-weight: 700; color: var(--text-main); text-align: center; margin-bottom: 8px; letter-spacing: -0.5px; } .auth-subtitle { font-size: 0.85rem; color: var(--text-muted); text-align: center; margin-bottom: 28px; }  Grid & Navigation Links */ .register-name-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; } .auth-footer-link { text-align: center; margin-top: 24px; font-size: 0.85rem; color: var(--text-muted); } .auth-footer-link a { color: var(--text-main); font-weight: 600; text-decoration: none; margin-left: 4px; } .auth-footer-link a:hover { text-decoration: underline; }
+:root { --bg-canvas: #F1F5F9; --card-bg: #FFFFFF; --text-main: #0F172A; --text-muted: #64748B; --border-light: #E2E8F0; --input-focus: #334155; --btn-primary: #0F172A; --btn-hover: #1E293B; --hero-bg-dark: #0F172A; } 
+ .landing-page-container { min-height: 100vh; width: 100vw; background-color: var(--bg-canvas); display: flex; align-items: center; justify-content: center; padding: 32px; } 
+.landing-card { width: 100%; max-width: 1040px; height: 600px; background: var(--card-bg); border-radius: 20px; box-shadow: 0 12px 32px rgba(15, 23, 42, 0.05); 
+  display: flex; overflow: hidden; border: 1px solid var(--border-light); } 
+   .landing-form-section { flex: 1; padding: 48px; display: flex; flex-direction: column; justify-content: space-between; } 
+   .landing-brand-header { display: flex; align-items: center; gap: 10px; } 
+   .brand-logo-icon { width: 30px; height: 30px; background-color: var(--btn-primary); color: var(--card-bg); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem; } .brand-name { font-weight: 700; font-size: 1.05rem; letter-spacing: -0.3px; color: var(--text-main); } .landing-form-content { max-width: 320px; width: 100%; margin: 0 auto; } 
+   .landing-form-content h2 { font-size: 1.6rem; font-weight: 700; color: var(--text-main); margin-bottom: 32px; text-align: center; letter-spacing: -0.5px; }  
+   .minimal-input-group { margin-bottom: 22px; } .minimal-input-group input { width: 100%; border: none; border-bottom: 1px solid var(--border-light); padding: 10px 0; font-size: 0.9rem; outline: none; background: transparent; color: var(--text-main); transition: border-color 0.2s; } .minimal-input-group input::placeholder { color: var(--text-muted); } 
+   .minimal-input-group input:focus { border-bottom-color: var(--input-focus); }
+    .forgot-link-wrapper { text-align: right; margin-bottom: 32px; } 
+   .forgot-link-wrapper a { font-size: 0.8rem; color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
+    .forgot-link-wrapper a:hover { color: var(--text-main); } 
+   .btn-pill-submit { width: 100%; padding: 13px; border-radius: 50px; background-color: var(--btn-primary); color: var(--card-bg); border: none; font-weight: 600; letter-spacing: 0.5px; font-size: 0.85rem; cursor: pointer; transition: background-color 0.2s, transform 0.1s; } .btn-pill-submit:hover { background-color: var(--btn-hover); transform: translateY(-1px); } 
+   .landing-hero-section { flex: 1.1; background: linear-gradient( 140deg, rgba(15, 23, 42, 0.88), rgba(30, 41, 59, 0.94) ), 
+    url("https://images.unsplash.com/photo-1507652313519-d4e9174996dd?auto=format&fit=crop&w=1200&q=80") center/cover no-repeat;
+     padding: 48px; display: flex; flex-direction: column; justify-content: space-between; color: var(--card-bg); } 
+     .hero-top-nav { display: flex; align-items: center; justify-content: flex-end; gap: 16px; font-size: 0.85rem; color: var(--text-muted); } 
+     .btn-hero-outline { border: 1px solid rgba(255, 255, 255, 0.25); padding: 8px 20px; border-radius: 50px; color: var(--card-bg); text-decoration: none; font-weight: 500; font-size: 0.82rem; transition: background 0.2s, border-color 0.2s; }
+      .btn-hero-outline:hover { background: rgba(255, 255, 255, 0.1); border-color: rgba(255, 255, 255, 0.6); } .hero-content { max-width: 380px; } 
+      .hero-content h1 { font-size: 2.1rem; font-weight: 700; margin-bottom: 12px; letter-spacing: -0.5px; line-height: 1.25; } .hero-content p { font-size: 0.9rem; color: var(--text-muted); line-height: 1.6; } .hero-pagination-dots { display: flex; gap: 8px; }
+       .hero-pagination-dots .dot { width: 14px; height: 4px; border-radius: 2px; background: rgba(255, 255, 255, 0.2); } 
+      .hero-pagination-dots .dot.active { background: var(--card-bg); width: 24px; }
+.auth-centered-container { min-height: 100vh; width: 100vw; background-color: var(--bg-canvas); display: flex; align-items: center; justify-content: center; padding: 24px; }
+ .auth-single-card { width: 100%; max-width: 460px; background: var(--card-bg); border-radius: 16px; box-shadow: 0 12px 32px rgba(15, 23, 42, 0.05); border: 1px solid var(--border-light); padding: 40px; } 
+ .auth-single-card .brand-header { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 24px; } 
+ .auth-single-card h2 { font-size: 1.5rem; font-weight: 700; color: var(--text-main); text-align: center; margin-bottom: 8px; letter-spacing: -0.5px; }
+  .auth-subtitle { font-size: 0.85rem; color: var(--text-muted); text-align: center; margin-bottom: 28px; } 
+  .register-name-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; } 
+  .auth-footer-link { text-align: center; margin-top: 24px; font-size: 0.85rem; color: var(--text-muted); }
+   .auth-footer-link a { color: var(--text-main); font-weight: 600; text-decoration: none; margin-left: 4px; }
+    .auth-footer-link a:hover { text-decoration: underline; }
 
 .top-navbar {
   position: sticky;
@@ -1885,7 +1915,6 @@ transition:
     font-size: 0.82rem;
   }
 
-   Register */
 
   .auth-centered-container {
     padding: 12px;
@@ -2065,4 +2094,5 @@ transition:
   select,
   textarea {
     max-width: 100%;
-  }}
+  }
+}
