@@ -95,6 +95,7 @@ setImageUsername(existingItem.imageUsername ?? "");
     if (!name.trim()) return;
     if (quantity < 1) return;
     if (!category) return;
+    
 onSubmit({
   listId,
   name: name.trim(),

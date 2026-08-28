@@ -27,7 +27,9 @@ const shoppingItemSlice = createSlice({
     addItem: (
       state,
       action: PayloadAction<ShoppingItem>
+      
     ) => {
+       
       state.items.push(action.payload);
     },
 

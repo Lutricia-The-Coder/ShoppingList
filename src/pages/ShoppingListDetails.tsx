@@ -229,6 +229,7 @@ const ShoppingListDetails = () => {
   const handleCreateItem = async (
     item: Omit<ShoppingItem, "id">
   ) => {
+   
     try {
       dispatch(setError(null));
 
@@ -393,7 +394,7 @@ const ShoppingListDetails = () => {
           to="/"
           className="back-link"
         >
-          &lt; Back to Shopping Lists
+          &lt; Back
         </Link>
 
         <button

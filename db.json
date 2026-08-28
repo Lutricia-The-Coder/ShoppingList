@@ -2,13 +2,132 @@
   "users": [
     {
       "email": "zoe@gmail.com",
-      "password": "15e2b0d3c33891ebb0f1ef609ec419420c20e320ce94c65fbc8c3312448eb225",
-      "name": "Lutricia",
+      "password": "8a9bcf1e51e812d0af8465a8dbcc9f741064bf0af3b3d08e6b0246437c19f7fb",
+      "name": "Lulu",
       "surname": "Ngomane",
-      "cellNumber": "0791234567",
+      "cellNumber": "0791234568",
       "id": "oN3MR7pWHDk"
     }
   ],
-  "shoppingLists": [],
-  "shoppingItems": []
+  "shoppingLists": [
+    {
+      "name": "Breakfast",
+      "userId": "oN3MR7pWHDk",
+      "dateAdded": "2026-08-28T09:20:29.534Z",
+      "id": "tgCwfeS4xtE"
+    },
+    {
+      "name": "Breakfast",
+      "userId": "oN3MR7pWHDk",
+      "dateAdded": "2026-08-28T09:43:57.294Z",
+      "id": "q13fVC98FrY"
+    }
+  ],
+  "shoppingItems": [
+    {
+      "name": "egg",
+      "quantity": 1,
+      "notes": "",
+      "category": "Groceries",
+      "image": "",
+      "imageAuthor": "",
+      "imageUsername": "",
+      "completed": false,
+      "dateAdded": "2026-08-28T07:17:36.713Z",
+      "listId": "1hjOebA0sfk",
+      "id": "a0N-hVtS4Ls"
+    },
+    {
+      "name": "milk",
+      "quantity": 1,
+      "notes": "",
+      "category": "Groceries",
+      "image": "https://images.unsplash.com/photo-1550583724-b2692b85b150?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDQ1MjYyfDB8MXxzZWFyY2h8MXx8bWlsa3xlbnwwfHx8fDE3ODc5MDg4MDl8MA&ixlib=rb-4.1.0&q=80&w=400",
+      "imageAuthor": "Eiliv Aceron",
+      "imageUsername": "shootdelicious",
+      "completed": false,
+      "dateAdded": "2026-08-28T09:43:57.294Z",
+      "listId": "q13fVC98FrY",
+      "id": "lLC20Ka_3UY"
+    },
+    {
+      "listId": "q13fVC98FrY",
+      "name": "chocolate",
+      "quantity": 1,
+      "notes": "",
+      "category": "Groceries",
+      "image": "https://images.unsplash.com/photo-1610450949065-1f2841536c88?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDQ1MjYyfDB8MXxzZWFyY2h8MXx8Y2hvY29sYXRlfGVufDB8fHx8MTc4NzkwODg4Nnww&ixlib=rb-4.1.0&q=80&w=400",
+      "imageAuthor": "",
+      "imageUsername": "",
+      "completed": false,
+      "dateAdded": "2026-08-28T09:49:20.871Z",
+      "id": "gw7gQO01BTE"
+    },
+    {
+      "listId": "q13fVC98FrY",
+      "name": "chips",
+      "quantity": 4,
+      "notes": "",
+      "category": "Groceries",
+      "image": "https://images.unsplash.com/photo-1613919113640-25732ec5e61f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDQ1MjYyfDB8MXxzZWFyY2h8MXx8Y2hpcHN8ZW58MHx8fHwxNzg3OTExMTY4fDA&ixlib=rb-4.1.0&q=80&w=400",
+      "imageAuthor": "",
+      "imageUsername": "",
+      "completed": false,
+      "dateAdded": "2026-08-28T09:59:36.622Z",
+      "id": "0YMvtcoDaUU"
+    },
+    {
+      "listId": "q13fVC98FrY",
+      "name": "yoghurt",
+      "quantity": 3,
+      "notes": "",
+      "category": "Groceries",
+      "image": "https://images.unsplash.com/photo-1562114808-b4b33cf60f4f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDQ1MjYyfDB8MXxzZWFyY2h8MXx8eW9naHVydHxlbnwwfHx8fDE3ODc5MTExOTF8MA&ixlib=rb-4.1.0&q=80&w=400",
+      "imageAuthor": "",
+      "imageUsername": "",
+      "completed": false,
+      "dateAdded": "2026-08-28T09:59:55.046Z",
+      "id": "VoYnvHL0gDY"
+    },
+    {
+      "listId": "q13fVC98FrY",
+      "name": "Milk",
+      "quantity": 4,
+      "notes": "",
+      "category": "Household",
+      "image": "https://images.unsplash.com/photo-1550583724-b2692b85b150?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDQ1MjYyfDB8MXxzZWFyY2h8MXx8TWlsa3xlbnwwfHx8fDE3ODc5MDkwMTh8MA&ixlib=rb-4.1.0&q=80&w=400",
+      "imageAuthor": "",
+      "imageUsername": "",
+      "completed": false,
+      "dateAdded": "2026-08-28T10:00:45.753Z",
+      "id": "iCPEqDBh4mE"
+    },
+    {
+      "listId": "q13fVC98FrY",
+      "name": "egg",
+      "quantity": 5,
+      "notes": "",
+      "category": "Groceries",
+      "image": "https://images.unsplash.com/photo-1607690424560-35d967d6ad7c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDQ1MjYyfDB8MXxzZWFyY2h8MXx8ZWdnfGVufDB8fHx8MTc4NzkxMTE1MHww&ixlib=rb-4.1.0&q=80&w=400",
+      "imageAuthor": "",
+      "imageUsername": "",
+      "completed": false,
+      "dateAdded": "2026-08-28T10:07:12.991Z",
+      "id": "skPsIa9m8VY"
+    },
+    {
+      "listId": "q13fVC98FrY",
+      "name": "chocolate",
+      "quantity": 3,
+      "notes": "",
+      "category": "Household",
+      "image": "https://images.unsplash.com/photo-1610450949065-1f2841536c88?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDQ1MjYyfDB8MXxzZWFyY2h8MXx8Y2hvY29sYXRlfGVufDB8fHx8MTc4NzkwODg4Nnww&ixlib=rb-4.1.0&q=80&w=400",
+      "imageAuthor": "",
+      "imageUsername": "",
+      "completed": false,
+      "dateAdded": "2026-08-28T10:15:41.535Z",
+      "id": "8wN_2X_ZDa0"
+    }
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
 }

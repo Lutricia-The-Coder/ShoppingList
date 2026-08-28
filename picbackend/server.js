@@ -15,9 +15,7 @@ const SERPAPI_API_KEY =
   process.env.SERPAPI_API_KEY;
 
 
- * Search Google Shopping for a product
- * and return its image.
- */
+
 app.get("/api/shopping-image", async (req, res) => {
   try {
     const query = req.query.q;

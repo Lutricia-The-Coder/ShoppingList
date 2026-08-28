@@ -51,9 +51,7 @@ const Home = () => {
   const [editingList, setEditingList] =
     useState<ShoppingList | null>(null);
 
-  /*
-   * LOAD SHOPPING LISTS
-   */
+  
   useEffect(() => {
     const loadShoppingLists =
       async () => {
@@ -82,10 +80,7 @@ const Home = () => {
 
     loadShoppingLists();
   }, [currentUser, dispatch]);
-
-  /*
-   * CREATE SHOPPING LIST
-   */
+ 
   const handleCreateList = async (
     shoppingList: Omit<
       ShoppingList,
@@ -109,10 +104,7 @@ const Home = () => {
           userId: currentUser.id,
         });
 
-      /*
-       * Create items after
-       * the list has been created.
-       */
+      
       for (const item of items) {
         await createShoppingItem({
           ...item,
@@ -141,9 +133,7 @@ const Home = () => {
     }
   };
 
-  /*
-   * UPDATE SHOPPING LIST
-   */
+  
   const handleUpdateList = async (
     shoppingList: Omit<
       ShoppingList,
