@@ -31,8 +31,8 @@ const ShoppingItemCard = ({
           onChange={() => onToggle(item)}
           aria-label={`Mark ${item.name} as ${
             item.completed
-              ? "not bought"
-              : "bought"
+              ? "incomplete"
+              : "completed"
           }`}
         />
       </div>
