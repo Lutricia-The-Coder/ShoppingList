@@ -1,90 +1,29 @@
+import jsonServer from "json-server";
 import express from "express";
-import cors from "cors";
-import dotenv from "dotenv";
+import path from "path";
+import { fileURLToPath } from "url";
 
-dotenv.config();
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-const app = express();
+const server = express();
+const router = jsonServer.router("db.json");
+const middlewares = jsonServer.defaults();
+const PORT = process.env.PORT || 3000;
 
-const PORT = 4000;
+// Serve JSON Server API under /api
+server.use(middlewares);
+server.use("/api", router);
 
-app.use(cors());
-app.use(express.json());
+// Serve the compiled Vite frontend from the dist folder
+const distPath = path.join(__dirname, "dist");
+server.use(express.static(distPath));
 
-const SERPAPI_API_KEY =
-  process.env.SERPAPI_API_KEY;
-
-
-
-app.get("/api/shopping-image", async (req, res) => {
-  try {
-    const query = req.query.q;
-
-    if (!query || typeof query !== "string") {
-      return res.status(400).json({
-        message: "Product name is required.",
-      });
-    }
-
-    if (!SERPAPI_API_KEY) {
-      return res.status(500).json({
-        message:
-          "SerpApi API key is not configured.",
-      });
-    }
-
-    const params = new URLSearchParams({
-      engine: "google_shopping",
-      q: query.trim(),
-      api_key: SERPAPI_API_KEY,
-    });
-
-    const response = await fetch(
-      `https://serpapi.com/search.json?${params.toString()}`
-    );
-
-    if (!response.ok) {
-      throw new Error(
-        `SerpApi returned ${response.status}`
-      );
-    }
-
-    const data = await response.json();
-
-    const firstResult =
-      data.shopping_results?.[0];
-
-    if (!firstResult) {
-      return res.status(404).json({
-        message:
-          "No product image was found.",
-        image: null,
-      });
-    }
-
-    return res.json({
-      image:
-        firstResult.thumbnail ?? null,
-
-      title:
-        firstResult.title ?? query,
-    });
-  } catch (error) {
-    console.error(
-      "SerpApi error:",
-      error
-    );
-
-    return res.status(500).json({
-      message:
-        "Unable to search for product image.",
-      image: null,
-    });
-  }
+// Handle SPA routing for React Router
+server.get("*", (req, res) => {
+  res.sendFile(path.join(distPath, "index.html"));
 });
 
-app.listen(PORT, () => {
-  console.log(
-    `SerpApi server running on http://localhost:${PORT}`
-  );
+server.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });

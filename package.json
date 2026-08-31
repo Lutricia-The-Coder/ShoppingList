@@ -5,9 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "concurrently \"vite\" \"json-server --watch db.json --port 3000\"",
-    "server": "json-server --watch db.json --port 3000 --host 0.0.0.0",
+    "server": "json-server db.json --port 3000 --host 0.0.0.0 --static ./dist",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
+    "start": "node server.js",
     "preview": "vite preview"
   },
   "dependencies": {
