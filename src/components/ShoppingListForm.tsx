@@ -852,19 +852,17 @@ const ShoppingListForm = ({
                   >
                     + ADD ANOTHER ITEM
                   </button>
-                </div>
-              </section>
-            )
-          )}
-
-          
-
-          <button
+                   <button
             type="button"
             onClick={handleAddCategory}
           >
             + ADD ANOTHER CATEGORY
           </button>
+                </div>
+              </section>
+            )
+          )}
+
 
 
           {imageError && (
