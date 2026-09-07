@@ -30,6 +30,7 @@ import {
 
 import ShoppingItemForm from "../components/ShoppingItemForm";
 import ShoppingItemCard from "../components/ShoppingItemCard";
+import ConfirmationDialog from "../components/ConfirmationDialog";
 import toast from "react-hot-toast";
 
 import type { ShoppingItem } from "../types";
@@ -66,6 +67,9 @@ const ShoppingListDetails = () => {
 
   const [editingItem, setEditingItem] =
     useState<ShoppingItem | null>(null);
+
+  const [itemToDelete, setItemToDelete] =
+    useState<string | null>(null);
 
   useEffect(() => {
     if (!listId) {
@@ -275,18 +279,7 @@ const ShoppingListDetails = () => {
   };
 
  
-  const handleDeleteItem = async (
-    id: string
-  ) => {
-    const confirmed =
-      window.confirm(
-        "Are you sure you want to delete this item?"
-      );
-
-    if (!confirmed) {
-      return;
-    }
-
+  const handleDeleteItem = async (id: string) => {
     try {
       dispatch(setError(null));
 
@@ -297,6 +290,8 @@ const ShoppingListDetails = () => {
       toast.success("Shopping item deleted successfully.");
     } catch {
       toast.error("Unable to delete shopping item.");
+    } finally {
+      setItemToDelete(null);
     }
   };
 
@@ -492,6 +487,15 @@ const ShoppingListDetails = () => {
       
       <section className="shopping-list-items-section">
 
+        {itemToDelete && (
+          <ConfirmationDialog
+            title="Delete shopping item?"
+            message="This item will be permanently removed from your list."
+            onCancel={() => setItemToDelete(null)}
+            onConfirm={() => handleDeleteItem(itemToDelete)}
+          />
+        )}
+
         <h2>
           Items (
           {filteredAndSortedItems.length}
@@ -525,7 +529,7 @@ const ShoppingListDetails = () => {
                   }
                   onEdit={handleEdit}
                   onDelete={
-                    handleDeleteItem
+                    setItemToDelete
                   }
                   onToggle={
                     handleToggleItem
@@ -540,7 +544,7 @@ const ShoppingListDetails = () => {
                         item={item}
                         onEdit={handleEdit}
                         onDelete={
-                          handleDeleteItem
+                          setItemToDelete
                         }
                         onToggle={
                           handleToggleItem

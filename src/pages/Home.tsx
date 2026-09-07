@@ -7,6 +7,7 @@ import { createShoppingItem } from "../services/shoppingItemService";
 import type { ShoppingItem,ShoppingList,} from "../types";
 import ShoppingListCard from "../components/ShoppingListCard";
 import ShoppingListForm from "../components/ShoppingListForm";
+import ConfirmationDialog from "../components/ConfirmationDialog";
 import toast from "react-hot-toast";
 const Home = () => {
   const dispatch = useAppDispatch();
@@ -27,6 +28,9 @@ const Home = () => {
 
   const [editingList, setEditingList] =
     useState<ShoppingList | null>(null);
+
+  const [listToDelete, setListToDelete] =
+    useState<string | null>(null);
 
   
   useEffect(() => {
@@ -133,18 +137,7 @@ const Home = () => {
   };
 
 
-  const handleDeleteList = async (
-    id: string
-  ) => {
-    const confirmed =
-      window.confirm(
-        "Are you sure you want to delete this shopping list?"
-      );
-
-    if (!confirmed) {
-      return;
-    }
-
+  const handleDeleteList = async (id: string) => {
     try {
       dispatch(setError(null));
 
@@ -155,6 +148,8 @@ const Home = () => {
       toast.success("Shopping list deleted successfully.");
     } catch {
       toast.error("Unable to delete shopping list.");
+    } finally {
+      setListToDelete(null);
     }
   };
 
@@ -252,6 +247,15 @@ const Home = () => {
         </section>
       )}
 
+      {listToDelete && (
+        <ConfirmationDialog
+          title="Delete shopping list?"
+          message="This will permanently remove the list and its items."
+          onCancel={() => setListToDelete(null)}
+          onConfirm={() => handleDeleteList(listToDelete)}
+        />
+      )}
+
 
    
       {loading && (
@@ -330,7 +334,7 @@ const Home = () => {
                       handleEdit
                     }
                     onDelete={
-                      handleDeleteList
+                      setListToDelete
                     }
                     onShare={
                       handleShare
