@@ -1649,24 +1649,24 @@ a {
 }
 
 .profile-form-actions button:last-child {
-  background: var(--btn-primary);
-  color: var(--card-bg);
-  border: 1px solid var(--btn-primary);
+ background: #0F172A;
+  color: #FFFFFF;
+  border: 1px solid #0F172A;
 }
 
 .profile-form-actions button:last-child:hover {
-  background: var(--btn-hover);
-  transform: translateY(-1px);
+  background: #1E293B;
 }
 
 .profile-form-actions button:active {
   transform: translateY(0);
 }
-
 .profile-form-actions button:disabled {
+  background: #334155;
+  color: #FFFFFF;
+  border-color: #334155;
   opacity: 0.5;
   cursor: not-allowed;
-  transform: none;
 }
 
 
