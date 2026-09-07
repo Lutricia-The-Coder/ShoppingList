@@ -61,9 +61,6 @@ a {
   background: var(--bg-canvas);
 }
 
-/* =========================
-   LANDING PAGE
-========================= */
 
 .landing-page-container {
   min-height: 100vh;
@@ -276,10 +273,6 @@ a {
   width: 24px;
 }
 
-/* =========================
-   AUTH PAGES
-========================= */
-
 .auth-centered-container {
   min-height: 100vh;
   width: 100vw;
@@ -348,9 +341,6 @@ a {
   text-decoration: underline;
 }
 
-/* =========================
-   NAVBAR
-========================= */
 
 .top-navbar {
   position: sticky;
@@ -409,10 +399,6 @@ a {
   background: var(--btn-hover);
   transform: scale(1.04);
 }
-
-/* =========================
-   APP / DASHBOARD
-========================= */
 
 .app-main {
   width: 100%;
@@ -503,10 +489,6 @@ a {
   color: var(--text-muted);
   font-size: 15px;
 }
-
-/* =========================
-   PROFILE
-========================= */
 
 .profile-overlay {
   position: fixed;
@@ -670,9 +652,6 @@ a {
   background: var(--btn-hover);
 }
 
-/* =========================
-   CONFIRMATION DIALOG
-========================= */
 
 .confirmation-overlay {
   position: fixed;
@@ -741,10 +720,6 @@ a {
 .confirmation-delete-button:hover {
   background: #8f1d14;
 }
-
-/* =========================
-   SHOPPING LIST FORM
-========================= */
 
 .shopping-list-form {
   width: 100%;
@@ -935,10 +910,6 @@ a {
   background: var(--btn-hover);
 }
 
-/* =========================
-   SHOPPING CARDS
-========================= */
-
 .shopping-card {
   width: 100%;
   max-width: 420px;
@@ -1026,10 +997,6 @@ a {
 .card-actions button:active {
   transform: translateY(1px);
 }
-
-/* =========================
-   SHOPPING LIST DETAILS
-========================= */
 
 .shopping-list-details {
   width: 100%;
@@ -1221,10 +1188,6 @@ a {
   font-size: 20px;
   font-weight: 700;
 }
-
-/* =========================
-   SHOPPING ITEMS
-========================= */
 
 .shopping-item-card {
   display: grid;
@@ -1420,10 +1383,6 @@ a {
   border-radius: 12px;
 }
 
-/* =========================
-   SHOPPING ITEM FORM
-========================= */
-
 .shopping-item-form-page {
   width: 100%;
   display: flex;
@@ -1559,8 +1518,8 @@ a {
 }
 
 .shopping-completed-option {
-  display: flex !important;
-  flex-direction: row !important;
+  display: flex;
+  flex-direction: row ;
   align-items: center;
   gap: 8px;
   margin-top: 16px;
@@ -1618,9 +1577,6 @@ a {
   background: var(--btn-hover);
 }
 
-/* =========================
-   PROFILE EDIT FORM
-========================= */
 
 .profile-edit-form {
   padding: 8px 0 0;
@@ -1713,9 +1669,6 @@ a {
   transform: none;
 }
 
-/* =========================
-   RESPONSIVE
-========================= */
 
 @media (min-width: 1200px) {
   .landing-page-container {
