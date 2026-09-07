@@ -239,7 +239,7 @@ onSubmit({
   onClick={handleImageSearch}
   disabled={imageLoading}
 >
-  {imageLoading ? "Searching..." : "Search Unsplash"}
+  {imageLoading ? "Searching..." : "Search Image"}
 </button>
 {imageError && (
   <p className="shopping-image-error">

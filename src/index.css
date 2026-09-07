@@ -402,47 +402,79 @@ transition:
 }
 
 .shopping-list-form {
-  width: 92%;
-  max-width: 400px;
-  margin: 20px auto;
-  padding: 10px;
-  background: transparent;
-  border: none;
-  box-shadow: none;
+  width: 100%;
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 24px;
+  box-sizing: border-box;
+
+  background: #ffffff;
+  border: 1px solid #e2e2e2;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
 }
 
 .shopping-list-form h2 {
-  margin: 0 0 14px;
-  text-align: center;
-  font-size: 18px;
+  margin: 0 0 20px;
+  padding-bottom: 14px;
+
+  border-bottom: 1px solid #e5e5e5;
+
+  color: #222;
+  font-size: 22px;
   font-weight: 700;
-  color: #333;
 }
 
 .shopping-list-form label {
   display: block;
-  margin: 7px 0 3px;
-  font-size: 11px;
-  font-weight: 600;
+  margin: 16px 0 6px;
+
   color: #444;
+  font-size: 12px;
+  font-weight: 700;
 }
 
 .shopping-list-form input,
 .shopping-list-form select,
 .shopping-list-form textarea {
   width: 100%;
-  padding: 6px 8px;
+  box-sizing: border-box;
+
+  padding: 10px 12px;
+
   border: 1px solid #d1d5db;
-  border-radius: 5px;
+  border-radius: 7px;
+
   background: #fff;
-  font-size: 12px;
+  color: #333;
+
+  font-family: inherit;
+  font-size: 13px;
+
   outline: none;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.shopping-list-form input,
+.shopping-list-form select {
+  height: 40px;
 }
 
 .shopping-list-form textarea {
-  min-height: 55px;
+  min-height: 90px;
   resize: vertical;
 }
+
+.shopping-list-form input:focus,
+.shopping-list-form select:focus,
+.shopping-list-form textarea:focus {
+  border-color: #6b7280;
+  box-shadow: 0 0 0 3px rgba(107, 114, 128, 0.12);
+}
+
 
 .category-group {
   margin-top: 14px;
