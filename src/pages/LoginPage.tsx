@@ -4,6 +4,7 @@ import { getUserByEmail } from "../services/authService";
 import { hashPassword } from "../types/encryption";
 import { useAppDispatch } from "../store/hooks";
 import { login } from "../features/auth/authSlice";
+import toast from "react-hot-toast";
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -13,7 +14,6 @@ const LoginPage = () => {
     email: "",
     password: "",
   });
-  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -23,10 +23,8 @@ const LoginPage = () => {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    setError("");
-
     if (!formData.email || !formData.password) {
-      setError("Please fill in all fields.");
+      toast.error("Please fill in all fields.");
       return;
     }
 
@@ -36,7 +34,7 @@ const LoginPage = () => {
       const user = await getUserByEmail(email);
 
       if (!user || user.password !== hashPassword(formData.password)) {
-        setError("Invalid email or password.");
+        toast.error("Invalid email or password.");
         return;
       }
 
@@ -44,7 +42,7 @@ const LoginPage = () => {
       navigate("/dashboard");
     } catch (err) {
       console.error("Login error:", err);
-      setError("An unexpected error occurred.");
+      toast.error("An unexpected error occurred.");
     } finally {
       setLoading(false);
     }
@@ -62,8 +60,6 @@ const LoginPage = () => {
 
           <div className="landing-form-content">
             <h2>Login</h2>
-
-            {error && <div className="auth-error-alert">{error}</div>}
 
             <form onSubmit={handleSubmit}>
               <div className="minimal-input-group">

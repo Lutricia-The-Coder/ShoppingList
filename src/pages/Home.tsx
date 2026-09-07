@@ -1,32 +1,13 @@
 import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
 import emptyCartImg from "../assets/empty-removebg-preview.png";
-import {
-  addList,
-  deleteList,
-  setError,
-  setLists,
-  setLoading,
-  updateList,
-} from "../features/shoppingLists/shoppingListSlice";
-
-import {
-  createShoppingList,
-  deleteShoppingList,
-  getShoppingLists,
-  updateShoppingList,
-} from "../services/shoppingListService";
-
+import { addList, deleteList, setError,setLists, setLoading,updateList,} from "../features/shoppingLists/shoppingListSlice";
+import {  createShoppingList, deleteShoppingList, getShoppingLists, updateShoppingList,} from "../services/shoppingListService";
 import { createShoppingItem } from "../services/shoppingItemService";
-
-import type {
-  ShoppingItem,
-  ShoppingList,
-} from "../types";
-
+import type { ShoppingItem,ShoppingList,} from "../types";
 import ShoppingListCard from "../components/ShoppingListCard";
 import ShoppingListForm from "../components/ShoppingListForm";
-
+import toast from "react-hot-toast";
 const Home = () => {
   const dispatch = useAppDispatch();
 
@@ -37,13 +18,9 @@ const Home = () => {
   const {
     lists,
     loading,
-    error,
   } = useAppSelector(
     (state) => state.shoppingLists
   );
-
-  const [message, setMessage] =
-    useState("");
 
   const [showForm, setShowForm] =
     useState(false);
@@ -68,11 +45,7 @@ const Home = () => {
 
           dispatch(setLists(data));
         } catch {
-          dispatch(
-            setError(
-              "Unable to load shopping lists."
-            )
-          );
+          toast.error("Unable to load shopping lists.");
         } finally {
           dispatch(setLoading(false));
         }
@@ -114,22 +87,17 @@ const Home = () => {
 
       dispatch(addList(newList));
 
-      setMessage(
-        "Shopping list created successfully."
-      );
+      toast.success("Shopping list created successfully.");
 
       setShowForm(false);
     } catch (error) {
+      toast.error("Unable to create shopping list.");
       console.error(
         "Create shopping list error:",
         error
       );
 
-      dispatch(
-        setError(
-          "Unable to create shopping list."
-        )
-      );
+      dispatch(setError(null));
     }
   };
 
@@ -155,18 +123,12 @@ const Home = () => {
 
       dispatch(updateList(updatedList));
 
-      setMessage(
-        "Shopping list updated successfully."
-      );
+      toast.success("Shopping list updated successfully.");
 
       setEditingList(null);
       setShowForm(false);
     } catch {
-      dispatch(
-        setError(
-          "Unable to update shopping list."
-        )
-      );
+      toast.error("Unable to update shopping list.");
     }
   };
 
@@ -190,15 +152,9 @@ const Home = () => {
 
       dispatch(deleteList(id));
 
-      setMessage(
-        "Shopping list deleted successfully."
-      );
+      toast.success("Shopping list deleted successfully.");
     } catch {
-      dispatch(
-        setError(
-          "Unable to delete shopping list."
-        )
-      );
+      toast.error("Unable to delete shopping list.");
     }
   };
 
@@ -230,9 +186,7 @@ const Home = () => {
           url: shareUrl,
         });
 
-        setMessage(
-          "Shopping list shared successfully."
-        );
+        toast.success("Shopping list shared successfully.");
 
         return;
       }
@@ -241,15 +195,9 @@ const Home = () => {
         shareUrl
       );
 
-      setMessage(
-        "Shopping list link copied to clipboard."
-      );
+      toast.success("Shopping list link copied to clipboard.");
     } catch {
-      dispatch(
-        setError(
-          "Unable to share the shopping list."
-        )
-      );
+      toast.error("Failed to share the shopping list.");
     }
   };
 
@@ -257,7 +205,6 @@ const Home = () => {
   const handleNewList = () => {
     setEditingList(null);
     setShowForm(true);
-    setMessage("");
     dispatch(setError(null));
   };
 
@@ -287,25 +234,6 @@ const Home = () => {
         </button>
 
       </header>
-
-
-      {message && (
-        <div
-          className="auth-success-alert"
-          role="status"
-        >
-          {message}
-        </div>
-      )}
-
-      {error && (
-        <div
-          className="auth-error-alert"
-          role="alert"
-        >
-          {error}
-        </div>
-      )}
 
 
       {showForm && (

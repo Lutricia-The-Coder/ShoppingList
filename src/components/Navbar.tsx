@@ -20,6 +20,7 @@ import {
 
 import { updateUser } from "../services/authService";
 import { hashPassword } from "../types/encryption";
+import toast from "react-hot-toast";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -51,10 +52,6 @@ const Navbar = () => {
   const [confirmPassword, setConfirmPassword] =
     useState("");
 
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
-
-
   if (!currentUser) {
     return null;
   }
@@ -72,8 +69,6 @@ const Navbar = () => {
     setShowProfile(true);
     setEditingDetails(false);
     setChangingPassword(false);
-    setError("");
-    setSuccess("");
   };
 
 
@@ -82,24 +77,17 @@ const Navbar = () => {
     setSurname(currentUser.surname || "");
     setCellNumber(currentUser.cellNumber || "");
 
-    setError("");
-    setSuccess("");
-
     setChangingPassword(false);
     setEditingDetails(true);
   };
 
   const handleSaveDetails = async () => {
     if (!name.trim() || !surname.trim()) {
-      setError("Name and surname are required.");
-      setSuccess("");
+      toast.error("Name and surname are required.");
       return;
     }
 
     try {
-      setError("");
-      setSuccess("");
-
       const updatedUser = await updateUser(
         currentUser.id,
         {
@@ -119,26 +107,19 @@ const Navbar = () => {
 
       setEditingDetails(false);
 
-      setSuccess("Your details have been updated.");
+      toast.success("Your details have been updated.");
     } catch (error) {
       console.error(
         "Failed to update user details:",
         error
       );
 
-      setError(
-        "Failed to update your details. Please try again."
-      );
-
-      setSuccess("");
+      toast.error("Failed to update your details. Please try again.");
     }
   };
 
 
   const handleChangePassword = () => {
-    setError("");
-    setSuccess("");
-
     setCurrentPassword("");
     setNewPassword("");
     setConfirmPassword("");
@@ -150,35 +131,26 @@ const Navbar = () => {
 
   const handleSavePassword = async () => {
     if (!currentPassword) {
-      setError("Please enter your current password.");
-      setSuccess("");
+      toast.error("Please enter your current password.");
       return;
     }
 
     if (!newPassword) {
-      setError("Please enter a new password.");
-      setSuccess("");
+      toast.error("Please enter a new password.");
       return;
     }
 
     if (newPassword.length < 8) {
-      setError(
-        "Your new password must be at least 8 characters."
-      );
-      setSuccess("");
+      toast.error("Your new password must be at least 8 characters.");
       return;
     }
 
     if (newPassword !== confirmPassword) {
-      setError("Passwords do not match.");
-      setSuccess("");
+      toast.error("Passwords do not match.");
       return;
     }
 
     try {
-      setError("");
-      setSuccess("");
-
       const hashedPassword =
         hashPassword(newPassword);
 
@@ -204,20 +176,14 @@ const Navbar = () => {
   
       setChangingPassword(false);
 
-      setSuccess(
-        "Your password has been changed successfully."
-      );
+      toast.success("Your password has been changed successfully.");
     } catch (error) {
       console.error(
         "Failed to change password:",
         error
       );
 
-      setError(
-        "Failed to change your password. Please try again."
-      );
-
-      setSuccess("");
+      toast.error("Failed to change your password. Please try again.");
     }
   };
 
@@ -236,9 +202,6 @@ const Navbar = () => {
     setEditingDetails(false);
     setChangingPassword(false);
 
-    setError("");
-    setSuccess("");
-
     setCurrentPassword("");
     setNewPassword("");
     setConfirmPassword("");
@@ -247,8 +210,6 @@ const Navbar = () => {
   
   const handleCancelEdit = () => {
     setEditingDetails(false);
-    setError("");
-    setSuccess("");
   };
 
 
@@ -259,8 +220,6 @@ const Navbar = () => {
     setNewPassword("");
     setConfirmPassword("");
 
-    setError("");
-    setSuccess("");
   };
 
   return (
@@ -320,25 +279,6 @@ const Navbar = () => {
               </button>
 
             </div>
-
-            {error && (
-              <div
-                className="profile-form-error"
-                role="alert"
-              >
-                {error}
-              </div>
-            )}
-
-        
-            {success && (
-              <div
-                className="profile-form-success"
-                role="status"
-              >
-                {success}
-              </div>
-            )}
 
           
             {editingDetails ? (

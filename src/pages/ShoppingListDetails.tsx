@@ -30,6 +30,7 @@ import {
 
 import ShoppingItemForm from "../components/ShoppingItemForm";
 import ShoppingItemCard from "../components/ShoppingItemCard";
+import toast from "react-hot-toast";
 
 import type { ShoppingItem } from "../types";
 
@@ -38,7 +39,7 @@ const ShoppingListDetails = () => {
 
   const dispatch = useAppDispatch();
 
-  const { items, loading, error } =
+  const { items, loading } =
     useAppSelector(
       (state) => state.shoppingItems
     );
@@ -50,8 +51,6 @@ const ShoppingListDetails = () => {
   const shoppingList = lists.find(
     (list) => list.id === listId
   );
-
-  const [message, setMessage] = useState("");
 
   const [searchParams, setSearchParams] =
     useSearchParams();
@@ -83,11 +82,7 @@ const ShoppingListDetails = () => {
 
         dispatch(setItems(data));
       } catch {
-        dispatch(
-          setError(
-            "Unable to load shopping items."
-          )
-        );
+        toast.error("Unable to load shopping items.");
       } finally {
         dispatch(setLoading(false));
       }
@@ -217,11 +212,7 @@ const ShoppingListDetails = () => {
 
       dispatch(updateItem(updatedItem));
     } catch {
-      dispatch(
-        setError(
-          "Unable to update shopping item."
-        )
-      );
+      toast.error("Unable to update shopping item.");
     }
   };
 
@@ -241,9 +232,7 @@ const ShoppingListDetails = () => {
 
       dispatch(addItem(newItem));
 
-      setMessage(
-        "Shopping item added successfully."
-      );
+      toast.success("Shopping item added successfully.");
 
       setEditingItem(null);
       setShowForm(false);
@@ -253,11 +242,7 @@ const ShoppingListDetails = () => {
         error
       );
 
-      dispatch(
-        setError(
-          "Unable to create shopping item."
-        )
-      );
+      toast.error("Unable to create shopping item.");
     }
   };
 
@@ -280,18 +265,12 @@ const ShoppingListDetails = () => {
 
       dispatch(updateItem(updatedItem));
 
-      setMessage(
-        "Shopping item updated successfully."
-      );
+      toast.success("Shopping item updated successfully.");
 
       setEditingItem(null);
       setShowForm(false);
     } catch {
-      dispatch(
-        setError(
-          "Unable to update shopping item."
-        )
-      );
+      toast.error("Unable to update shopping item.");
     }
   };
 
@@ -315,15 +294,9 @@ const ShoppingListDetails = () => {
 
       dispatch(deleteItem(id));
 
-      setMessage(
-        "Shopping item deleted successfully."
-      );
+      toast.success("Shopping item deleted successfully.");
     } catch {
-      dispatch(
-        setError(
-          "Unable to delete shopping item."
-        )
-      );
+      toast.error("Unable to delete shopping item.");
     }
   };
 
@@ -333,7 +306,6 @@ const ShoppingListDetails = () => {
   ) => {
     setEditingItem(item);
     setShowForm(true);
-    setMessage("");
     dispatch(setError(null));
   };
 
@@ -341,7 +313,6 @@ const ShoppingListDetails = () => {
   const handleAddItem = () => {
     setEditingItem(null);
     setShowForm(true);
-    setMessage("");
     dispatch(setError(null));
   };
 
@@ -470,24 +441,6 @@ const ShoppingListDetails = () => {
       </header>
 
       
-
-      {message && (
-        <p
-          role="status"
-          className="auth-success-alert"
-        >
-          {message}
-        </p>
-      )}
-
-      {error && (
-        <p
-          role="alert"
-          className="auth-error-alert"
-        >
-          {error}
-        </p>
-      )}
 
 
       <section className="shopping-list-controls">

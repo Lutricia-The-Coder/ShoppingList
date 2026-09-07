@@ -2,6 +2,7 @@ import { type FormEvent, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { registerUser, getUserByEmail } from "../services/authService";
 import { hashPassword } from "../types/encryption";
+import toast from "react-hot-toast";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -13,9 +14,6 @@ const Register = () => {
     surname: "",
     cellNumber: "",
   });
-
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
@@ -29,9 +27,6 @@ const Register = () => {
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
 
-    setError("");
-    setSuccess("");
-
     try {
       if (
         !formData.email ||
@@ -40,7 +35,7 @@ const Register = () => {
         !formData.surname ||
         !formData.cellNumber
       ) {
-        setError("Please complete all fields.");
+        toast.error("Please complete all fields.");
         return;
       }
 
@@ -48,7 +43,7 @@ const Register = () => {
       const existingUser = await getUserByEmail(email);
 
       if (existingUser) {
-        setError("An account with this email already exists. Try signing in.");
+        toast.error("An account with this email already exists. Try signing in.");
         return;
       }
 
@@ -62,14 +57,14 @@ const Register = () => {
         cellNumber: formData.cellNumber.trim(),
       });
 
-      setSuccess("Registration successful! Redirecting to login...");
+      toast.success("Registration successful! Redirecting to login...");
 
       setTimeout(() => {
         navigate("/login");
       }, 1000);
     } catch (error) {
       console.error("Registration error:", error);
-      setError("Something went wrong during registration.");
+      toast.error("Something went wrong during registration.");
     }
   };
 
@@ -85,9 +80,6 @@ const Register = () => {
         <p className="auth-subtitle">
           Enter your details below to create your account
         </p>
-
-        {error && <div className="auth-error-alert" role="alert">{error}</div>}
-        {success && <div className="auth-success-alert" role="status">{success}</div>}
 
         <form onSubmit={handleSubmit}>
           

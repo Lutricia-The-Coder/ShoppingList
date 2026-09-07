@@ -3,6 +3,7 @@ import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { login, logout } from "../features/auth/authSlice";
 import { updateUser, getUserByEmail } from "../services/authService";
 import { hashPassword } from "../types/encryption";
+import toast from "react-hot-toast";
 
 const Profile = () => {
   const dispatch = useAppDispatch();
@@ -19,24 +20,18 @@ const Profile = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
-  const [message, setMessage] = useState("");
-  const [error, setError] = useState("");
-
   if (!currentUser) {
     return null;
   }
 
   const handleProfileUpdate = async (event: FormEvent) => {
     event.preventDefault();
-    setMessage("");
-    setError("");
-
     try {
       const trimmedEmail = email.trim().toLowerCase();
       const existingUser = await getUserByEmail(trimmedEmail);
 
       if (existingUser && existingUser.id !== currentUser.id) {
-        setError("That email address is already registered.");
+        toast.error("That email address is already registered.");
         return;
       }
 
@@ -48,26 +43,23 @@ const Profile = () => {
       });
 
       dispatch(login(updatedUser));
-      setMessage("Profile details updated successfully.");
+      toast.success("Profile details updated successfully.");
       setEditing(false);
     } catch (error) {
       console.error("Profile update error:", error);
-      setError("Unable to update your profile.");
+      toast.error("Unable to update your profile.");
     }
   };
 
   const handlePasswordUpdate = async (event: FormEvent) => {
     event.preventDefault();
-    setMessage("");
-    setError("");
-
     if (password.length < 8) {
-      setError("Password must be at least 8 characters.");
+      toast.error("Password must be at least 8 characters.");
       return;
     }
 
     if (password !== confirmPassword) {
-      setError("Passwords do not match.");
+      toast.error("Passwords do not match.");
       return;
     }
 
@@ -80,19 +72,16 @@ const Profile = () => {
       dispatch(login(updatedUser));
       setPassword("");
       setConfirmPassword("");
-      setMessage("Password changed successfully.");
+      toast.success("Password changed successfully.");
       setChangingPassword(false);
     } catch (error) {
       console.error("Password update error:", error);
-      setError("Unable to update your password.");
+      toast.error("Unable to update your password.");
     }
   };
 
   return (
     <div className="profile-page-flat">
-
-      {message && <div className="auth-success-alert" role="status">{message}</div>}
-      {error && <div className="auth-error-alert" role="alert">{error}</div>}
 
       <section className="profile-section">
         <h3 className="profile-section-title">Personal Details</h3>
@@ -120,8 +109,6 @@ const Profile = () => {
                 setSurname(currentUser.surname);
                 setEmail(currentUser.email);
                 setCellNumber(currentUser.cellNumber);
-                setMessage("");
-                setError("");
                 setEditing(true);
               }}
             >
@@ -203,8 +190,6 @@ const Profile = () => {
             onClick={() => {
               setPassword("");
               setConfirmPassword("");
-              setMessage("");
-              setError("");
               setChangingPassword(true);
             }}
           >

@@ -11,6 +11,7 @@ import {
 } from "../services/authService";
 
 import { hashPassword } from "../types/encryption";
+import toast from "react-hot-toast";
 
 const ForgotPassword = () => {
   const navigate = useNavigate();
@@ -27,12 +28,6 @@ const ForgotPassword = () => {
   const [userId, setUserId] =
     useState<string | null>(null);
 
-  const [error, setError] =
-    useState("");
-
-  const [success, setSuccess] =
-    useState("");
-
   const [loading, setLoading] =
     useState(false);
 
@@ -44,11 +39,8 @@ const ForgotPassword = () => {
   ) => {
     event.preventDefault();
 
-    setError("");
-    setSuccess("");
-
     if (!cellNumber.trim()) {
-      setError("Please enter your cell number.");
+      toast.error("Please enter your cell number.");
       return;
     }
 
@@ -61,9 +53,7 @@ const ForgotPassword = () => {
         );
 
       if (!user) {
-        setError(
-          "No account was found with that cell number."
-        );
+        toast.error("No account was found with that cell number.");
         return;
       }
 
@@ -71,18 +61,14 @@ const ForgotPassword = () => {
       setUserId(user.id);
       setNumberVerified(true);
 
-      setSuccess(
-        "Number verified. You can now create a new password."
-      );
+      toast.success("Number verified. You can now create a new password.");
     } catch (error) {
       console.error(
         "Verify number error:",
         error
       );
 
-      setError(
-        "Something went wrong while checking your number."
-      );
+      toast.error("Something went wrong while checking your number.");
     } finally {
       setLoading(false);
     }
@@ -93,36 +79,25 @@ const ForgotPassword = () => {
   ) => {
     event.preventDefault();
 
-    setError("");
-    setSuccess("");
-
     if (!userId) {
-      setError(
-        "Please verify your cell number first."
-      );
+      toast.error("Please verify your cell number first.");
       return;
     }
 
     if (!newPassword) {
-      setError(
-        "Please enter a new password."
-      );
+      toast.error("Please enter a new password.");
       return;
     }
 
     if (newPassword.length < 8) {
-      setError(
-        "Password must be at least 8 characters."
-      );
+      toast.error("Password must be at least 8 characters.");
       return;
     }
 
     if (
       newPassword !== confirmPassword
     ) {
-      setError(
-        "Passwords do not match."
-      );
+      toast.error("Passwords do not match.");
       return;
     }
 
@@ -136,9 +111,7 @@ const ForgotPassword = () => {
         password: hashedPassword,
       });
 
-      setSuccess(
-        "Password changed successfully. Redirecting to login..."
-      );
+      toast.success("Password changed successfully. Redirecting to login...");
 
       setNewPassword("");
       setConfirmPassword("");
@@ -152,9 +125,7 @@ const ForgotPassword = () => {
         error
       );
 
-      setError(
-        "Unable to change your password. Please try again."
-      );
+      toast.error("Unable to change your password. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -182,24 +153,6 @@ const ForgotPassword = () => {
               Enter your cell number to verify
               your account.
             </p>
-
-            {error && (
-              <div
-                className="auth-error-alert"
-                role="alert"
-              >
-                {error}
-              </div>
-            )}
-
-            {success && (
-              <div
-                className="auth-success-alert"
-                role="status"
-              >
-                {success}
-              </div>
-            )}
 
             <form
               onSubmit={handleVerifyNumber}
@@ -243,24 +196,6 @@ const ForgotPassword = () => {
             <p className="auth-subtitle">
               Enter your new password below.
             </p>
-
-            {error && (
-              <div
-                className="auth-error-alert"
-                role="alert"
-              >
-                {error}
-              </div>
-            )}
-
-            {success && (
-              <div
-                className="auth-success-alert"
-                role="status"
-              >
-                {success}
-              </div>
-            )}
 
             <form
               onSubmit={handleChangePassword}
