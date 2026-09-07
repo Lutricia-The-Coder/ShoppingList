@@ -9,14 +9,7 @@
       "id": "oN3MR7pWHDk"
     }
   ],
-  "shoppingLists": [
-    {
-      "name": "Breakfast",
-      "userId": "oN3MR7pWHDk",
-      "dateAdded": "2026-08-31T09:43:44.765Z",
-      "id": "kTWZTHzG7ao"
-    }
-  ],
+  "shoppingLists": [],
   "shoppingItems": [
     {
       "name": "egg",
@@ -134,6 +127,19 @@
       "dateAdded": "2026-08-31T09:43:44.765Z",
       "listId": "kTWZTHzG7ao",
       "id": "bZiYrDxs-tw"
+    },
+    {
+      "name": "milk",
+      "quantity": 3,
+      "notes": "",
+      "category": "Groceries",
+      "image": "",
+      "imageAuthor": "",
+      "imageUsername": "",
+      "completed": false,
+      "dateAdded": "2026-09-07T07:38:03.483Z",
+      "listId": "iDo4frlkAzk",
+      "id": "QOK-lAHjxEY"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"
