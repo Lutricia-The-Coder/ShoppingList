@@ -28,7 +28,21 @@ The objective of this project is to build a fully functional shopping list appli
 * Secure password handling
 
 ---
+ ### Preview
 
+### LOGIN
+
+![Login Page](./src/assets/flogin.png)
+
+### SIGNUP
+
+![Register](./src/assets/fsignup.png)
+
+### LANDING PAGE
+
+![Landing page](/src/assets/empty.png)
+
+---
 ## Features
 
 ### Authentication
