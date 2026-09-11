@@ -157,6 +157,35 @@ a {
   border-bottom-color: var(--input-focus);
 }
 
+.password-input-wrapper {
+  position: relative;
+  display: block;
+}
+
+.password-input-wrapper input {
+  padding-right: 32px;
+}
+
+.password-visibility-button {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  border: 0;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  transform: translateY(-50%);
+}
+
+.password-visibility-button:hover,
+.password-visibility-button:focus-visible {
+  color: var(--text-main);
+}
+
 .forgot-link-wrapper {
   text-align: right;
   margin-bottom: 32px;

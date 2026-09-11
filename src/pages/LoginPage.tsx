@@ -5,6 +5,7 @@ import { hashPassword } from "../types/encryption";
 import { useAppDispatch } from "../store/hooks";
 import { login } from "../features/auth/authSlice";
 import toast from "react-hot-toast";
+import PasswordInput from "../components/PasswordInput";
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -74,8 +75,7 @@ const LoginPage = () => {
               </div>
 
               <div className="minimal-input-group">
-                <input
-                  type="password"
+                <PasswordInput
                   name="password"
                   placeholder="Password"
                   value={formData.password}
