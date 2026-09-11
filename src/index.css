@@ -987,13 +987,19 @@ a {
 
 .shopping-lists-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 20px;
   align-items: stretch;
 }
 
 .shopping-lists-grid .shopping-card {
   max-width: none;
+}
+
+@media (max-width: 700px) {
+  .shopping-lists-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 .shopping-card h2 {
