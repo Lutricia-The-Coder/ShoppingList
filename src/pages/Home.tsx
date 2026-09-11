@@ -181,8 +181,6 @@ const Home = () => {
           url: shareUrl,
         });
 
-        toast.success("Shopping list shared successfully.");
-
         return;
       }
 
