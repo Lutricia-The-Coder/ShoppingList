@@ -166,6 +166,11 @@ a {
   padding-right: 32px;
 }
 
+.password-input-wrapper input::-ms-reveal,
+.password-input-wrapper input::-ms-clear {
+  display: none;
+}
+
 .password-visibility-button {
   position: absolute;
   top: 50%;
