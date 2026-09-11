@@ -21,6 +21,7 @@ import {
 import { updateUser } from "../services/authService";
 import { hashPassword } from "../types/encryption";
 import toast from "react-hot-toast";
+import ConfirmationDialog from "./ConfirmationDialog";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -51,6 +52,9 @@ const Navbar = () => {
 
   const [confirmPassword, setConfirmPassword] =
     useState("");
+
+  const [showLogoutConfirmation, setShowLogoutConfirmation] =
+    useState(false);
 
   if (!currentUser) {
     return null;
@@ -551,11 +555,22 @@ const Navbar = () => {
                 <button
                   type="button"
                   className="profile-logout-button"
-                  onClick={handleLogout}
+                  onClick={() => setShowLogoutConfirmation(true)}
                 >
                   <LogOut size={18} />
                   Logout
                 </button>
+
+                {showLogoutConfirmation && (
+                  <ConfirmationDialog
+                    title="Log out?"
+                    message="Are you sure you want to log out?"
+                    onCancel={() => setShowLogoutConfirmation(false)}
+                    onConfirm={handleLogout}
+                    confirmLabel="Logout"
+                    loadingLabel="Logging out..."
+                  />
+                )}
               </>
             )}
 

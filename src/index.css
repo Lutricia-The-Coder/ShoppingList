@@ -985,6 +985,17 @@ a {
   gap: 16px;
 }
 
+.shopping-lists-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  align-items: stretch;
+}
+
+.shopping-lists-grid .shopping-card {
+  max-width: none;
+}
+
 .shopping-card h2 {
   margin: 0;
   font-size: 1.25rem;
