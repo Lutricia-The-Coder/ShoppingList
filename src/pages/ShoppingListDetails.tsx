@@ -224,7 +224,17 @@ const ShoppingListDetails = () => {
   const handleCreateItem = async (
     item: Omit<ShoppingItem, "id">
   ) => {
-   
+    const itemAlreadyOnList = items.some(
+      (existingItem) =>
+        existingItem.name.trim().toLowerCase() ===
+        item.name.trim().toLowerCase()
+    );
+
+    if (itemAlreadyOnList) {
+      toast.error("Item is already on the list.");
+      return;
+    }
+
     try {
       dispatch(setError(null));
 
