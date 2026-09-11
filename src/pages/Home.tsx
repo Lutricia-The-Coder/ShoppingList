@@ -31,6 +31,8 @@ const Home = () => {
 
   const [listToDelete, setListToDelete] =
     useState<string | null>(null);
+  const [submitting, setSubmitting] = useState(false);
+  const [deleting, setDeleting] = useState(false);
 
   
   useEffect(() => {
@@ -73,6 +75,7 @@ const Home = () => {
     }
 
     try {
+      setSubmitting(true);
       dispatch(setError(null));
 
       const newList =
@@ -102,6 +105,8 @@ const Home = () => {
       );
 
       dispatch(setError(null));
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -117,6 +122,7 @@ const Home = () => {
     }
 
     try {
+      setSubmitting(true);
       dispatch(setError(null));
 
       const updatedList =
@@ -133,12 +139,15 @@ const Home = () => {
       setShowForm(false);
     } catch {
       toast.error("Unable to update shopping list.");
+    } finally {
+      setSubmitting(false);
     }
   };
 
 
   const handleDeleteList = async (id: string) => {
     try {
+      setDeleting(true);
       dispatch(setError(null));
 
       await deleteShoppingList(id);
@@ -149,6 +158,7 @@ const Home = () => {
     } catch {
       toast.error("Unable to delete shopping list.");
     } finally {
+      setDeleting(false);
       setListToDelete(null);
     }
   };
@@ -240,6 +250,7 @@ const Home = () => {
                 : handleCreateList
             }
             onCancel={handleCancel}
+            isSubmitting={submitting}
           />
 
         </section>
@@ -251,6 +262,7 @@ const Home = () => {
           message="This will permanently remove the list and its items."
           onCancel={() => setListToDelete(null)}
           onConfirm={() => handleDeleteList(listToDelete)}
+          isLoading={deleting}
         />
       )}
 

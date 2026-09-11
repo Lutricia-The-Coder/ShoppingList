@@ -10,6 +10,7 @@ import type {
 } from "../types";
 
 import { searchUnsplashImage } from "../services/unsplashService";
+import { getItemCategory } from "../types/categoryRules";
 
 interface NewListItem {
   name: string;
@@ -40,9 +41,10 @@ interface ShoppingListFormProps {
       ShoppingItem,
       "id" | "listId"
     >[]
-  ) => void;
+  ) => void | Promise<void>;
 
   onCancel: () => void;
+  isSubmitting?: boolean;
 }
 
 const createEmptyItem = (): NewListItem => ({
@@ -66,6 +68,7 @@ const ShoppingListForm = ({
   listId,
   onSubmit,
   onCancel,
+  isSubmitting = false,
 }: ShoppingListFormProps) => {
   const [name, setName] = useState("");
 
@@ -361,6 +364,27 @@ const ShoppingListForm = ({
         return;
       }
 
+      const mismatchedItem = categories
+        .flatMap((group) =>
+          group.items.map((item) => ({
+            category: group.category,
+            name: item.name.trim(),
+          }))
+        )
+        .find((item) => {
+          const detectedCategory = getItemCategory(item.name);
+
+          return detectedCategory && detectedCategory !== item.category;
+        });
+
+      if (mismatchedItem) {
+        setImageError(
+          `"${mismatchedItem.name}" does not match the ${mismatchedItem.category} category.`
+        );
+
+        return;
+      }
+
       const dateAdded =
         new Date().toISOString();
 
@@ -467,6 +491,27 @@ const ShoppingListForm = ({
     if (invalidItem) {
       setImageError(
         "Please enter a name and valid quantity for every item."
+      );
+
+      return;
+    }
+
+    const mismatchedItem = categories
+      .flatMap((group) =>
+        group.items.map((item) => ({
+          category: group.category,
+          name: item.name.trim(),
+        }))
+      )
+      .find((item) => {
+        const detectedCategory = getItemCategory(item.name);
+
+        return detectedCategory && detectedCategory !== item.category;
+      });
+
+    if (mismatchedItem) {
+      setImageError(
+        `"${mismatchedItem.name}" does not match the ${mismatchedItem.category} category.`
       );
 
       return;
@@ -885,12 +930,12 @@ const ShoppingListForm = ({
    
 
       <div className="form-actions">
-        <button type="submit">
+        <button type="submit" disabled={isSubmitting}>
           {existingList
             ? addItemMode
-              ? "Add Items"
-              : "Save Changes"
-            : "Create List"}
+              ? isSubmitting ? "Adding..." : "Add Items"
+              : isSubmitting ? "Saving..." : "Save Changes"
+            : isSubmitting ? "Creating..." : "Create List"}
         </button>
 
         <button

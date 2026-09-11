@@ -3,6 +3,7 @@ interface ConfirmationDialogProps {
   message: string;
   onConfirm: () => void;
   onCancel: () => void;
+  isLoading?: boolean;
 }
 
 const ConfirmationDialog = ({
@@ -10,6 +11,7 @@ const ConfirmationDialog = ({
   message,
   onConfirm,
   onCancel,
+  isLoading = false,
 }: ConfirmationDialogProps) => {
   return (
     <div
@@ -33,6 +35,7 @@ const ConfirmationDialog = ({
             type="button"
             className="confirmation-cancel-button"
             onClick={onCancel}
+            disabled={isLoading}
           >
             Cancel
           </button>
@@ -40,8 +43,9 @@ const ConfirmationDialog = ({
             type="button"
             className="confirmation-delete-button"
             onClick={onConfirm}
+            disabled={isLoading}
           >
-            Delete
+            {isLoading ? "Deleting..." : "Delete"}
           </button>
         </div>
       </section>

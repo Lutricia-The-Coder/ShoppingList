@@ -70,6 +70,8 @@ const ShoppingListDetails = () => {
 
   const [itemToDelete, setItemToDelete] =
     useState<string | null>(null);
+  const [submitting, setSubmitting] = useState(false);
+  const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
     if (!listId) {
@@ -204,6 +206,7 @@ const ShoppingListDetails = () => {
     item: ShoppingItem
   ) => {
     try {
+      setSubmitting(true);
       dispatch(setError(null));
 
       const updatedItem =
@@ -257,6 +260,8 @@ const ShoppingListDetails = () => {
       );
 
       toast.error("Unable to create shopping item.");
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -269,6 +274,7 @@ const ShoppingListDetails = () => {
     }
 
     try {
+      setSubmitting(true);
       dispatch(setError(null));
 
       const updatedItem =
@@ -285,12 +291,15 @@ const ShoppingListDetails = () => {
       setShowForm(false);
     } catch {
       toast.error("Unable to update shopping item.");
+    } finally {
+      setSubmitting(false);
     }
   };
 
  
   const handleDeleteItem = async (id: string) => {
     try {
+      setDeleting(true);
       dispatch(setError(null));
 
       await deleteShoppingItem(id);
@@ -301,6 +310,7 @@ const ShoppingListDetails = () => {
     } catch {
       toast.error("Unable to delete shopping item.");
     } finally {
+      setDeleting(false);
       setItemToDelete(null);
     }
   };
@@ -353,6 +363,7 @@ const ShoppingListDetails = () => {
                 : handleCreateItem
             }
             onCancel={handleCancel}
+            isSubmitting={submitting}
           />
         </section>
       </main>
@@ -503,6 +514,7 @@ const ShoppingListDetails = () => {
             message="This item will be permanently removed from your list."
             onCancel={() => setItemToDelete(null)}
             onConfirm={() => handleDeleteItem(itemToDelete)}
+            isLoading={deleting}
           />
         )}
 

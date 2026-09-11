@@ -14,6 +14,7 @@ const Register = () => {
     surname: "",
     cellNumber: "",
   });
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
@@ -28,6 +29,7 @@ const Register = () => {
     event.preventDefault();
 
     try {
+      setLoading(true);
       if (
         !formData.email ||
         !formData.password ||
@@ -65,6 +67,8 @@ const Register = () => {
     } catch (error) {
       console.error("Registration error:", error);
       toast.error("Something went wrong during registration.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -149,8 +153,9 @@ const Register = () => {
             type="submit"
             className="btn-pill-submit"
             style={{ marginTop: "16px" }}
+            disabled={loading}
           >
-            REGISTER
+            {loading ? "REGISTERING..." : "REGISTER"}
           </button>
         </form>
 

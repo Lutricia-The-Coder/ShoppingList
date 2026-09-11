@@ -6,14 +6,16 @@ import {
 
 import type { ShoppingItem } from "../types";
 import { searchUnsplashImage } from "../services/unsplashService";
+import { getItemCategory } from "../types/categoryRules";
 
 interface ShoppingItemFormProps {
   listId: string;
   existingItem?: ShoppingItem | null;
   onSubmit: (
     item: Omit<ShoppingItem, "id">
-  ) => void;
+  ) => void | Promise<void>;
   onCancel: () => void;
+  isSubmitting?: boolean;
 }
 
 const ShoppingItemForm = ({
@@ -21,6 +23,7 @@ const ShoppingItemForm = ({
   existingItem,
   onSubmit,
   onCancel,
+  isSubmitting = false,
 }: ShoppingItemFormProps) => {
   const [name, setName] = useState("");
   const [quantity, setQuantity] = useState(1);
@@ -95,6 +98,15 @@ setImageUsername(existingItem.imageUsername ?? "");
     if (!name.trim()) return;
     if (quantity < 1) return;
     if (!category) return;
+
+    const detectedCategory = getItemCategory(name);
+
+    if (detectedCategory && detectedCategory !== category) {
+      setImageError(
+        `"${name.trim()}" does not match the ${category} category.`
+      );
+      return;
+    }
     
 onSubmit({
   listId,
@@ -289,10 +301,11 @@ onSubmit({
           <button
             type="submit"
             className="shopping-form-submit"
+            disabled={isSubmitting}
           >
-            {existingItem
-              ? "Save Changes"
-              : "Add Item"}
+            {isSubmitting
+              ? existingItem ? "Saving..." : "Adding..."
+              : existingItem ? "Save Changes" : "Add Item"}
           </button>
         </div>
       </form>

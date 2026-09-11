@@ -19,6 +19,8 @@ const Profile = () => {
 
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [profileLoading, setProfileLoading] = useState(false);
+  const [passwordLoading, setPasswordLoading] = useState(false);
 
   if (!currentUser) {
     return null;
@@ -27,6 +29,7 @@ const Profile = () => {
   const handleProfileUpdate = async (event: FormEvent) => {
     event.preventDefault();
     try {
+      setProfileLoading(true);
       const trimmedEmail = email.trim().toLowerCase();
       const existingUser = await getUserByEmail(trimmedEmail);
 
@@ -48,6 +51,8 @@ const Profile = () => {
     } catch (error) {
       console.error("Profile update error:", error);
       toast.error("Unable to update your profile.");
+    } finally {
+      setProfileLoading(false);
     }
   };
 
@@ -64,6 +69,7 @@ const Profile = () => {
     }
 
     try {
+      setPasswordLoading(true);
       const hashedPassword = hashPassword(password);
       const updatedUser = await updateUser(currentUser.id, {
         password: hashedPassword,
@@ -77,6 +83,8 @@ const Profile = () => {
     } catch (error) {
       console.error("Password update error:", error);
       toast.error("Unable to update your password.");
+    } finally {
+      setPasswordLoading(false);
     }
   };
 
@@ -157,8 +165,9 @@ const Profile = () => {
               type="submit"
               className="btn-pill-submit-sm"
               style={{ marginTop: "8px" }}
+              disabled={profileLoading}
             >
-              SAVE CHANGES
+              {profileLoading ? "SAVING..." : "SAVE CHANGES"}
             </button>
 
             <button
@@ -225,8 +234,9 @@ const Profile = () => {
               type="submit"
               className="btn-pill-submit-sm"
               style={{ marginTop: "8px" }}
+              disabled={passwordLoading}
             >
-              UPDATE PASSWORD
+              {passwordLoading ? "UPDATING..." : "UPDATE PASSWORD"}
             </button>
 
             <button
