@@ -95,19 +95,17 @@ const LoginPage = () => {
               >
                 {loading ? "LOGGING IN..." : "LOGIN"}
               </button>
+
+              <div className="signup-link-wrapper">
+                <span>Don't have an account?</span>{" "}
+                <Link to="/register">Sign Up</Link>
+              </div>
             </form>
           </div>
         </div>
 
         
         <div className="landing-hero-section">
-          <div className="hero-top-nav">
-            <span>Don't have an account ?</span>
-            <Link to="/register" className="btn-hero-outline">
-              Sign Up
-            </Link>
-          </div>
-
           <div className="hero-content">
             <h1>Welcome to OrgList</h1>
             <p>

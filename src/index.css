@@ -69,15 +69,16 @@ a {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 32px;
+  padding: 0 !important;
 }
 
 .landing-card {
   width: 100%;
   max-width: 1040px;
-  height: 600px;
+  height: 100vh !important;
+  max-width: none !important;
   background: var(--card-bg);
-  border-radius: 20px;
+  border-radius: 0 !important;
   box-shadow: 0 12px 32px rgba(15, 23, 42, 0.05);
   display: flex;
   overflow: hidden;
@@ -89,13 +90,17 @@ a {
   padding: 48px;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: center;
+  position: relative;
 }
 
 .landing-brand-header {
   display: flex;
   align-items: center;
   gap: 10px;
+  position: absolute;
+  top: 48px;
+  left: 48px;
 }
 
 .brand-logo-icon {
@@ -228,6 +233,23 @@ a {
   transform: translateY(-1px);
 }
 
+.signup-link-wrapper {
+  margin-top: 20px;
+  text-align: center;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
+.signup-link-wrapper a {
+  color: var(--text-main);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.signup-link-wrapper a:hover {
+  text-decoration: underline;
+}
+
 .landing-hero-section {
   flex: 1.1;
   background:
@@ -241,8 +263,10 @@ a {
   padding: 48px;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: center;
+  align-items: center;
   color: var(--card-bg);
+  position: relative;
 }
 
 .hero-top-nav {
@@ -274,6 +298,7 @@ a {
 
 .hero-content {
   max-width: 380px;
+  text-align: center;
 }
 
 .hero-content h1 {
@@ -293,6 +318,9 @@ a {
 .hero-pagination-dots {
   display: flex;
   gap: 8px;
+  position: absolute;
+  bottom: 48px;
+  left: 48px;
 }
 
 .hero-pagination-dots .dot {

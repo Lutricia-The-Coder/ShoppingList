@@ -930,7 +930,11 @@ const ShoppingListForm = ({
    
 
       <div className="form-actions">
-        <button type="submit" disabled={isSubmitting}>
+        <button
+          type="submit"
+          disabled={isSubmitting}
+          aria-busy={isSubmitting}
+        >
           {existingList
             ? addItemMode
               ? isSubmitting ? "Adding..." : "Add Items"
