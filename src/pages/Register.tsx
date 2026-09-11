@@ -5,6 +5,7 @@ import { hashPassword } from "../types/encryption";
 import toast from "react-hot-toast";
 import { useAppDispatch } from "../store/hooks";
 import { login } from "../features/auth/authSlice";
+import PasswordInput from "../components/PasswordInput";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -141,9 +142,8 @@ const Register = () => {
           </div>
 
           <div className="minimal-input-group">
-            <input
+            <PasswordInput
               id="password"
-              type="password"
               name="password"
               placeholder="Password"
               minLength={8}
