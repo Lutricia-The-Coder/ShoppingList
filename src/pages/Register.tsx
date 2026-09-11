@@ -3,9 +3,12 @@ import { useNavigate, Link } from "react-router-dom";
 import { registerUser, getUserByEmail } from "../services/authService";
 import { hashPassword } from "../types/encryption";
 import toast from "react-hot-toast";
+import { useAppDispatch } from "../store/hooks";
+import { login } from "../features/auth/authSlice";
 
 const Register = () => {
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
   const [formData, setFormData] = useState({
     email: "",
@@ -51,7 +54,7 @@ const Register = () => {
 
       const hashedPassword = hashPassword(formData.password);
 
-      await registerUser({
+      const newUser = await registerUser({
         email,
         password: hashedPassword,
         name: formData.name.trim(),
@@ -59,10 +62,11 @@ const Register = () => {
         cellNumber: formData.cellNumber.trim(),
       });
 
-      toast.success("Registration successful! Redirecting to login...");
+      dispatch(login(newUser));
+      toast.success("Registration successful! Redirecting to your dashboard...");
 
       setTimeout(() => {
-        navigate("/login");
+        navigate("/dashboard");
       }, 1000);
     } catch (error) {
       console.error("Registration error:", error);
